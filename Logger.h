@@ -12,6 +12,7 @@ enum LogType {
 	ERRR = 2
 };
 
+//jaming
 void Log(enum LogType logType, std::string thread, std::string message, std::string printarg, bool filteraction = true);
 void Log(enum LogType logType, std::string thread, std::string message, std::string printarg);
 void Log(enum LogType logType, std::string thread, std::string message);

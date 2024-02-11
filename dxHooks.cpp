@@ -115,7 +115,7 @@ Status::Enum bind(uint16_t _index, void** _original, void* _function)
 	void* target = (void*)g_methodsTable[_index];
 	if (MH_CreateHook(target, _function, _original) != MH_OK || MH_EnableHook(target) != MH_OK) 
 	{
-		return Status::UnknownError; //change to like idn a actuall message maybe
+		return Status::UnknownError; //kys
 	}
 
 	return Status::Success;

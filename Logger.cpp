@@ -1,4 +1,5 @@
 #include "Logger.h"
+//super cool not at all bad logger
 
 void Log(enum LogType logType, std::string thread, std::string message, std::string printarg, bool filteraction)
 {

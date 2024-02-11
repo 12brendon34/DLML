@@ -60,7 +60,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		// disables thread notifications (DLL_THREAD_ATTACH, DLL_THREAD_DETACH)
 		DisableThreadLibraryCalls(hModule);
 		MH_Initialize();
 

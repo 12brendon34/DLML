@@ -10,7 +10,7 @@ bool Add_Source_Hook(char const* Path, int FFSAddSourceFlags) {
 		std::string message = "Added Source: " + (std::string)Path + " SourceFlag: " + std::to_string(FFSAddSourceFlags) + "\n";
 		Log(message);
 	}
-	//std::cout << "Added Source: \"" << Path << "\", SourceFlag:" << FFSAddSourceFlags << (Status ? " (returned true)" : " (returned false)") << std::endl;
+
 	return Status;
 }
 
@@ -22,7 +22,7 @@ void InitializeGameScript_Hook(LPCSTR param_1) {
 	for (size_t i = 0; i < ModInfoList.size(); i++)
 		Add_Source_Hook(ModInfoList[i].ModPath.c_str(), 9);
 	Log((std::string)"Initializing Game Scripts\n");
-	//std::cout << "InitializeGameScript Called" << std::endl;
+
 	return InitializeGameScript(param_1);
 }
 
@@ -32,7 +32,7 @@ _clogv CLogV = nullptr;
 void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg) {
 	std::string Message;
 
-	//this is a really bad function rn
+	//this is a really bad rn
 
 	if (logtype == LogType::DEBG)
 		Message.append(" DBUG :");
@@ -42,18 +42,7 @@ void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int
 		Message.append(" INFO :");
 	else if (logtype == LogType::ERRR)
 		Message.append(" ERRR :");
-	/*
-	switch ((LogType)logtype) {
-		case LogType::DEBG:
-			Message.append(" DBUG :");
-		case LogType::WARN:
-			Message.append(" WARN :");
-		case LogType::INFO:
-			Message.append(" INFO :");
-		case LogType::ERRR:
-			Message.append(" ERRR :");
-	};
-	*/
+
 	Message.append(" [" + (std::string)thread + "] ");
 
 #ifdef DEBUG
@@ -72,20 +61,8 @@ void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int
 }
 
 BOOL CreateHooks(HMODULE hmodule) {
-
-#ifdef DEBUG
-	AllocConsole();
-
-	FILE* fp;
-	freopen_s(&fp, "CONOUT$", "w", stdout);
-#endif
-	//std::cout << "Dll loaded" << std::endl;
-
 	HMODULE EngineDll = GetModuleHandleA("engine_x64_rwdi.dll");
 	HMODULE FilesystemDll = GetModuleHandleA("filesystem_x64_rwdi.dll");
-
-	//std::cout << "Found engine_x64_rwdi.dll BaseAddress at : " << EngineDll << std::endl;
-	//std::cout << "Found filesystem_x64_rwdi.dll Hook at : " << FilesystemDll << std::endl;
 
 	AddLog("Found engine_x64_rwdi.dll BaseAddress at :  %p\n", (void*)EngineDll);
 	AddLog("Found filesystem_x64_rwdi.dll BaseAddress at :  %p\n", (void*)FilesystemDll);
@@ -124,25 +101,19 @@ BOOL CreateHooks(HMODULE hmodule) {
 			if (::GetModuleHandle("dxgi.dll") != NULL && ::GetModuleHandle("d3d11.dll") != NULL)
 			{
 				bind(8, (void**)&oPresent, hkPresent);
-				bind(13, (void**)&oResizeBuffers, hkResizeBuffers); //to fix resize crash
+				bind(13, (void**)&oResizeBuffers, hkResizeBuffers); //gota get that Resizeable Buffalo
 				init_hook = true;
 			}
 		}
 
 	} while (!init_hook);
 
-	//need to do this like good
+	//need to do this like, good
 	while (true) {
 		Sleep(100);
 		if (GetAsyncKeyState(VK_DELETE))
 			break;
 	}
 
-#ifdef DEBUG
-	if (fp != nullptr)
-		fclose(fp);
-
-	FreeConsole();
-#endif
 	return true;
 }

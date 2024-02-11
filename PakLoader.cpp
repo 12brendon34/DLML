@@ -5,6 +5,15 @@
 namespace fs = std::filesystem;
 std::vector<ModInfo> ModInfoList;
 
+//https://en.cppreference.com/w/cpp/string/byte/tolower too lazy I am, “Powerful you have become, the dark side I sense in you.” – Yoda (I have never watched starwars) 
+std::string str_tolower(std::string s)
+{
+	std::transform(s.begin(), s.end(), s.begin(),
+		[](unsigned char c) { return std::tolower(c); }
+	);
+	return s;
+}
+
 void IndexPaks()
 {
 	//get paks dir
@@ -23,7 +32,7 @@ void IndexPaks()
 	//index
 	for (const auto& entry : fs::directory_iterator(path))
 	{
-		if (entry.path().extension().string() == ".pak")
+		if (str_tolower(entry.path().extension().string()) == ".pak")
 		{
 			ModInfo CurrentMod;
 			CurrentMod.ModName = L"PlaceHolder";
