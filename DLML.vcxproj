@@ -114,6 +114,7 @@
     <ClCompile Include="MinHook\hook.c" />
     <ClCompile Include="MinHook\trampoline.c" />
     <ClCompile Include="PakLoader.cpp" />
+    <ClCompile Include="TestHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="dsound.asm">
@@ -143,6 +144,7 @@
     <ClInclude Include="MinHook\table64.h" />
     <ClInclude Include="MinHook\trampoline.h" />
     <ClInclude Include="PakLoader.h" />
+    <ClInclude Include="TestHook.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

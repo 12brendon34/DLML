@@ -94,6 +94,7 @@ ImGuiTextBuffer     Buf;
 ImGuiTextFilter     Filter;
 ImVector<int>       LineOffsets;        // Index to lines offset. We maintain this with AddLog() calls, allowing us to have a random access on lines
 bool                AutoScroll = true;     // Keep scrolling if already at the bottom
+bool                Verbose = true;		// Show Full Game Log
 bool                ImDemo = false;		// Show Imgui Demo Window
 
 void Clear()
@@ -141,6 +142,8 @@ void DrawLogWindow(const char* title, bool* p_open)
 	bool clear = ImGui::Button("Clear");
 	ImGui::SameLine();
 	bool copy = ImGui::Button("Copy");
+	ImGui::SameLine();
+	ImGui::Checkbox("Verbose", &Verbose);
 
 	ImGui::Separator();
 	ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
@@ -149,6 +152,14 @@ void DrawLogWindow(const char* title, bool* p_open)
 		Clear();
 	if (copy)
 		ImGui::LogToClipboard();
+
+	//too lazy to do this a better way
+	if (Verbose) {
+		MH_EnableHook(GetCategoryLevel_Address);
+	}
+	else {
+		MH_DisableHook(GetCategoryLevel_Address);
+	}
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 	const char* buf = Buf.begin();

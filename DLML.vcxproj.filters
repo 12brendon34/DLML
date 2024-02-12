@@ -40,6 +40,7 @@
       <Filter>Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="TestHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hooks.h" />
@@ -95,6 +96,7 @@
       <Filter>Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="TestHook.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="dsound.asm" />
