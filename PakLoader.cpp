@@ -24,9 +24,15 @@ void IndexPaks()
 	path = path + "\\Mods\\Paks\\";
 
 	//make if not exist
-	if (!std::filesystem::exists(path))
+	ULONGLONG now = GetTickCount64();
+	while (!std::filesystem::exists(path))
 	{
-		std::filesystem::create_directory(path);
+		if (GetTickCount64() - now > 500)
+		{
+			std::filesystem::create_directory(path);
+
+			now = GetTickCount64();
+		}
 	}
 
 	//index
