@@ -21,7 +21,7 @@ void IndexPaks()
 	GetModuleFileNameA(NULL, path_c, MAX_PATH);
 	std::string path = std::string(path_c);
 	path = path.substr(0, path.find_last_of("/\\"));
-	path = path + "\\Mods\\Paks\\";
+	path = path + "\\CustomPaks\\";
 
 	//make if not exist
 	ULONGLONG now = GetTickCount64();
