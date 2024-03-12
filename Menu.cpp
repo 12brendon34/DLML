@@ -56,7 +56,7 @@ void StylishImgui()
 	colors[ImGuiCol_TitleBgCollapsed] = ImColor(39, 51, 125);
 	colors[ImGuiCol_MenuBarBg] = ImColor(39, 51, 125);
 	colors[ImGuiCol_ScrollbarBg] = ImColor(18, 12, 27);
-	colors[ImGuiCol_ScrollbarGrab] = ImColor(18, 12, 27);
+	colors[ImGuiCol_ScrollbarGrab] = ImColor(39, 51, 125);
 	colors[ImGuiCol_ScrollbarGrabHovered] = ImColor(34, 122, 180);
 	colors[ImGuiCol_ScrollbarGrabActive] = ImColor(34, 122, 180);
 	colors[ImGuiCol_CheckMark] = ImColor(255, 255, 255);
@@ -106,6 +106,7 @@ void InitImGui()
 }
 
 LRESULT WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
 	if (init)
 	{
 		if (uMsg == WM_KEYUP && wParam == VK_F5)
@@ -115,7 +116,7 @@ LRESULT WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 		}
 
-		//marks the window inactive to trick the silly goose into releasing the control of the mouse
+
 		if (menu_visible && !is_inactive)
 		{
 			CallWindowProc(reinterpret_cast<WNDPROC>(oWndProc), hWnd, WM_ACTIVATE, WA_INACTIVE, 0);
@@ -178,6 +179,7 @@ ImGuiTextFilter     Filter;
 ImVector<int>       LineOffsets;        // Index to lines offset. We maintain this with AddLog() calls, allowing us to have a random access on lines
 bool                AutoScroll = true;     // Keep scrolling if already at the bottom
 bool                Verbose = true;		// Show Full Game Log
+bool                ImDemo = false;		// Show Imgui Demo Window
 
 void Clear()
 {
@@ -211,8 +213,14 @@ void DrawLogWindow(const char* title, bool* p_open)
 	if (ImGui::BeginPopup("Options"))
 	{
 		ImGui::Checkbox("Auto-scroll", &AutoScroll);
+#ifdef DEBUG
+		ImGui::Checkbox("Show Imgui Demo", &ImDemo);
+#endif
 		ImGui::EndPopup();
 	}
+
+	if (ImDemo)
+		ImGui::ShowDemoWindow();
 
 	// Main window
 	if (ImGui::Button("Options"))
