@@ -76,7 +76,7 @@ BOOL CreateHooks(HMODULE hmodule) {
 	HMODULE EngineDll = GetModuleHandleA("engine_x64_rwdi.dll");
 	HMODULE FilesystemDll = GetModuleHandleA("filesystem_x64_rwdi.dll");
 
-	AddLog("Found engine_x64_rwdi.dll BaseAddress at :  %p\n", (void*)EngineDll);
+	AddLog("\nFound engine_x64_rwdi.dll BaseAddress at :  %p\n", (void*)EngineDll);
 	AddLog("Found filesystem_x64_rwdi.dll BaseAddress at :  %p\n", (void*)FilesystemDll);
 
 	InitializeGameScript_Address = GetProcAddress(EngineDll, "InitializeGameScript");
