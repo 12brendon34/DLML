@@ -15,10 +15,12 @@ void __cdecl CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenum
 //annoying ahh
 
 int __cdecl GetCategoryLevel_Hook(int This, char* Catagory);
+int* __cdecl LogSettingsInstance_Hook();
 
 extern FARPROC GetCategoryLevel_Address;
 extern FARPROC InitializeGameScript_Address;
 extern FARPROC Add_Source_Address;
 extern FARPROC CLogV_Address;
+extern FARPROC LogSettingsInstance_Address;
 
 BOOL WINAPI CreateHooks(HMODULE hmodule);

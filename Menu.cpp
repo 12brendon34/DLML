@@ -242,6 +242,7 @@ void DrawLogWindow(const char* title, bool* p_open)
 
 	//too lazy to do this a better way [good]
 	Verbose ? MH_EnableHook(GetCategoryLevel_Address) : MH_DisableHook(GetCategoryLevel_Address);
+	Verbose ? MH_EnableHook(LogSettingsInstance_Address) : MH_DisableHook(LogSettingsInstance_Address);
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 	const char* buf = Buf.begin();
