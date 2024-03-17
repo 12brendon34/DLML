@@ -11,12 +11,29 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 	MH_STATUS status = MH_CreateHook(target, destination, original);
 	std::string statusCode = MH_StatusToString(status);
 
-	if (status != MH_OK) {
-		printf("Hooked :%p -> :%p\n", target, destination);
+	if (status == MH_OK) {
+#ifdef _DEBUG
+		printf("Hooked %p -> %p\n", target, destination);
+#endif
 	}
 	else {
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p :%s", target, statusCode);
+		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p : %s", target, statusCode);
 	}
+}
+
+FARPROC GetProcAddressSinple(HMODULE hModule, LPCSTR lpProcName) {
+#pragma warning(suppress : 6387)
+	FARPROC Source_Address = GetProcAddress(hModule, lpProcName);
+	if (Source_Address != NULL)
+	{
+#ifdef _DEBUG
+		printf("Loaded Libary at: %p\n", Source_Address);
+#endif
+	}
+	else {
+		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed");
+	}
+	return Source_Address;
 }
 
 typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
@@ -40,40 +57,27 @@ FARPROC Add_Source_Address;
 BOOL CreateHooks(HMODULE hmodule) {
 
 	HMODULE EngineDll = GetModuleHandleA("engine_x64_rwdi.dll");
-	HMODULE FilesystemDll = GetModuleHandleA("filesystem_x64_rwdi.dll");
-
 	if (EngineDll) {
-		printf("Found engine_x64_rwdi.dll BaseAddress at :  %p\n", (void*)EngineDll);
+#ifdef _DEBUG
+		printf("Found engine_x64_rwdi.dll BaseAddress at: %p\n", EngineDll);
+#endif
 	}
-	else {
+	else
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to create engine_x64_rwdi.dll handle");
-	}
 
+	HMODULE FilesystemDll = GetModuleHandleA("filesystem_x64_rwdi.dll");
 	if (FilesystemDll) {
-		printf("Found filesystem_x64_rwdi.dll BaseAddress at :  %p\n", (void*)FilesystemDll);
+#ifdef _DEBUG
+		printf("Found filesystem_x64_rwdi.dll BaseAddress at: %p\n", FilesystemDll);
+#endif
+
 	}
-	else {
+	else
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to create filesystem_x64_rwdi.dll handle");
-	}
 
-	#pragma warning(suppress : 6387) //handled, it just doesn't know that
-	InitializeGameScript_Address = GetProcAddress(EngineDll, "InitializeGameScript");
-	if (InitializeGameScript_Address != NULL) {
-		printf("Loaded Libary at :  %p\n", InitializeGameScript_Address);
-	}
-	else {
-		MsgBoxExit(MB_ICONERROR, "Exitin g", "Failed");
-	}
 
-	#pragma warning(suppress : 6387)
-	Add_Source_Address = GetProcAddress(FilesystemDll, "?add_source@fs@@YA_NPEBDW4ENUM@FFSAddSourceFlags@@@Z");
-	if (Add_Source_Address != NULL)
-	{
-		printf("Loaded Libary at :  %p\n", Add_Source_Address);
-	}
-	else {
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed");
-	}
+	InitializeGameScript_Address = GetProcAddressSinple(EngineDll, "InitializeGameScript");
+	Add_Source_Address = GetProcAddressSinple(FilesystemDll, "?add_source@fs@@YA_NPEBDW4ENUM@FFSAddSourceFlags@@@Z");
 
 	HookFunction(InitializeGameScript_Address, &InitializeGameScript, reinterpret_cast<void**>(&InitializeGameScript_Real));
 	HookFunction(Add_Source_Address, &Add_Source, reinterpret_cast<void**>(&Add_Source_Real));

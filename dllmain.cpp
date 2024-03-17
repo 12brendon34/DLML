@@ -111,36 +111,31 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	case DLL_PROCESS_ATTACH:
 	{
 		DisableThreadLibraryCalls(hModule);
+#ifdef _DEBUG
 		AllocConsole();
 
 		FILE* pCout;
 		freopen_s(&pCout, "conout$", "w", stdout);
 		freopen_s(&pCout, "conout$", "w", stderr);
-
+		if (pCout)
+			#pragma warning(suppress : 6387)
+			fclose(pCout);
+#endif
 		MH_STATUS status = MH_Initialize();
 		std::string statusCode = MH_StatusToString(status);
 
-		if (status == MH_OK) {
-			globals.MinHookInitialized = true;
+		if (status != MH_OK && status != MH_ERROR_ALREADY_INITIALIZED) {
+			MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to initialize MinHook: %p", statusCode);
 		}
-		else if (status == MH_ERROR_ALREADY_INITIALIZED) {
-			printf("MinHook already initialized.\n");
-			globals.MinHookInitialized = true;
-		}
-		else {
-			std::string msg = std::string("Unable to initialize MinHook: {}"), statusCode;
-			throw std::runtime_error(msg);
-		}
+		globals.MinHookInitialized = true;
 
 		char path[MAX_PATH]{};
 		CopyMemory(path + GetSystemDirectory(path, MAX_PATH - 12), "\\dsound.dll", 12);
 		dsound_dll = LoadLibrary(path);
 
 		if (dsound_dll == NULL)
-		{
-			MessageBox(0, "Original dsound.dll missing", "Exiting", MB_ICONERROR);
-			ExitProcess(0);
-		}
+			MsgBoxExit(MB_ICONERROR, "Exiting", "Source dsound.dll missing");
+
 		setup_dsound();
 
 		HANDLE h = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CreateHooks, hModule, 0, 0);
@@ -156,6 +151,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	{
 		FreeLibrary(dsound_dll);
 		MH_Uninitialize();
+#ifdef _DEBUG
+		FreeConsole();
+#endif
 	}
 	break;
 	}

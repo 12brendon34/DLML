@@ -31,7 +31,7 @@ fs::path SetupDir(std::string subfolder) {
 
 void IndexPaks()
 {
-	fs::path paksPath = SetupDir("paks");
+	fs::path paksPath = SetupDir("Paks");
 
 	for (const auto& entry : fs::directory_iterator(paksPath))
 	{
