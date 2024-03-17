@@ -32,9 +32,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -100,58 +98,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="Fonts.cpp" />
-    <ClCompile Include="Hooks.cpp" />
-    <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
-    <ClCompile Include="ImGui\imgui_draw.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="dxHooks.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="MinHook\buffer.c" />
-    <ClCompile Include="MinHook\hde32.c" />
-    <ClCompile Include="MinHook\hde64.c" />
-    <ClCompile Include="MinHook\hook.c" />
-    <ClCompile Include="MinHook\trampoline.c" />
-    <ClCompile Include="PakLoader.cpp" />
-    <ClCompile Include="TestHook.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="dsound.asm">
-      <FileType>Document</FileType>
-    </MASM>
     <None Include="dsound.def" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Fonts.h" />
-    <ClInclude Include="Hooks.h" />
-    <ClInclude Include="ImGui\imconfig.h" />
-    <ClInclude Include="ImGui\imgui.h" />
-    <ClInclude Include="ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="ImGui\imgui_internal.h" />
-    <ClInclude Include="ImGui\imstb_rectpack.h" />
-    <ClInclude Include="ImGui\imstb_textedit.h" />
-    <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="dxHooks.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="MinHook\buffer.h" />
-    <ClInclude Include="MinHook\hde32.h" />
-    <ClInclude Include="MinHook\hde64.h" />
-    <ClInclude Include="MinHook\MinHook.h" />
-    <ClInclude Include="MinHook\pstdint.h" />
-    <ClInclude Include="MinHook\table32.h" />
-    <ClInclude Include="MinHook\table64.h" />
-    <ClInclude Include="MinHook\trampoline.h" />
-    <ClInclude Include="PakLoader.h" />
-    <ClInclude Include="TestHook.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
