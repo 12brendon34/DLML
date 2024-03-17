@@ -10,6 +10,6 @@ DirectSoundCreate8
 DirectSoundEnumerateA
 DirectSoundEnumerateW
 DirectSoundFullDuplexCreate
-DllCanUnloadNow
-DllGetClassObject
+DllCanUnloadNow PRIVATE
+DllGetClassObject PRIVATE
 GetDeviceID

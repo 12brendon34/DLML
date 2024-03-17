@@ -97,10 +97,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="common.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Hooks.cpp" />
+    <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="MinHook\buffer.c" />
+    <ClCompile Include="MinHook\hde32.c" />
+    <ClCompile Include="MinHook\hde64.c" />
+    <ClCompile Include="MinHook\hook.c" />
+    <ClCompile Include="MinHook\trampoline.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dsound.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="Hooks.h" />
+    <ClInclude Include="Loader.h" />
+    <ClInclude Include="MinHook\buffer.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="MinHook\hde32.h" />
+    <ClInclude Include="MinHook\hde64.h" />
+    <ClInclude Include="MinHook\MinHook.h" />
+    <ClInclude Include="MinHook\pstdint.h" />
+    <ClInclude Include="MinHook\table32.h" />
+    <ClInclude Include="MinHook\table64.h" />
+    <ClInclude Include="MinHook\trampoline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
