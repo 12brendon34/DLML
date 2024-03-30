@@ -231,6 +231,9 @@ void DrawLogWindow(const char* title, bool* p_open)
 	bool copy = ImGui::Button("Copy");
 	ImGui::SameLine();
 	ImGui::Checkbox("Verbose", &Verbose);
+	ImGui::SameLine();
+	Filter.Draw("Filter", -100.0f);
+
 
 	ImGui::Separator();
 	ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
@@ -248,18 +251,31 @@ void DrawLogWindow(const char* title, bool* p_open)
 	const char* buf = Buf.begin();
 	const char* buf_end = Buf.end();
 
-	ImGuiListClipper clipper;
-	clipper.Begin(LineOffsets.Size);
-	while (clipper.Step())
+	if (Filter.IsActive())
 	{
-		for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
+		for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
 		{
 			const char* line_start = buf + LineOffsets[line_no];
 			const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-			ImGui::TextUnformatted(line_start, line_end);
+			if (Filter.PassFilter(line_start, line_end))
+				ImGui::TextUnformatted(line_start, line_end);
 		}
 	}
-	clipper.End();
+	else
+	{
+		ImGuiListClipper clipper;
+		clipper.Begin(LineOffsets.Size);
+		while (clipper.Step())
+		{
+			for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
+			{
+				const char* line_start = buf + LineOffsets[line_no];
+				const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
+				ImGui::TextUnformatted(line_start, line_end);
+			}
+		}
+		clipper.End();
+	}
 
 	ImGui::PopStyleVar();
 
