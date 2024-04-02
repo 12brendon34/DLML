@@ -111,16 +111,17 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	case DLL_PROCESS_ATTACH:
 	{
 		DisableThreadLibraryCalls(hModule);
-#ifdef _DEBUG
-		AllocConsole();
+		if (_DEBUG) {
+			AllocConsole();
 
-		FILE* pCout;
-		freopen_s(&pCout, "conout$", "w", stdout);
-		freopen_s(&pCout, "conout$", "w", stderr);
-		if (pCout)
-			#pragma warning(suppress : 6387)
-			fclose(pCout);
-#endif
+			FILE* pCout;
+			freopen_s(&pCout, "conout$", "w", stdout);
+			freopen_s(&pCout, "conout$", "w", stderr);
+			if (pCout)
+#pragma warning(suppress : 6387) //vs funk
+				fclose(pCout);
+		}
+
 		MH_STATUS status = MH_Initialize();
 		std::string statusCode = MH_StatusToString(status);
 
