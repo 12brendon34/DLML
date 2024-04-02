@@ -1,6 +1,5 @@
 #include "Hooks.h"
 #include "global.h"
-#include "Loader.h"
 
 void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 
@@ -36,23 +35,34 @@ FARPROC GetProcAddressSinple(HMODULE hModule, LPCSTR lpProcName) {
 	return Source_Address;
 }
 
-typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
-add_source Add_Source_Real;
-bool Add_Source(char const* Path, int FFSAddSourceFlags) {
-	return Add_Source_Real(Path, FFSAddSourceFlags);
+typedef UINT(*calc_file_crc)(__int64* CrcCalcArgs);
+calc_file_crc Calc_File_Crc_Real;
+UINT Calc_File_Crc(__int64* CrcCalcArgs) {
+	return true;
 }
 
-typedef void(__cdecl* initializegamescript)(LPCSTR locale);
-initializegamescript InitializeGameScript_Real = nullptr;
-void InitializeGameScript(LPCSTR locale) {
-	for (size_t i = 0; i < ModInfoList.size(); i++)
-		Add_Source(ModInfoList[i].ModPath.c_str(), 9);
-
-	return InitializeGameScript_Real(locale);
+typedef bool(*aredataauthenticatedtoplaymultiplayer)();
+aredataauthenticatedtoplaymultiplayer AreDataAuthenticatedToPlayMultiplayer_Real;
+bool AreDataAuthenticatedToPlayMultiplayer() {
+	return true;
 }
 
-FARPROC InitializeGameScript_Address;
-FARPROC Add_Source_Address;
+typedef void(*ilevelrepladdverifydata)();
+ilevelrepladdverifydata ILevelReplAddVerifyData_Real;
+void ILevelReplAddVerifyData() {
+	return;
+}
+
+typedef void(*igamerepladdverifydata)();
+igamerepladdverifydata IGameReplAddVerifyData_Real;
+void IGameReplAddVerifyData() {
+	return;
+}
+
+FARPROC Calc_File_Crc_Address;
+FARPROC AreDataAuthenticatedToPlayMultiplayer_Address;
+FARPROC ILevelReplAddVerifyData_Address;
+FARPROC IGameReplAddVerifyData_Address;
 
 BOOL CreateHooks(HMODULE hmodule) {
 
@@ -75,14 +85,16 @@ BOOL CreateHooks(HMODULE hmodule) {
 	else
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to create filesystem_x64_rwdi.dll handle");
 
+	Calc_File_Crc_Address = GetProcAddressSinple(FilesystemDll, "?calc_file_crc@fs@@YA_NAEAUCrcCalcArgs@1@@Z");
+	AreDataAuthenticatedToPlayMultiplayer_Address = GetProcAddressSinple(EngineDll, "?AreDataAuthenticatedToPlayMultiplayer@IGame@@QEBA_NXZ");
+	ILevelReplAddVerifyData_Address = GetProcAddressSinple(EngineDll, "?ReplAddVerifyData@ILevel@@QEAAXPEBDI_N@Z");
+	IGameReplAddVerifyData_Address = GetProcAddressSinple(EngineDll, "?ReplAddVerifyData@IGame@@QEAAXPEBDI_N@Z");
 
-	InitializeGameScript_Address = GetProcAddressSinple(EngineDll, "InitializeGameScript");
-	Add_Source_Address = GetProcAddressSinple(FilesystemDll, "?add_source@fs@@YA_NPEBDW4ENUM@FFSAddSourceFlags@@@Z");
+	HookFunction(Calc_File_Crc_Address, &Calc_File_Crc, reinterpret_cast<void**>(&Calc_File_Crc_Real));
+	HookFunction(AreDataAuthenticatedToPlayMultiplayer_Address, &AreDataAuthenticatedToPlayMultiplayer, reinterpret_cast<void**>(&AreDataAuthenticatedToPlayMultiplayer_Real));
+	HookFunction(ILevelReplAddVerifyData_Address, &ILevelReplAddVerifyData, reinterpret_cast<void**>(&ILevelReplAddVerifyData_Real));
+	HookFunction(IGameReplAddVerifyData_Address, &IGameReplAddVerifyData, reinterpret_cast<void**>(&IGameReplAddVerifyData_Real));
 
-	HookFunction(InitializeGameScript_Address, &InitializeGameScript, reinterpret_cast<void**>(&InitializeGameScript_Real));
-	HookFunction(Add_Source_Address, &Add_Source, reinterpret_cast<void**>(&Add_Source_Real));
-
-	IndexPaks();
 	MH_EnableHook(MH_ALL_HOOKS);
 
 	while (globals.Running)
