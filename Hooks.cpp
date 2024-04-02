@@ -1,6 +1,25 @@
 #include "Hooks.h"
 #include "global.h"
 
+HMODULE GetModuleHandleSimple(LPCSTR lpModuleName) {
+	HMODULE Handle = GetModuleHandle(lpModuleName);
+	if (Handle)
+		dbgprintf("Found %s BaseAddress at: %p\n", lpModuleName, Handle);
+	else
+		MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to create filesystem_x64_rwdi.dll handle");
+	return Handle;
+}
+
+FARPROC GetProcAddressSimple(HMODULE hModule, LPCSTR lpProcName) {
+#pragma warning(suppress : 6387)
+	FARPROC Address = GetProcAddress(hModule, lpProcName);
+	if (Address)
+		dbgprintf("Loaded Libary at: %p\n", Address);
+	else
+		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed To Get Address");
+	return Address;
+}
+
 void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 
 	if (!globals.MinHookInitialized && MH_Initialize() == MH_OK) {
@@ -11,28 +30,11 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 	std::string statusCode = MH_StatusToString(status);
 
 	if (status == MH_OK) {
-#ifdef _DEBUG
-		printf("Hooked %p -> %p\n", target, destination);
-#endif
+		dbgprintf("Hooked %p -> %p\n", target, destination);
 	}
 	else {
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p : %s", target, statusCode);
 	}
-}
-
-FARPROC GetProcAddressSinple(HMODULE hModule, LPCSTR lpProcName) {
-#pragma warning(suppress : 6387)
-	FARPROC Source_Address = GetProcAddress(hModule, lpProcName);
-	if (Source_Address != NULL)
-	{
-#ifdef _DEBUG
-		printf("Loaded Libary at: %p\n", Source_Address);
-#endif
-	}
-	else {
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed");
-	}
-	return Source_Address;
 }
 
 typedef UINT(*calc_file_crc)(__int64* CrcCalcArgs);
@@ -66,29 +68,13 @@ FARPROC IGameReplAddVerifyData_Address;
 
 BOOL CreateHooks(HMODULE hmodule) {
 
-	HMODULE EngineDll = GetModuleHandleA("engine_x64_rwdi.dll");
-	if (EngineDll) {
-#ifdef _DEBUG
-		printf("Found engine_x64_rwdi.dll BaseAddress at: %p\n", EngineDll);
-#endif
-	}
-	else
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to create engine_x64_rwdi.dll handle");
+	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
+	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
 
-	HMODULE FilesystemDll = GetModuleHandleA("filesystem_x64_rwdi.dll");
-	if (FilesystemDll) {
-#ifdef _DEBUG
-		printf("Found filesystem_x64_rwdi.dll BaseAddress at: %p\n", FilesystemDll);
-#endif
-
-	}
-	else
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to create filesystem_x64_rwdi.dll handle");
-
-	Calc_File_Crc_Address = GetProcAddressSinple(FilesystemDll, "?calc_file_crc@fs@@YA_NAEAUCrcCalcArgs@1@@Z");
-	AreDataAuthenticatedToPlayMultiplayer_Address = GetProcAddressSinple(EngineDll, "?AreDataAuthenticatedToPlayMultiplayer@IGame@@QEBA_NXZ");
-	ILevelReplAddVerifyData_Address = GetProcAddressSinple(EngineDll, "?ReplAddVerifyData@ILevel@@QEAAXPEBDI_N@Z");
-	IGameReplAddVerifyData_Address = GetProcAddressSinple(EngineDll, "?ReplAddVerifyData@IGame@@QEAAXPEBDI_N@Z");
+	Calc_File_Crc_Address = GetProcAddressSimple(FilesystemDll, "?calc_file_crc@fs@@YA_NAEAUCrcCalcArgs@1@@Z");
+	AreDataAuthenticatedToPlayMultiplayer_Address = GetProcAddressSimple(EngineDll, "?AreDataAuthenticatedToPlayMultiplayer@IGame@@QEBA_NXZ");
+	ILevelReplAddVerifyData_Address = GetProcAddressSimple(EngineDll, "?ReplAddVerifyData@ILevel@@QEAAXPEBDI_N@Z");
+	IGameReplAddVerifyData_Address = GetProcAddressSimple(EngineDll, "?ReplAddVerifyData@IGame@@QEAAXPEBDI_N@Z");
 
 	HookFunction(Calc_File_Crc_Address, &Calc_File_Crc, reinterpret_cast<void**>(&Calc_File_Crc_Real));
 	HookFunction(AreDataAuthenticatedToPlayMultiplayer_Address, &AreDataAuthenticatedToPlayMultiplayer, reinterpret_cast<void**>(&AreDataAuthenticatedToPlayMultiplayer_Real));
