@@ -4,7 +4,8 @@ std::vector<ModInfo> ModInfoList;
 char path_c[MAX_PATH];
 
 fs::path SetupDir(std::string subfolder) {
-	GetModuleFileNameA(NULL, path_c, MAX_PATH);
+	(void)GetModuleFileNameA(NULL, path_c, MAX_PATH);
+
 	std::string path = std::string(path_c);
 	fs::path RootDL = path.substr(0, path.find_last_of("/\\"));
 
