@@ -10,7 +10,7 @@
 #ifdef _DEBUG
 #  define dbgprintf(...) fprintf(stderr, __VA_ARGS__)
 #else
-#  define debug_print(msg) (void)0
+#  define dbgprintf(...) (void)0
 #  define _DEBUG 0
 #endif
 
@@ -18,6 +18,4 @@ namespace fs = std::filesystem;
 
 #include "MinHook/MinHook.h"
 
-std::string str_tolower(std::string s);
-
-int MsgBoxExit(UINT nType, LPCSTR lpCaption, LPCSTR sz, ...);
+void MsgBoxExit(UINT nType, LPCSTR lpCaption, LPCSTR sz, ...);

@@ -110,16 +110,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		DisableThreadLibraryCalls(hModule);
-		if (_DEBUG) {
-			AllocConsole();
+		(void)DisableThreadLibraryCalls(hModule);
 
-			FILE* pCout;
-			freopen_s(&pCout, "conout$", "w", stdout);
-			freopen_s(&pCout, "conout$", "w", stderr);
-			if (pCout)
-#pragma warning(suppress : 6387) //vs funk
-				fclose(pCout);
+		if (_DEBUG) {
+			(void)AllocConsole();
+
+			(void)freopen("CONOUT$", "w", stderr);
+			(void)freopen("CONOUT$", "w", stdout);
 		}
 
 		MH_STATUS status = MH_Initialize();
@@ -139,22 +136,23 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 		setup_dsound();
 
-		HANDLE h = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CreateHooks, hModule, 0, 0);
-		if (h != 0)
+		HANDLE handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CreateHooks, hModule, 0, 0);
+		if (handle != 0)
 		{
-			SetThreadPriority(h, 2);
-			CloseHandle(h);
+			(void)SetThreadPriority(handle, 2);
+			(void)CloseHandle(handle);
 		}
 
 		break;
 	}
 	case DLL_PROCESS_DETACH:
 	{
-		FreeLibrary(dsound_dll);
-		MH_Uninitialize();
-#ifdef _DEBUG
-		FreeConsole();
-#endif
+		(void)FreeLibrary(dsound_dll);
+		(void)MH_Uninitialize();
+
+		if (_DEBUG) {
+			(void)FreeConsole();
+		}
 	}
 	break;
 	}
