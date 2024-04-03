@@ -3,7 +3,6 @@
 #include <iostream>
 #include <windows.h>
 #include <windows.h>
-#include <dsound.h>
 #include <algorithm>
 #include <filesystem>
 #include "MinHook/MinHook.h"

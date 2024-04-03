@@ -10,6 +10,7 @@
     <ClCompile Include="MinHook\hook.c" />
     <ClCompile Include="MinHook\trampoline.c" />
     <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
@@ -20,7 +21,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dsound.def" />
+    <None Include="winmm.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hooks.h" />
@@ -35,5 +36,6 @@
     <ClInclude Include="MinHook\trampoline.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Loader.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
 </Project>
