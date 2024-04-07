@@ -20,10 +20,191 @@ LRESULT WINAPI CloseDriver(HDRVR hDriver, LPARAM lParam1, LPARAM lParam2) {
 	return (CloseDriver_Real)(hDriver, lParam1, lParam2);
 }
 
+typedef LRESULT(WINAPI* defdriverproc)(DWORD_PTR dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2);
+defdriverproc DefDriverProc_Real;
+LRESULT WINAPI DefDriverProc(DWORD_PTR dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2) {
+	return (DefDriverProc_Real)(dwDriverIdentifier, hdrvr, uMsg, lParam1, lParam2);
+}
+
+
+typedef LRESULT(WINAPI* drivercallback)(DWORD_PTR dwCallback, DWORD dwFlags, HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
+drivercallback DriverCallback_Real;
+BOOL APIENTRY DriverCallback(DWORD_PTR dwCallback, DWORD dwFlags, HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+{
+	return (DriverCallback_Real)(dwCallback, dwFlags, hDevice, dwMsg, dwUser, dwParam1, dwParam2);
+}
+
+typedef HMODULE(WINAPI* drvgetmodulehandle)(HDRVR hDriver);
+drvgetmodulehandle DrvGetModuleHandle_Real;
+HMODULE WINAPI DrvGetModuleHandle(HDRVR hDriver)
+{
+	return (DrvGetModuleHandle_Real)(hDriver);
+}
+
+typedef HMODULE(WINAPI* getdrivermodulehandle)(HDRVR hDriver);
+getdrivermodulehandle GetDriverModuleHandle_Real;
+HMODULE WINAPI GetDriverModuleHandle(HDRVR hDriver)
+{
+	return (GetDriverModuleHandle_Real)(hDriver);
+}
+
+typedef HDRVR(WINAPI* opendriver)(LPCWSTR szDriverName, LPCWSTR szSectionName, LPARAM lParam2);
+opendriver OpenDriver_Real;
+HDRVR WINAPI OpenDriver(LPCWSTR szDriverName, LPCWSTR szSectionName, LPARAM lParam2)
+{
+	return (OpenDriver_Real)(szDriverName, szSectionName, lParam2);
+}
+
+typedef BOOL(WINAPI* playsound)(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound);
+playsound PlaySound_Real;
+BOOL WINAPI PlaySound(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound)
+{
+	return (PlaySound_Real)(pszSound, hmod, fdwSound);
+}
+
+typedef BOOL(WINAPI* playsounda)(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound);
+playsounda PlaySoundA_Real;
+BOOL WINAPI PlaySoundA(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound)
+{
+	return (PlaySoundA_Real)(pszSound, hmod, fdwSound);
+}
+
+typedef BOOL(WINAPI* playsoundw)(LPCWSTR pszSound, HMODULE hmod, DWORD fdwSound);
+playsoundw PlaySoundW_Real;
+BOOL WINAPI PlaySoundW(LPCWSTR pszSound, HMODULE hmod, DWORD fdwSound)
+{
+	return (PlaySoundW_Real)(pszSound, hmod, fdwSound);
+}
+
+typedef LRESULT(WINAPI* senddrivermessage)(HDRVR hDriver, UINT message, LPARAM lParam1, LPARAM lParam2);
+senddrivermessage SendDriverMessage_Real;
+LRESULT WINAPI SendDriverMessage(HDRVR hDriver, UINT message, LPARAM lParam1, LPARAM lParam2)
+{
+	return (SendDriverMessage_Real)(hDriver, message, lParam1, lParam2);
+}
+
+typedef void(WINAPI* wowappexit)();
+wowappexit WOWAppExit_Real;
+void WINAPI WOWAppExit()
+{
+	return (WOWAppExit_Real)();
+}
+
+typedef MMRESULT(WINAPI* auxgetdevcapsa)(UINT_PTR uDeviceID, LPAUXCAPSA pac, UINT cbac);
+auxgetdevcapsa auxGetDevCapsA_Real;
+MMRESULT WINAPI auxGetDevCapsA(UINT_PTR uDeviceID, LPAUXCAPSA pac, UINT cbac)
+{
+	return (auxGetDevCapsA_Real)(uDeviceID, pac, cbac);
+}
+
+typedef MMRESULT(WINAPI* auxgetdevcapsw)(UINT_PTR uDeviceID, LPAUXCAPSW pac, UINT cbac);
+auxgetdevcapsw auxGetDevCapsW_Real;
+MMRESULT WINAPI auxGetDevCapsW(UINT_PTR uDeviceID, LPAUXCAPSW pac, UINT cbac)
+{
+	return (auxGetDevCapsW_Real)(uDeviceID, pac, cbac);
+}
+
+typedef UINT(WINAPI* auxgetnumdevs)();
+auxgetnumdevs auxGetNumDevs_Real;
+UINT WINAPI auxGetNumDevs()
+{
+	return (auxGetNumDevs_Real)();
+}
+
+typedef MMRESULT(WINAPI* auxgetvolume)(UINT uDeviceID, LPDWORD pdwVolume);
+auxgetvolume auxGetVolume_Real;
+MMRESULT WINAPI auxGetVolume(UINT uDeviceID, LPDWORD pdwVolume)
+{
+	return (auxGetVolume_Real)(uDeviceID, pdwVolume);
+}
+
+typedef MMRESULT(WINAPI* auxoutmessage)(UINT uDeviceID, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2);
+auxoutmessage auxOutMessage_Real;
+MMRESULT WINAPI auxOutMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
+{
+	return (auxOutMessage_Real)(uDeviceID, uMsg, dw1, dw2);
+}
+
+typedef MMRESULT(WINAPI* auxsetvolume)(UINT uDeviceID, DWORD dwVolume);
+auxsetvolume auxSetVolume_Real;
+MMRESULT WINAPI auxSetVolume(UINT uDeviceID, DWORD dwVolume)
+{
+	return (auxSetVolume_Real)(uDeviceID, dwVolume);
+}
+
+typedef MMRESULT(WINAPI* joyconfigchanged)(DWORD dwFlags);
+joyconfigchanged joyConfigChanged_Real;
+MMRESULT WINAPI joyConfigChanged(DWORD dwFlags)
+{
+	return (joyConfigChanged_Real)(dwFlags);
+}
+
+typedef MMRESULT(WINAPI* joygetdevcapsa)(UINT_PTR uJoyID, LPJOYCAPSA pjc, UINT cbjc);
+joygetdevcapsa joyGetDevCapsA_Real;
+MMRESULT WINAPI joyGetDevCapsA(UINT_PTR uJoyID, LPJOYCAPSA pjc, UINT cbjc)
+{
+	return (joyGetDevCapsA_Real)(uJoyID, pjc, cbjc);
+}
+
+typedef MMRESULT(WINAPI* joygetdevcapsw)(UINT_PTR uJoyID, LPJOYCAPSW pjc, UINT cbjc);
+joygetdevcapsw joyGetDevCapsW_Real;
+MMRESULT WINAPI joyGetDevCapsW(UINT_PTR uJoyID, LPJOYCAPSW pjc, UINT cbjc)
+{
+	return (joyGetDevCapsW_Real)(uJoyID, pjc, cbjc);
+}
+
+typedef UINT(WINAPI* joygetnumdevs)();
+joygetnumdevs joyGetNumDevs_Real;
+UINT WINAPI joyGetNumDevs(void)
+{
+	return (joyGetNumDevs_Real)();
+}
+
+typedef MMRESULT(WINAPI* joygetpos)(UINT uJoyID, LPJOYINFO pji);
+joygetpos joyGetPos_Real;
+MMRESULT WINAPI joyGetPos(UINT uJoyID, LPJOYINFO pji)
+{
+	return (joyGetPos_Real)(uJoyID, pji);
+}
+
+typedef MMRESULT(WINAPI* joygetposex)(UINT uJoyID, LPJOYINFOEX pji);
+joygetposex joyGetPosEx_Real;
+MMRESULT WINAPI joyGetPosEx(UINT uJoyID, LPJOYINFOEX pji)
+{
+	return (joyGetPosEx_Real)(uJoyID, pji);
+}
+
+typedef MMRESULT(WINAPI* joygetthreshold)(UINT uJoyID, LPUINT puThreshold);
+joygetthreshold joyGetThreshold_Real;
+MMRESULT WINAPI joyGetThreshold(UINT uJoyID, LPUINT puThreshold)
+{
+	return (joyGetThreshold_Real)(uJoyID, puThreshold);
+}
+
+typedef MMRESULT(WINAPI* joyreleasecapture)(UINT uJoyID);
+joyreleasecapture joyReleaseCapture_Real;
+MMRESULT WINAPI joyReleaseCapture(UINT uJoyID)
+{
+	return (joyReleaseCapture_Real)(uJoyID);
+}
+
+typedef MMRESULT(WINAPI* joysetcapture)(HWND hwnd, UINT uJoyID, UINT uPeriod, BOOL fChanged);
+joysetcapture joySetCapture_Real;
+MMRESULT WINAPI joySetCapture(HWND hwnd, UINT uJoyID, UINT uPeriod, BOOL fChanged)
+{
+	return (joySetCapture_Real)(hwnd, uJoyID, uPeriod, fChanged);
+}
+
+typedef MMRESULT(WINAPI* joysetthreshold)(UINT uJoyID, UINT uThreshold);
+joysetthreshold joySetThreshold_Real;
+MMRESULT WINAPI joySetThreshold(UINT uJoyID, UINT uThreshold)
+{
+	return (joySetThreshold_Real)(uJoyID, uThreshold);
+}
+
 void setup_winmm() {
 	mciExecute_Real = (mciexecute)GetProcAddress(winmm_dll, "mciExecute");
 	CloseDriver_Real = (closedriver)GetProcAddress(winmm_dll, "CloseDriver");
-	/*
 	DefDriverProc_Real = (defdriverproc)GetProcAddress(winmm_dll, "DefDriverProc");
 	DriverCallback_Real = (drivercallback)GetProcAddress(winmm_dll, "DriverCallback");
 	DrvGetModuleHandle_Real = (drvgetmodulehandle)GetProcAddress(winmm_dll, "DrvGetModuleHandle");
@@ -38,31 +219,33 @@ void setup_winmm() {
 	auxGetDevCapsW_Real = (auxgetdevcapsw)GetProcAddress(winmm_dll, "auxGetDevCapsW");
 	auxGetNumDevs_Real = (auxgetnumdevs)GetProcAddress(winmm_dll, "auxGetNumDevs");
 	auxGetVolume_Real = (auxgetvolume)GetProcAddress(winmm_dll, "auxGetVolume");
-	auxOutMessage_Real = (auxOutMessage)GetProcAddress(winmm_dll, "auxOutMessage");
-	auxSetVolume_Real = (auxSetVolume)GetProcAddress(winmm_dll, "auxSetVolume");
-	joyConfigChanged_Real = (joyConfigChanged)GetProcAddress(winmm_dll, "joyConfigChanged");
-	joyGetDevCapsA_Real = (joyGetDevCapsA)GetProcAddress(winmm_dll, "joyGetDevCapsA");
-	joyGetDevCapsW_Real = (joyGetDevCapsW)GetProcAddress(winmm_dll, "joyGetDevCapsW");
-	joyGetNumDevs_Real = (joyGetNumDevs)GetProcAddress(winmm_dll, "joyGetNumDevs");
-	joyGetPos_Real = (joyGetPos)GetProcAddress(winmm_dll, "joyGetPos");
-	joyGetPosEx_Real = (joyGetPosEx)GetProcAddress(winmm_dll, "joyGetPosEx");
-	joyGetThreshold_Real = (joyGetThreshold)GetProcAddress(winmm_dll, "joyGetThreshold");
-	joyReleaseCapture_Real = (joyReleaseCapture)GetProcAddress(winmm_dll, "joyReleaseCapture");
-	joySetCapture_Real = (joySetCapture)GetProcAddress(winmm_dll, "joySetCapture");
-	joySetThreshold_Real = (joySetThreshold)GetProcAddress(winmm_dll, "joySetThreshold");
+	auxOutMessage_Real = (auxoutmessage)GetProcAddress(winmm_dll, "auxOutMessage");
+	auxSetVolume_Real = (auxsetvolume)GetProcAddress(winmm_dll, "auxSetVolume");
+	joyConfigChanged_Real = (joyconfigchanged)GetProcAddress(winmm_dll, "joyConfigChanged");
+	joyGetDevCapsA_Real = (joygetdevcapsa)GetProcAddress(winmm_dll, "joyGetDevCapsA");
+	joyGetDevCapsW_Real = (joygetdevcapsw)GetProcAddress(winmm_dll, "joyGetDevCapsW");
+	joyGetNumDevs_Real = (joygetnumdevs)GetProcAddress(winmm_dll, "joyGetNumDevs");
+	joyGetPos_Real = (joygetpos)GetProcAddress(winmm_dll, "joyGetPos");
+	joyGetPosEx_Real = (joygetposex)GetProcAddress(winmm_dll, "joyGetPosEx");
+	joyGetThreshold_Real = (joygetthreshold)GetProcAddress(winmm_dll, "joyGetThreshold");
+	joyReleaseCapture_Real = (joyreleasecapture)GetProcAddress(winmm_dll, "joyReleaseCapture");
+	joySetCapture_Real = (joysetcapture)GetProcAddress(winmm_dll, "joySetCapture");
+	joySetThreshold_Real = (joysetthreshold)GetProcAddress(winmm_dll, "joySetThreshold");
+	/*
+
 	mciDriverNotify_Real = (mciDriverNotify)GetProcAddress(winmm_dll, "mciDriverNotify");
 	mciDriverYield_Real = (")GetProcAddress(winmm_dll, "mciDriverYield");
-		mciFreeCommandResource_Real = (mciFreeCommandResourc)GetProcAddress(winmm_dll, "mciFreeCommandResource");
+	mciFreeCommandResource_Real = (mciFreeCommandResourc)GetProcAddress(winmm_dll, "mciFreeCommandResource");
 	mciGetCreatorTask_Real = (mciGetCreatorTask)GetProcAddress(winmm_dll, "mciGetCreatorTask");
 	mciGetDeviceIDA_Real = (mciGetDeviceIDA)GetProcAddress(winmm_dll, "mciGetDeviceIDA");
 	mciGetDeviceIDFromElementID"A_Real = (mciGetDeviceIDFromElementIDA)GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDA");
-		mciGetDeviceIDFromElementIDmm_dll, W_Real = (mciGetDeviceIDFromElementIDW)GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDW");
+	mciGetDeviceIDFromElementIDmm_dll, W_Real = (mciGetDeviceIDFromElementIDW)GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDW");
 	mciGetDeviceIDW_Real = ("mciGetDeviceIDW)GetProcAddress(winmm_dll, "mciGetDeviceIDW");
-		mciGetDriverData_Real = (mciGetDriverData)GetProcAddress(winmm_dll, "mciGetDriverData");
+	mciGetDriverData_Real = (mciGetDriverData)GetProcAddress(winmm_dll, "mciGetDriverData");
 	mciGetErrorStringA_Real = (mciGetErrorStringA)GetProcAddress(winmm_dll, "mciGetErrorStringA");
 	mciGetErrorStringW_Real = (mciGetErrorStringW)GetProcAddress(winmm_dll, "mciGetErrorStringW");
 	mciGetYieldProc_Real = (")GetProcAddress(winmm_dll, "mciGetYieldProc");
-		mciLoadCommandResource_Real = (mciLoadCommandResource)GetProcAddress(winmm_dll, "mciLoadCommandResource");
+	mciLoadCommandResource_Real = (mciLoadCommandResource)GetProcAddress(winmm_dll, "mciLoadCommandResource");
 	mciSendCommandA_Real = (mciSendCommandA)GetProcAddress(winmm_dll, "mciSendCommandA");
 	mciSendCommandW_Real = (mciSendCommandW)GetProcAddress(winmm_dll, "mciSendCommandW");
 	mciSendStringA_Real = (mciSendStringA)GetProcAddress(winmm_dll, "mciSendStringA");
@@ -86,7 +269,7 @@ void setup_winmm() {
 	midiInStart_Real = (midiInStart)GetProcAddress(winmm_dll, "midiInStart");
 	midiInStop_Real = (midiInSto)GetProcAddress(winmm_dll, "midiInStop");
 	midiInUnprepareHeader_Real "= ()GetProcAddress(winmm_dll, "midiInUnprepareHeader");
-		midiOutCacheDrumPatches_Real, l = (midiOutCacheDrumPatches)GetProcAddress(winmm_dll, "midiOutCacheDrumPatches");
+	midiOutCacheDrumPatches_Real, l = (midiOutCacheDrumPatches)GetProcAddress(winmm_dll, "midiOutCacheDrumPatches");
 	midiOutCachePatches_Real = (midiOutCachePatches)GetProcAddress(winmm_dll, "midiOutCachePatches");
 	midiOutClose_Real = (midiOutClose)GetProcAddress(winmm_dll, "midiOutClose");
 	midiOutGetDevCapsA_Real = (midiOutGetDevCapsA)GetProcAddress(winmm_dll, "midiOutGetDevCapsA");
