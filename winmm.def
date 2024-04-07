@@ -8,7 +8,7 @@ DriverCallback
 DrvGetModuleHandle
 GetDriverModuleHandle
 OpenDriver
-PlaySound
+PlaySound = _PlaySound
 PlaySoundA
 PlaySoundW
 SendDriverMessage

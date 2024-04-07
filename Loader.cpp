@@ -20,8 +20,8 @@ fs::path SetupDir(std::string subfolder) {
 	{
 		if (GetTickCount64() - now > 500)
 		{
-			fs::create_directory(modsPath);
-			fs::create_directory(subPath);
+			(void)fs::create_directory(modsPath);
+			(void)fs::create_directory(subPath);
 
 			now = GetTickCount64();
 		}

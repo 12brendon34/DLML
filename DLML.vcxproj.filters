@@ -11,6 +11,8 @@
     <ClCompile Include="MinHook\trampoline.c" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="FileName.cpp" />
+    <ClCompile Include="proxy\winmm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
@@ -37,5 +39,6 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="proxy\winmm.h" />
   </ItemGroup>
 </Project>
