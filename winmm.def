@@ -1,183 +1,183 @@
 LIBRARY "winmm"
 EXPORTS
 
-mciExecute
-CloseDriver
-DefDriverProc
-DriverCallback
-DrvGetModuleHandle
-GetDriverModuleHandle
-OpenDriver
-PlaySound = _PlaySound
-PlaySoundA
-PlaySoundW
-SendDriverMessage
-WOWAppExit
-auxGetDevCapsA
-auxGetDevCapsW
-auxGetNumDevs
-auxGetVolume
-auxOutMessage
-auxSetVolume
-joyConfigChanged
-joyGetDevCapsA
-joyGetDevCapsW
-joyGetNumDevs
-joyGetPos
-joyGetPosEx
-joyGetThreshold
-joyReleaseCapture
-joySetCapture
-joySetThreshold
-mciDriverNotify
-mciDriverYield
-mciFreeCommandResource
-mciGetCreatorTask
-mciGetDeviceIDA
-mciGetDeviceIDFromElementIDA
-mciGetDeviceIDFromElementIDW
-mciGetDeviceIDW
-mciGetDriverData
-mciGetErrorStringA
-mciGetErrorStringW
-mciGetYieldProc
-mciLoadCommandResource
-mciSendCommandA
-mciSendCommandW
-mciSendStringA
-mciSendStringW
-mciSetDriverData
-mciSetYieldProc
-midiConnect
-midiDisconnect
-midiInAddBuffer
-midiInClose
-midiInGetDevCapsA
-midiInGetDevCapsW
-midiInGetErrorTextA
-midiInGetErrorTextW
-midiInGetID
-midiInGetNumDevs
-midiInMessage
-midiInOpen
-midiInPrepareHeader
-midiInReset
-midiInStart
-midiInStop
-midiInUnprepareHeader
-midiOutCacheDrumPatches
-midiOutCachePatches
-midiOutClose
-midiOutGetDevCapsA
-midiOutGetDevCapsW
-midiOutGetErrorTextA
-midiOutGetErrorTextW
-midiOutGetID
-midiOutGetNumDevs
-midiOutGetVolume
-midiOutLongMsg
-midiOutMessage
-midiOutOpen
-midiOutPrepareHeader
-midiOutReset
-midiOutSetVolume
-midiOutShortMsg
-midiOutUnprepareHeader
-midiStreamClose
-midiStreamOpen
-midiStreamOut
-midiStreamPause
-midiStreamPosition
-midiStreamProperty
-midiStreamRestart
-midiStreamStop
-mixerClose
-mixerGetControlDetailsA
-mixerGetControlDetailsW
-mixerGetDevCapsA
-mixerGetDevCapsW
-mixerGetID
-mixerGetLineControlsA
-mixerGetLineControlsW
-mixerGetLineInfoA
-mixerGetLineInfoW
-mixerGetNumDevs
-mixerMessage
-mixerOpen
-mixerSetControlDetails
-mmDrvInstall
-mmGetCurrentTask
-mmTaskBlock
-mmTaskCreate
-mmTaskSignal
-mmTaskYield
-mmioAdvance
-mmioAscend
-mmioClose
-mmioCreateChunk
-mmioDescend
-mmioFlush
-mmioGetInfo
-mmioInstallIOProcA
-mmioInstallIOProcW
-mmioOpenA
-mmioOpenW
-mmioRead
-mmioRenameA
-mmioRenameW
-mmioSeek
-mmioSendMessage
-mmioSetBuffer
-mmioSetInfo
-mmioStringToFOURCCA
-mmioStringToFOURCCW
-mmioWrite
-mmsystemGetVersion
-sndPlaySoundA
-sndPlaySoundW
-timeBeginPeriod
-timeEndPeriod
-timeGetDevCaps
-timeGetSystemTime
-timeGetTime
-timeKillEvent
-timeSetEvent
-waveInAddBuffer
-waveInClose
-waveInGetDevCapsA
-waveInGetDevCapsW
-waveInGetErrorTextA
-waveInGetErrorTextW
-waveInGetID
-waveInGetNumDevs
-waveInGetPosition
-waveInMessage
-waveInOpen
-waveInPrepareHeader
-waveInReset
-waveInStart
-waveInStop
-waveInUnprepareHeader
-waveOutBreakLoop
-waveOutClose
-waveOutGetDevCapsA
-waveOutGetDevCapsW
-waveOutGetErrorTextA
-waveOutGetErrorTextW
-waveOutGetID
-waveOutGetNumDevs
-waveOutGetPitch
-waveOutGetPlaybackRate
-waveOutGetPosition
-waveOutGetVolume
-waveOutMessage
-waveOutOpen
-waveOutPause
-waveOutPrepareHeader
-waveOutReset
-waveOutRestart
-waveOutSetPitch
-waveOutSetPlaybackRate
-waveOutSetVolume
-waveOutUnprepareHeader
-waveOutWrite
+mciExecute = hkmciExecute
+CloseDriver = hkCloseDriver
+DefDriverProc = hkDefDriverProc
+DriverCallback = hkDriverCallback
+DrvGetModuleHandle = hkDrvGetModuleHandle
+GetDriverModuleHandle = hkGetDriverModuleHandle
+OpenDriver = hkOpenDriver
+PlaySound = hkPlaySound
+PlaySoundA = hkPlaySoundA
+PlaySoundW = hkPlaySoundW
+SendDriverMessage = hkSendDriverMessage
+WOWAppExit = hkWOWAppExit
+auxGetDevCapsA = hkauxGetDevCapsA
+auxGetDevCapsW = hkauxGetDevCapsW
+auxGetNumDevs = hkauxGetNumDevs
+auxGetVolume = hkauxGetVolume
+auxOutMessage = hkauxOutMessage
+auxSetVolume = hkauxSetVolume
+joyConfigChanged = hkjoyConfigChanged
+joyGetDevCapsA = hkjoyGetDevCapsA
+joyGetDevCapsW = hkjoyGetDevCapsW
+joyGetNumDevs = hkjoyGetNumDevs
+joyGetPos = hkjoyGetPos
+joyGetPosEx = hkjoyGetPosEx
+joyGetThreshold = hkjoyGetThreshold
+joyReleaseCapture = hkjoyReleaseCapture
+joySetCapture = hkjoySetCapture
+joySetThreshold = hkjoySetThreshold
+mciDriverNotify = hkmciDriverNotify
+mciDriverYield = hkmciDriverYield
+mciFreeCommandResource = hkmciFreeCommandResource
+mciGetCreatorTask = hkmciGetCreatorTask
+mciGetDeviceIDA = hkmciGetDeviceIDA
+mciGetDeviceIDFromElementIDA = hkmciGetDeviceIDFromElementIDA
+mciGetDeviceIDFromElementIDW = hkmciGetDeviceIDFromElementIDW
+mciGetDeviceIDW = hkmciGetDeviceIDW
+mciGetDriverData = hkmciGetDriverData
+mciGetErrorStringA = hkmciGetErrorStringA
+mciGetErrorStringW = hkmciGetErrorStringW
+mciGetYieldProc = hkmciGetYieldProc
+mciLoadCommandResource = hkmciLoadCommandResource
+mciSendCommandA = hkmciSendCommandA
+mciSendCommandW = hkmciSendCommandW
+mciSendStringA = hkmciSendStringA
+mciSendStringW = hkmciSendStringW
+mciSetDriverData = hkmciSetDriverData
+mciSetYieldProc = hkmciSetYieldProc
+midiConnect = hkmidiConnect
+midiDisconnect = hkmidiDisconnect
+midiInAddBuffer = hkmidiInAddBuffer
+midiInClose = hkmidiInClose
+midiInGetDevCapsA = hkmidiInGetDevCapsA
+midiInGetDevCapsW = hkmidiInGetDevCapsW
+midiInGetErrorTextA = hkmidiInGetErrorTextA
+midiInGetErrorTextW = hkmidiInGetErrorTextW
+midiInGetID = hkmidiInGetID
+midiInGetNumDevs = hkmidiInGetNumDevs
+midiInMessage = hkmidiInMessage
+midiInOpen = hkmidiInOpen
+midiInPrepareHeader = hkmidiInPrepareHeader
+midiInReset = hkmidiInReset
+midiInStart = hkmidiInStart
+midiInStop = hkmidiInStop
+midiInUnprepareHeader = hkmidiInUnprepareHeader
+midiOutCacheDrumPatches = hkmidiOutCacheDrumPatches
+midiOutCachePatches = hkmidiOutCachePatches
+midiOutClose = hkmidiOutClose
+midiOutGetDevCapsA = hkmidiOutGetDevCapsA
+midiOutGetDevCapsW = hkmidiOutGetDevCapsW
+midiOutGetErrorTextA = hkmidiOutGetErrorTextA
+midiOutGetErrorTextW = hkmidiOutGetErrorTextW
+midiOutGetID = hkmidiOutGetID
+midiOutGetNumDevs = hkmidiOutGetNumDevs
+midiOutGetVolume = hkmidiOutGetVolume
+midiOutLongMsg = hkmidiOutLongMsg
+midiOutMessage = hkmidiOutMessage
+midiOutOpen = hkmidiOutOpen
+midiOutPrepareHeader = hkmidiOutPrepareHeader
+midiOutReset = hkmidiOutReset
+midiOutSetVolume = hkmidiOutSetVolume
+midiOutShortMsg = hkmidiOutShortMsg
+midiOutUnprepareHeader = hkmidiOutUnprepareHeader
+midiStreamClose = hkmidiStreamClose
+midiStreamOpen = hkmidiStreamOpen
+midiStreamOut = hkmidiStreamOut
+midiStreamPause = hkmidiStreamPause
+midiStreamPosition = hkmidiStreamPosition
+midiStreamProperty = hkmidiStreamProperty
+midiStreamRestart = hkmidiStreamRestart
+midiStreamStop = hkmidiStreamStop
+mixerClose = hkmixerClose
+mixerGetControlDetailsA = hkmixerGetControlDetailsA
+mixerGetControlDetailsW = hkmixerGetControlDetailsW
+mixerGetDevCapsA = hkmixerGetDevCapsA
+mixerGetDevCapsW = hkmixerGetDevCapsW
+mixerGetID = hkmixerGetID
+mixerGetLineControlsA = hkmixerGetLineControlsA
+mixerGetLineControlsW = hkmixerGetLineControlsW
+mixerGetLineInfoA = hkmixerGetLineInfoA
+mixerGetLineInfoW = hkmixerGetLineInfoW
+mixerGetNumDevs = hkmixerGetNumDevs
+mixerMessage = hkmixerMessage
+mixerOpen = hkmixerOpen
+mixerSetControlDetails = hkmixerSetControlDetails
+mmDrvInstall = hkmmDrvInstall
+mmGetCurrentTask = hkmmGetCurrentTask
+mmTaskBlock = hkmmTaskBlock
+mmTaskCreate = hkmmTaskCreate
+mmTaskSignal = hkmmTaskSignal
+mmTaskYield = hkmmTaskYield
+mmioAdvance = hkmmioAdvance
+mmioAscend = hkmmioAscend
+mmioClose = hkmmioClose
+mmioCreateChunk = hkmmioCreateChunk
+mmioDescend = hkmmioDescend
+mmioFlush = hkmmioFlush
+mmioGetInfo = hkmmioGetInfo
+mmioInstallIOProcA = hkmmioInstallIOProcA
+mmioInstallIOProcW = hkmmioInstallIOProcW
+mmioOpenA = hkmmioOpenA
+mmioOpenW = hkmmioOpenW
+mmioRead = hkmmioRead
+mmioRenameA = hkmmioRenameA
+mmioRenameW = hkmmioRenameW
+mmioSeek = hkmmioSeek
+mmioSendMessage = hkmmioSendMessage
+mmioSetBuffer = hkmmioSetBuffer
+mmioSetInfo = hkmmioSetInfo
+mmioStringToFOURCCA = hkmmioStringToFOURCCA
+mmioStringToFOURCCW = hkmmioStringToFOURCCW
+mmioWrite = hkmmioWrite
+mmsystemGetVersion = hkmmsystemGetVersion
+sndPlaySoundA = hksndPlaySoundA
+sndPlaySoundW = hksndPlaySoundW
+timeBeginPeriod = hktimeBeginPeriod
+timeEndPeriod = hktimeEndPeriod
+timeGetDevCaps = hktimeGetDevCaps
+timeGetSystemTime = hktimeGetSystemTime
+timeGetTime = hktimeGetTime
+timeKillEvent = hktimeKillEvent
+timeSetEvent = hktimeSetEvent
+waveInAddBuffer = hkwaveInAddBuffer
+waveInClose = hkwaveInClose
+waveInGetDevCapsA = hkwaveInGetDevCapsA
+waveInGetDevCapsW = hkwaveInGetDevCapsW
+waveInGetErrorTextA = hkwaveInGetErrorTextA
+waveInGetErrorTextW = hkwaveInGetErrorTextW
+waveInGetID = hkwaveInGetID
+waveInGetNumDevs = hkwaveInGetNumDevs
+waveInGetPosition = hkwaveInGetPosition
+waveInMessage = hkwaveInMessage
+waveInOpen = hkwaveInOpen
+waveInPrepareHeader = hkwaveInPrepareHeader
+waveInReset = hkwaveInReset
+waveInStart = hkwaveInStart
+waveInStop = hkwaveInStop
+waveInUnprepareHeader = hkwaveInUnprepareHeader
+waveOutBreakLoop = hkwaveOutBreakLoop
+waveOutClose = hkwaveOutClose
+waveOutGetDevCapsA = hkwaveOutGetDevCapsA
+waveOutGetDevCapsW = hkwaveOutGetDevCapsW
+waveOutGetErrorTextA = hkwaveOutGetErrorTextA
+waveOutGetErrorTextW = hkwaveOutGetErrorTextW
+waveOutGetID = hkwaveOutGetID
+waveOutGetNumDevs = hkwaveOutGetNumDevs
+waveOutGetPitch = hkwaveOutGetPitch
+waveOutGetPlaybackRate = hkwaveOutGetPlaybackRate
+waveOutGetPosition = hkwaveOutGetPosition
+waveOutGetVolume = hkwaveOutGetVolume
+waveOutMessage = hkwaveOutMessage
+waveOutOpen = hkwaveOutOpen
+waveOutPause = hkwaveOutPause
+waveOutPrepareHeader = hkwaveOutPrepareHeader
+waveOutReset = hkwaveOutReset
+waveOutRestart = hkwaveOutRestart
+waveOutSetPitch = hkwaveOutSetPitch
+waveOutSetPlaybackRate = hkwaveOutSetPlaybackRate
+waveOutSetVolume = hkwaveOutSetVolume
+waveOutUnprepareHeader = hkwaveOutUnprepareHeader
+waveOutWrite = hkwaveOutWrite

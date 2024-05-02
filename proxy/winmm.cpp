@@ -3,330 +3,1275 @@
 
 HMODULE winmm_dll;
 
-typedef BOOL(WINAPI* mciexecute)(LPCSTR Param1);
-mciexecute mciExecute_Real;
-BOOL WINAPI mciExecute(LPCSTR Param1) {
+using t_mciExecute = decltype(&hkmciExecute);
+using t_CloseDriver = decltype(&hkCloseDriver);
+using t_DefDriverProc = decltype(&hkDefDriverProc);
+using t_DriverCallback = decltype(&hkDriverCallback);
+using t_DrvGetModuleHandle = decltype(&hkDrvGetModuleHandle);
+using t_GetDriverModuleHandle = decltype(&hkGetDriverModuleHandle);
+using t_OpenDriver = decltype(&hkOpenDriver);
+using t_PlaySound = decltype(&hkPlaySound);
+using t_PlaySoundA = decltype(&hkPlaySoundA);
+using t_PlaySoundW = decltype(&hkPlaySoundW);
+using t_SendDriverMessage = decltype(&hkSendDriverMessage);
+using t_WOWAppExit = decltype(&hkWOWAppExit);
+using t_auxGetDevCapsA = decltype(&hkauxGetDevCapsA);
+using t_auxGetDevCapsW = decltype(&hkauxGetDevCapsW);
+using t_auxGetNumDevs = decltype(&hkauxGetNumDevs);
+using t_auxGetVolume = decltype(&hkauxGetVolume);
+using t_auxOutMessage = decltype(&hkauxOutMessage);
+using t_auxSetVolume = decltype(&hkauxSetVolume);
+using t_joyConfigChanged = decltype(&hkjoyConfigChanged);
+using t_joyGetDevCapsA = decltype(&hkjoyGetDevCapsA);
+using t_joyGetDevCapsW = decltype(&hkjoyGetDevCapsW);
+using t_joyGetNumDevs = decltype(&hkjoyGetNumDevs);
+using t_joyGetPos = decltype(&hkjoyGetPos);
+using t_joyGetPosEx = decltype(&hkjoyGetPosEx);
+using t_joyGetThreshold = decltype(&hkjoyGetThreshold);
+using t_joyReleaseCapture = decltype(&hkjoyReleaseCapture);
+using t_joySetCapture = decltype(&hkjoySetCapture);
+using t_joySetThreshold = decltype(&hkjoySetThreshold);
+using t_mciDriverNotify = decltype(&hkmciDriverNotify);
+using t_mciDriverYield = decltype(&hkmciDriverYield);
+using t_mciFreeCommandResource = decltype(&hkmciFreeCommandResource);
+using t_mciGetCreatorTask = decltype(&hkmciGetCreatorTask);
+using t_mciGetDeviceIDA = decltype(&hkmciGetDeviceIDA);
+using t_mciGetDeviceIDFromElementIDA = decltype(&hkmciGetDeviceIDFromElementIDA);
+using t_mciGetDeviceIDFromElementIDW = decltype(&hkmciGetDeviceIDFromElementIDW);
+using t_mciGetDeviceIDW = decltype(&hkmciGetDeviceIDW);
+using t_mciGetDriverData = decltype(&hkmciGetDriverData);
+using t_mciGetErrorStringA = decltype(&hkmciGetErrorStringA);
+using t_mciGetErrorStringW = decltype(&hkmciGetErrorStringW);
+using t_mciGetYieldProc = decltype(&hkmciGetYieldProc);
+using t_mciLoadCommandResource = decltype(&hkmciLoadCommandResource);
+using t_mciSendCommandA = decltype(&hkmciSendCommandA);
+using t_mciSendCommandW = decltype(&hkmciSendCommandW);
+using t_mciSendStringA = decltype(&hkmciSendStringA);
+using t_mciSendStringW = decltype(&hkmciSendStringW);
+using t_mciSetDriverData = decltype(&hkmciSetDriverData);
+using t_mciSetYieldProc = decltype(&hkmciSetYieldProc);
+using t_midiConnect = decltype(&hkmidiConnect);
+using t_midiDisconnect = decltype(&hkmidiDisconnect);
+using t_midiInAddBuffer = decltype(&hkmidiInAddBuffer);
+using t_midiInClose = decltype(&hkmidiInClose);
+using t_midiInGetDevCapsA = decltype(&hkmidiInGetDevCapsA);
+using t_midiInGetDevCapsW = decltype(&hkmidiInGetDevCapsW);
+using t_midiInGetErrorTextA = decltype(&hkmidiInGetErrorTextA);
+using t_midiInGetErrorTextW = decltype(&hkmidiInGetErrorTextW);
+using t_midiInGetID = decltype(&hkmidiInGetID);
+using t_midiInGetNumDevs = decltype(&hkmidiInGetNumDevs);
+using t_midiInMessage = decltype(&hkmidiInMessage);
+using t_midiInOpen = decltype(&hkmidiInOpen);
+using t_midiInPrepareHeader = decltype(&hkmidiInPrepareHeader);
+using t_midiInReset = decltype(&hkmidiInReset);
+using t_midiInStart = decltype(&hkmidiInStart);
+using t_midiInStop = decltype(&hkmidiInStop);
+using t_midiInUnprepareHeader = decltype(&hkmidiInUnprepareHeader);
+using t_midiOutCacheDrumPatches = decltype(&hkmidiOutCacheDrumPatches);
+using t_midiOutCachePatches = decltype(&hkmidiOutCachePatches);
+using t_midiOutClose = decltype(&hkmidiOutClose);
+using t_midiOutGetDevCapsA = decltype(&hkmidiOutGetDevCapsA);
+using t_midiOutGetDevCapsW = decltype(&hkmidiOutGetDevCapsW);
+using t_midiOutGetErrorTextA = decltype(&hkmidiOutGetErrorTextA);
+using t_midiOutGetErrorTextW = decltype(&hkmidiOutGetErrorTextW);
+using t_midiOutGetID = decltype(&hkmidiOutGetID);
+using t_midiOutGetNumDevs = decltype(&hkmidiOutGetNumDevs);
+using t_midiOutGetVolume = decltype(&hkmidiOutGetVolume);
+using t_midiOutLongMsg = decltype(&hkmidiOutLongMsg);
+using t_midiOutMessage = decltype(&hkmidiOutMessage);
+using t_midiOutOpen = decltype(&hkmidiOutOpen);
+using t_midiOutPrepareHeader = decltype(&hkmidiOutPrepareHeader);
+using t_midiOutReset = decltype(&hkmidiOutReset);
+using t_midiOutSetVolume = decltype(&hkmidiOutSetVolume);
+using t_midiOutShortMsg = decltype(&hkmidiOutShortMsg);
+using t_midiOutUnprepareHeader = decltype(&hkmidiOutUnprepareHeader);
+using t_midiStreamClose = decltype(&hkmidiStreamClose);
+using t_midiStreamOpen = decltype(&hkmidiStreamOpen);
+using t_midiStreamOut = decltype(&hkmidiStreamOut);
+using t_midiStreamPause = decltype(&hkmidiStreamPause);
+using t_midiStreamPosition = decltype(&hkmidiStreamPosition);
+using t_midiStreamProperty = decltype(&hkmidiStreamProperty);
+using t_midiStreamRestart = decltype(&hkmidiStreamRestart);
+using t_midiStreamStop = decltype(&hkmidiStreamStop);
+using t_mixerClose = decltype(&hkmixerClose);
+using t_mixerGetControlDetailsA = decltype(&hkmixerGetControlDetailsA);
+using t_mixerGetControlDetailsW = decltype(&hkmixerGetControlDetailsW);
+using t_mixerGetDevCapsA = decltype(&hkmixerGetDevCapsA);
+using t_mixerGetDevCapsW = decltype(&hkmixerGetDevCapsW);
+using t_mixerGetID = decltype(&hkmixerGetID);
+using t_mixerGetLineControlsA = decltype(&hkmixerGetLineControlsA);
+using t_mixerGetLineControlsW = decltype(&hkmixerGetLineControlsW);
+using t_mixerGetLineInfoA = decltype(&hkmixerGetLineInfoA);
+using t_mixerGetLineInfoW = decltype(&hkmixerGetLineInfoW);
+using t_mixerGetNumDevs = decltype(&hkmixerGetNumDevs);
+using t_mixerMessage = decltype(&hkmixerMessage);
+using t_mixerOpen = decltype(&hkmixerOpen);
+using t_mixerSetControlDetails = decltype(&hkmixerSetControlDetails);
+using t_mmDrvInstall = decltype(&hkmmDrvInstall);
+using t_mmGetCurrentTask = decltype(&hkmmGetCurrentTask);
+using t_mmTaskBlock = decltype(&hkmmTaskBlock);
+using t_mmTaskCreate = decltype(&hkmmTaskCreate);
+using t_mmTaskSignal = decltype(&hkmmTaskSignal);
+using t_mmTaskYield = decltype(&hkmmTaskYield);
+using t_mmioAdvance = decltype(&hkmmioAdvance);
+using t_mmioAscend = decltype(&hkmmioAscend);
+using t_mmioClose = decltype(&hkmmioClose);
+using t_mmioCreateChunk = decltype(&hkmmioCreateChunk);
+using t_mmioDescend = decltype(&hkmmioDescend);
+using t_mmioFlush = decltype(&hkmmioFlush);
+using t_mmioGetInfo = decltype(&hkmmioGetInfo);
+using t_mmioInstallIOProcA = decltype(&hkmmioInstallIOProcA);
+using t_mmioInstallIOProcW = decltype(&hkmmioInstallIOProcW);
+using t_mmioOpenA = decltype(&hkmmioOpenA);
+using t_mmioOpenW = decltype(&hkmmioOpenW);
+using t_mmioRead = decltype(&hkmmioRead);
+using t_mmioRenameA = decltype(&hkmmioRenameA);
+using t_mmioRenameW = decltype(&hkmmioRenameW);
+using t_mmioSeek = decltype(&hkmmioSeek);
+using t_mmioSendMessage = decltype(&hkmmioSendMessage);
+using t_mmioSetBuffer = decltype(&hkmmioSetBuffer);
+using t_mmioSetInfo = decltype(&hkmmioSetInfo);
+using t_mmioStringToFOURCCA = decltype(&hkmmioStringToFOURCCA);
+using t_mmioStringToFOURCCW = decltype(&hkmmioStringToFOURCCW);
+using t_mmioWrite = decltype(&hkmmioWrite);
+using t_mmsystemGetVersion = decltype(&hkmmsystemGetVersion);
+using t_sndPlaySoundA = decltype(&hksndPlaySoundA);
+using t_sndPlaySoundW = decltype(&hksndPlaySoundW);
+using t_timeBeginPeriod = decltype(&hktimeBeginPeriod);
+using t_timeEndPeriod = decltype(&hktimeEndPeriod);
+using t_timeGetDevCaps = decltype(&hktimeGetDevCaps);
+using t_timeGetSystemTime = decltype(&hktimeGetSystemTime);
+using t_timeGetTime = decltype(&hktimeGetTime);
+using t_timeKillEvent = decltype(&hktimeKillEvent);
+using t_timeSetEvent = decltype(&hktimeSetEvent);
+using t_waveInAddBuffer = decltype(&hkwaveInAddBuffer);
+using t_waveInClose = decltype(&hkwaveInClose);
+using t_waveInGetDevCapsA = decltype(&hkwaveInGetDevCapsA);
+using t_waveInGetDevCapsW = decltype(&hkwaveInGetDevCapsW);
+using t_waveInGetErrorTextA = decltype(&hkwaveInGetErrorTextA);
+using t_waveInGetErrorTextW = decltype(&hkwaveInGetErrorTextW);
+using t_waveInGetID = decltype(&hkwaveInGetID);
+using t_waveInGetNumDevs = decltype(&hkwaveInGetNumDevs);
+using t_waveInGetPosition = decltype(&hkwaveInGetPosition);
+using t_waveInMessage = decltype(&hkwaveInMessage);
+using t_waveInOpen = decltype(&hkwaveInOpen);
+using t_waveInPrepareHeader = decltype(&hkwaveInPrepareHeader);
+using t_waveInReset = decltype(&hkwaveInReset);
+using t_waveInStart = decltype(&hkwaveInStart);
+using t_waveInStop = decltype(&hkwaveInStop);
+using t_waveInUnprepareHeader = decltype(&hkwaveInUnprepareHeader);
+using t_waveOutBreakLoop = decltype(&hkwaveOutBreakLoop);
+using t_waveOutClose = decltype(&hkwaveOutClose);
+using t_waveOutGetDevCapsA = decltype(&hkwaveOutGetDevCapsA);
+using t_waveOutGetDevCapsW = decltype(&hkwaveOutGetDevCapsW);
+using t_waveOutGetErrorTextA = decltype(&hkwaveOutGetErrorTextA);
+using t_waveOutGetErrorTextW = decltype(&hkwaveOutGetErrorTextW);
+using t_waveOutGetID = decltype(&hkwaveOutGetID);
+using t_waveOutGetNumDevs = decltype(&hkwaveOutGetNumDevs);
+using t_waveOutGetPitch = decltype(&hkwaveOutGetPitch);
+using t_waveOutGetPlaybackRate = decltype(&hkwaveOutGetPlaybackRate);
+using t_waveOutGetPosition = decltype(&hkwaveOutGetPosition);
+using t_waveOutGetVolume = decltype(&hkwaveOutGetVolume);
+using t_waveOutMessage = decltype(&hkwaveOutMessage);
+using t_waveOutOpen = decltype(&hkwaveOutOpen);
+using t_waveOutPause = decltype(&hkwaveOutPause);
+using t_waveOutPrepareHeader = decltype(&hkwaveOutPrepareHeader);
+using t_waveOutReset = decltype(&hkwaveOutReset);
+using t_waveOutRestart = decltype(&hkwaveOutRestart);
+using t_waveOutSetPitch = decltype(&hkwaveOutSetPitch);
+using t_waveOutSetPlaybackRate = decltype(&hkwaveOutSetPlaybackRate);
+using t_waveOutSetVolume = decltype(&hkwaveOutSetVolume);
+using t_waveOutUnprepareHeader = decltype(&hkwaveOutUnprepareHeader);
+using t_waveOutWrite = decltype(&hkwaveOutWrite);
 
-	return (mciExecute_Real)(Param1);
-}
+t_mciExecute o_mciExecute;
+t_CloseDriver o_CloseDriver;
+t_DefDriverProc o_DefDriverProc;
+t_DriverCallback o_DriverCallback;
+t_DrvGetModuleHandle o_DrvGetModuleHandle;
+t_GetDriverModuleHandle o_GetDriverModuleHandle;
+t_OpenDriver o_OpenDriver;
+t_PlaySound o_PlaySound;
+t_PlaySoundA o_PlaySoundA;
+t_PlaySoundW o_PlaySoundW;
+t_SendDriverMessage o_SendDriverMessage;
+t_WOWAppExit o_WOWAppExit;
+t_auxGetDevCapsA o_auxGetDevCapsA;
+t_auxGetDevCapsW o_auxGetDevCapsW;
+t_auxGetNumDevs o_auxGetNumDevs;
+t_auxGetVolume o_auxGetVolume;
+t_auxOutMessage o_auxOutMessage;
+t_auxSetVolume o_auxSetVolume;
+t_joyConfigChanged o_joyConfigChanged;
+t_joyGetDevCapsA o_joyGetDevCapsA;
+t_joyGetDevCapsW o_joyGetDevCapsW;
+t_joyGetNumDevs o_joyGetNumDevs;
+t_joyGetPos o_joyGetPos;
+t_joyGetPosEx o_joyGetPosEx;
+t_joyGetThreshold o_joyGetThreshold;
+t_joyReleaseCapture o_joyReleaseCapture;
+t_joySetCapture o_joySetCapture;
+t_joySetThreshold o_joySetThreshold;
+t_mciDriverNotify o_mciDriverNotify;
+t_mciDriverYield o_mciDriverYield;
+t_mciFreeCommandResource o_mciFreeCommandResource;
+t_mciGetCreatorTask o_mciGetCreatorTask;
+t_mciGetDeviceIDA o_mciGetDeviceIDA;
+t_mciGetDeviceIDFromElementIDA o_mciGetDeviceIDFromElementIDA;
+t_mciGetDeviceIDFromElementIDW o_mciGetDeviceIDFromElementIDW;
+t_mciGetDeviceIDW o_mciGetDeviceIDW;
+t_mciGetDriverData o_mciGetDriverData;
+t_mciGetErrorStringA o_mciGetErrorStringA;
+t_mciGetErrorStringW o_mciGetErrorStringW;
+t_mciGetYieldProc o_mciGetYieldProc;
+t_mciLoadCommandResource o_mciLoadCommandResource;
+t_mciSendCommandA o_mciSendCommandA;
+t_mciSendCommandW o_mciSendCommandW;
+t_mciSendStringA o_mciSendStringA;
+t_mciSendStringW o_mciSendStringW;
+t_mciSetDriverData o_mciSetDriverData;
+t_mciSetYieldProc o_mciSetYieldProc;
+t_midiConnect o_midiConnect;
+t_midiDisconnect o_midiDisconnect;
+t_midiInAddBuffer o_midiInAddBuffer;
+t_midiInClose o_midiInClose;
+t_midiInGetDevCapsA o_midiInGetDevCapsA;
+t_midiInGetDevCapsW o_midiInGetDevCapsW;
+t_midiInGetErrorTextA o_midiInGetErrorTextA;
+t_midiInGetErrorTextW o_midiInGetErrorTextW;
+t_midiInGetID o_midiInGetID;
+t_midiInGetNumDevs o_midiInGetNumDevs;
+t_midiInMessage o_midiInMessage;
+t_midiInOpen o_midiInOpen;
+t_midiInPrepareHeader o_midiInPrepareHeader;
+t_midiInReset o_midiInReset;
+t_midiInStart o_midiInStart;
+t_midiInStop o_midiInStop;
+t_midiInUnprepareHeader o_midiInUnprepareHeader;
+t_midiOutCacheDrumPatches o_midiOutCacheDrumPatches;
+t_midiOutCachePatches o_midiOutCachePatches;
+t_midiOutClose o_midiOutClose;
+t_midiOutGetDevCapsA o_midiOutGetDevCapsA;
+t_midiOutGetDevCapsW o_midiOutGetDevCapsW;
+t_midiOutGetErrorTextA o_midiOutGetErrorTextA;
+t_midiOutGetErrorTextW o_midiOutGetErrorTextW;
+t_midiOutGetID o_midiOutGetID;
+t_midiOutGetNumDevs o_midiOutGetNumDevs;
+t_midiOutGetVolume o_midiOutGetVolume;
+t_midiOutLongMsg o_midiOutLongMsg;
+t_midiOutMessage o_midiOutMessage;
+t_midiOutOpen o_midiOutOpen;
+t_midiOutPrepareHeader o_midiOutPrepareHeader;
+t_midiOutReset o_midiOutReset;
+t_midiOutSetVolume o_midiOutSetVolume;
+t_midiOutShortMsg o_midiOutShortMsg;
+t_midiOutUnprepareHeader o_midiOutUnprepareHeader;
+t_midiStreamClose o_midiStreamClose;
+t_midiStreamOpen o_midiStreamOpen;
+t_midiStreamOut o_midiStreamOut;
+t_midiStreamPause o_midiStreamPause;
+t_midiStreamPosition o_midiStreamPosition;
+t_midiStreamProperty o_midiStreamProperty;
+t_midiStreamRestart o_midiStreamRestart;
+t_midiStreamStop o_midiStreamStop;
+t_mixerClose o_mixerClose;
+t_mixerGetControlDetailsA o_mixerGetControlDetailsA;
+t_mixerGetControlDetailsW o_mixerGetControlDetailsW;
+t_mixerGetDevCapsA o_mixerGetDevCapsA;
+t_mixerGetDevCapsW o_mixerGetDevCapsW;
+t_mixerGetID o_mixerGetID;
+t_mixerGetLineControlsA o_mixerGetLineControlsA;
+t_mixerGetLineControlsW o_mixerGetLineControlsW;
+t_mixerGetLineInfoA o_mixerGetLineInfoA;
+t_mixerGetLineInfoW o_mixerGetLineInfoW;
+t_mixerGetNumDevs o_mixerGetNumDevs;
+t_mixerMessage o_mixerMessage;
+t_mixerOpen o_mixerOpen;
+t_mixerSetControlDetails o_mixerSetControlDetails;
+t_mmDrvInstall o_mmDrvInstall;
+t_mmGetCurrentTask o_mmGetCurrentTask;
+t_mmTaskBlock o_mmTaskBlock;
+t_mmTaskCreate o_mmTaskCreate;
+t_mmTaskSignal o_mmTaskSignal;
+t_mmTaskYield o_mmTaskYield;
+t_mmioAdvance o_mmioAdvance;
+t_mmioAscend o_mmioAscend;
+t_mmioClose o_mmioClose;
+t_mmioCreateChunk o_mmioCreateChunk;
+t_mmioDescend o_mmioDescend;
+t_mmioFlush o_mmioFlush;
+t_mmioGetInfo o_mmioGetInfo;
+t_mmioInstallIOProcA o_mmioInstallIOProcA;
+t_mmioInstallIOProcW o_mmioInstallIOProcW;
+t_mmioOpenA o_mmioOpenA;
+t_mmioOpenW o_mmioOpenW;
+t_mmioRead o_mmioRead;
+t_mmioRenameA o_mmioRenameA;
+t_mmioRenameW o_mmioRenameW;
+t_mmioSeek o_mmioSeek;
+t_mmioSendMessage o_mmioSendMessage;
+t_mmioSetBuffer o_mmioSetBuffer;
+t_mmioSetInfo o_mmioSetInfo;
+t_mmioStringToFOURCCA o_mmioStringToFOURCCA;
+t_mmioStringToFOURCCW o_mmioStringToFOURCCW;
+t_mmioWrite o_mmioWrite;
+t_mmsystemGetVersion o_mmsystemGetVersion;
+t_sndPlaySoundA o_sndPlaySoundA;
+t_sndPlaySoundW o_sndPlaySoundW;
+t_timeBeginPeriod o_timeBeginPeriod;
+t_timeEndPeriod o_timeEndPeriod;
+t_timeGetDevCaps o_timeGetDevCaps;
+t_timeGetSystemTime o_timeGetSystemTime;
+t_timeGetTime o_timeGetTime;
+t_timeKillEvent o_timeKillEvent;
+t_timeSetEvent o_timeSetEvent;
+t_waveInAddBuffer o_waveInAddBuffer;
+t_waveInClose o_waveInClose;
+t_waveInGetDevCapsA o_waveInGetDevCapsA;
+t_waveInGetDevCapsW o_waveInGetDevCapsW;
+t_waveInGetErrorTextA o_waveInGetErrorTextA;
+t_waveInGetErrorTextW o_waveInGetErrorTextW;
+t_waveInGetID o_waveInGetID;
+t_waveInGetNumDevs o_waveInGetNumDevs;
+t_waveInGetPosition o_waveInGetPosition;
+t_waveInMessage o_waveInMessage;
+t_waveInOpen o_waveInOpen;
+t_waveInPrepareHeader o_waveInPrepareHeader;
+t_waveInReset o_waveInReset;
+t_waveInStart o_waveInStart;
+t_waveInStop o_waveInStop;
+t_waveInUnprepareHeader o_waveInUnprepareHeader;
+t_waveOutBreakLoop o_waveOutBreakLoop;
+t_waveOutClose o_waveOutClose;
+t_waveOutGetDevCapsA o_waveOutGetDevCapsA;
+t_waveOutGetDevCapsW o_waveOutGetDevCapsW;
+t_waveOutGetErrorTextA o_waveOutGetErrorTextA;
+t_waveOutGetErrorTextW o_waveOutGetErrorTextW;
+t_waveOutGetID o_waveOutGetID;
+t_waveOutGetNumDevs o_waveOutGetNumDevs;
+t_waveOutGetPitch o_waveOutGetPitch;
+t_waveOutGetPlaybackRate o_waveOutGetPlaybackRate;
+t_waveOutGetPosition o_waveOutGetPosition;
+t_waveOutGetVolume o_waveOutGetVolume;
+t_waveOutMessage o_waveOutMessage;
+t_waveOutOpen o_waveOutOpen;
+t_waveOutPause o_waveOutPause;
+t_waveOutPrepareHeader o_waveOutPrepareHeader;
+t_waveOutReset o_waveOutReset;
+t_waveOutRestart o_waveOutRestart;
+t_waveOutSetPitch o_waveOutSetPitch;
+t_waveOutSetPlaybackRate o_waveOutSetPlaybackRate;
+t_waveOutSetVolume o_waveOutSetVolume;
+t_waveOutUnprepareHeader o_waveOutUnprepareHeader;
+t_waveOutWrite o_waveOutWrite;
 
-typedef LRESULT(WINAPI* closedriver)(HDRVR hDriver, LPARAM lParam1, LPARAM lParam2);
-closedriver CloseDriver_Real;
-LRESULT WINAPI CloseDriver(HDRVR hDriver, LPARAM lParam1, LPARAM lParam2) {
-
-	return (CloseDriver_Real)(hDriver, lParam1, lParam2);
-}
-
-typedef LRESULT(WINAPI* defdriverproc)(DWORD_PTR dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2);
-defdriverproc DefDriverProc_Real;
-LRESULT WINAPI DefDriverProc(DWORD_PTR dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2) {
-	return (DefDriverProc_Real)(dwDriverIdentifier, hdrvr, uMsg, lParam1, lParam2);
-}
-
-
-typedef LRESULT(WINAPI* drivercallback)(DWORD_PTR dwCallback, DWORD dwFlags, HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
-drivercallback DriverCallback_Real;
-BOOL APIENTRY DriverCallback(DWORD_PTR dwCallback, DWORD dwFlags, HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+bool __stdcall hkmciExecute(LPCSTR pszCommand)
 {
-	return (DriverCallback_Real)(dwCallback, dwFlags, hDevice, dwMsg, dwUser, dwParam1, dwParam2);
+	o_mciExecute(pszCommand);
 }
 
-typedef HMODULE(WINAPI* drvgetmodulehandle)(HDRVR hDriver);
-drvgetmodulehandle DrvGetModuleHandle_Real;
-HMODULE WINAPI DrvGetModuleHandle(HDRVR hDriver)
+LRESULT WINAPI hkCloseDriver(HDRVR hDriver, LPARAM lParam1, LPARAM lParam2)
 {
-	return (DrvGetModuleHandle_Real)(hDriver);
+	o_CloseDriver(hDriver, lParam1, lParam2);
 }
 
-typedef HMODULE(WINAPI* getdrivermodulehandle)(HDRVR hDriver);
-getdrivermodulehandle GetDriverModuleHandle_Real;
-HMODULE WINAPI GetDriverModuleHandle(HDRVR hDriver)
+LRESULT WINAPI hkDefDriverProc(DWORD_PTR dwDriverIdentifier, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
 {
-	return (GetDriverModuleHandle_Real)(hDriver);
+	o_DefDriverProc(dwDriverIdentifier, hdrvr, uMsg, lParam1, lParam2);
 }
 
-typedef HDRVR(WINAPI* opendriver)(LPCWSTR szDriverName, LPCWSTR szSectionName, LPARAM lParam2);
-opendriver OpenDriver_Real;
-HDRVR WINAPI OpenDriver(LPCWSTR szDriverName, LPCWSTR szSectionName, LPARAM lParam2)
+bool APIENTRY hkDriverCallback(DWORD_PTR dwCallback, DWORD dwFlags, HDRVR hDevice, DWORD dwMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
-	return (OpenDriver_Real)(szDriverName, szSectionName, lParam2);
+	o_DriverCallback(dwCallback, dwFlags, hDevice, dwMsg, dwUser, dwParam1, dwParam2);
 }
 
-typedef BOOL(WINAPI* playsound)(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound);
-playsound PlaySound_Real;
-
-/*
-* I need to redo my naming, can't keep doing _Real and hoping the functions don't already have a body
-* maybe something like orig_Function and hkFunction
-* maybe _t for the typedef's, 
-*/
-BOOL WINAPI _PlaySound(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound)
+HMODULE WINAPI hkDrvGetModuleHandle(HDRVR hDriver)
 {
-	return (PlaySound_Real)(pszSound, hmod, fdwSound);
+	o_DrvGetModuleHandle(hDriver);
 }
 
-typedef BOOL(WINAPI* playsounda)(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound);
-playsounda PlaySoundA_Real;
-BOOL WINAPI PlaySoundA(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound)
+HMODULE WINAPI hkGetDriverModuleHandle(HDRVR hDriver)
 {
-	return (PlaySoundA_Real)(pszSound, hmod, fdwSound);
+	o_GetDriverModuleHandle(hDriver);
 }
 
-typedef BOOL(WINAPI* playsoundw)(LPCWSTR pszSound, HMODULE hmod, DWORD fdwSound);
-playsoundw PlaySoundW_Real;
-BOOL WINAPI PlaySoundW(LPCWSTR pszSound, HMODULE hmod, DWORD fdwSound)
+HDRVR WINAPI hkOpenDriver(LPCWSTR szDriverName, LPCWSTR szSectionName, LPARAM lParam2)
 {
-	return (PlaySoundW_Real)(pszSound, hmod, fdwSound);
+	o_OpenDriver(szDriverName, szSectionName, lParam2);
 }
 
-typedef LRESULT(WINAPI* senddrivermessage)(HDRVR hDriver, UINT message, LPARAM lParam1, LPARAM lParam2);
-senddrivermessage SendDriverMessage_Real;
-LRESULT WINAPI SendDriverMessage(HDRVR hDriver, UINT message, LPARAM lParam1, LPARAM lParam2)
+bool WINAPI hkPlaySound(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound)
 {
-	return (SendDriverMessage_Real)(hDriver, message, lParam1, lParam2);
+	o_PlaySound(pszSound, hmod, fdwSound);
 }
 
-typedef void(WINAPI* wowappexit)();
-wowappexit WOWAppExit_Real;
-void WINAPI WOWAppExit()
+bool WINAPI hkPlaySoundA(LPCSTR pszSound, HMODULE hmod, DWORD fdwSound)
 {
-	return (WOWAppExit_Real)();
+	o_PlaySoundA(pszSound, hmod, fdwSound);
 }
 
-typedef MMRESULT(WINAPI* auxgetdevcapsa)(UINT_PTR uDeviceID, LPAUXCAPSA pac, UINT cbac);
-auxgetdevcapsa auxGetDevCapsA_Real;
-MMRESULT WINAPI auxGetDevCapsA(UINT_PTR uDeviceID, LPAUXCAPSA pac, UINT cbac)
+bool WINAPI hkPlaySoundW(LPCWSTR pszSound, HMODULE hmod, DWORD fdwSound)
 {
-	return (auxGetDevCapsA_Real)(uDeviceID, pac, cbac);
+	o_PlaySoundW(pszSound, hmod, fdwSound);
 }
 
-typedef MMRESULT(WINAPI* auxgetdevcapsw)(UINT_PTR uDeviceID, LPAUXCAPSW pac, UINT cbac);
-auxgetdevcapsw auxGetDevCapsW_Real;
-MMRESULT WINAPI auxGetDevCapsW(UINT_PTR uDeviceID, LPAUXCAPSW pac, UINT cbac)
+LRESULT WINAPI hkSendDriverMessage(HDRVR hDriver, UINT message, LPARAM lParam1, LPARAM lParam2)
 {
-	return (auxGetDevCapsW_Real)(uDeviceID, pac, cbac);
+	o_SendDriverMessage(hDriver, message, lParam1, lParam2);
 }
 
-typedef UINT(WINAPI* auxgetnumdevs)();
-auxgetnumdevs auxGetNumDevs_Real;
-UINT WINAPI auxGetNumDevs()
+void WINAPI hkWOWAppExit()
 {
-	return (auxGetNumDevs_Real)();
+	o_WOWAppExit();
 }
 
-typedef MMRESULT(WINAPI* auxgetvolume)(UINT uDeviceID, LPDWORD pdwVolume);
-auxgetvolume auxGetVolume_Real;
-MMRESULT WINAPI auxGetVolume(UINT uDeviceID, LPDWORD pdwVolume)
+MMRESULT WINAPI hkauxGetDevCapsA(UINT_PTR uDeviceID, LPAUXCAPSA pac, UINT cbac)
 {
-	return (auxGetVolume_Real)(uDeviceID, pdwVolume);
+	o_auxGetDevCapsA(uDeviceID, pac, cbac);
 }
 
-typedef MMRESULT(WINAPI* auxoutmessage)(UINT uDeviceID, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2);
-auxoutmessage auxOutMessage_Real;
-MMRESULT WINAPI auxOutMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
+MMRESULT WINAPI hkauxGetDevCapsW(UINT_PTR uDeviceID, LPAUXCAPSW pac, UINT cbac)
 {
-	return (auxOutMessage_Real)(uDeviceID, uMsg, dw1, dw2);
+	o_auxGetDevCapsW(uDeviceID, pac, cbac);
 }
 
-typedef MMRESULT(WINAPI* auxsetvolume)(UINT uDeviceID, DWORD dwVolume);
-auxsetvolume auxSetVolume_Real;
-MMRESULT WINAPI auxSetVolume(UINT uDeviceID, DWORD dwVolume)
+UINT WINAPI hkauxGetNumDevs()
 {
-	return (auxSetVolume_Real)(uDeviceID, dwVolume);
+	o_auxGetNumDevs();
 }
 
-typedef MMRESULT(WINAPI* joyconfigchanged)(DWORD dwFlags);
-joyconfigchanged joyConfigChanged_Real;
-MMRESULT WINAPI joyConfigChanged(DWORD dwFlags)
+MMRESULT WINAPI hkauxGetVolume(UINT uDeviceID, LPDWORD pdwVolume)
 {
-	return (joyConfigChanged_Real)(dwFlags);
+	o_auxGetVolume(uDeviceID, pdwVolume);
 }
 
-typedef MMRESULT(WINAPI* joygetdevcapsa)(UINT_PTR uJoyID, LPJOYCAPSA pjc, UINT cbjc);
-joygetdevcapsa joyGetDevCapsA_Real;
-MMRESULT WINAPI joyGetDevCapsA(UINT_PTR uJoyID, LPJOYCAPSA pjc, UINT cbjc)
+MMRESULT WINAPI hkauxOutMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
 {
-	return (joyGetDevCapsA_Real)(uJoyID, pjc, cbjc);
+	o_auxOutMessage(uDeviceID, uMsg, dw1, dw2);
 }
 
-typedef MMRESULT(WINAPI* joygetdevcapsw)(UINT_PTR uJoyID, LPJOYCAPSW pjc, UINT cbjc);
-joygetdevcapsw joyGetDevCapsW_Real;
-MMRESULT WINAPI joyGetDevCapsW(UINT_PTR uJoyID, LPJOYCAPSW pjc, UINT cbjc)
+MMRESULT WINAPI hkauxSetVolume(UINT uDeviceID, DWORD dwVolume)
 {
-	return (joyGetDevCapsW_Real)(uJoyID, pjc, cbjc);
+	o_auxSetVolume(uDeviceID, dwVolume);
 }
 
-typedef UINT(WINAPI* joygetnumdevs)();
-joygetnumdevs joyGetNumDevs_Real;
-UINT WINAPI joyGetNumDevs(void)
+MMRESULT WINAPI hkjoyConfigChanged(DWORD dwFlags)
 {
-	return (joyGetNumDevs_Real)();
+	o_joyConfigChanged(dwFlags);
 }
 
-typedef MMRESULT(WINAPI* joygetpos)(UINT uJoyID, LPJOYINFO pji);
-joygetpos joyGetPos_Real;
-MMRESULT WINAPI joyGetPos(UINT uJoyID, LPJOYINFO pji)
+MMRESULT WINAPI hkjoyGetDevCapsA(UINT_PTR uJoyID, LPJOYCAPSA pjc, UINT cbjc)
 {
-	return (joyGetPos_Real)(uJoyID, pji);
+	o_joyGetDevCapsA(uJoyID, pjc, cbjc);
 }
 
-typedef MMRESULT(WINAPI* joygetposex)(UINT uJoyID, LPJOYINFOEX pji);
-joygetposex joyGetPosEx_Real;
-MMRESULT WINAPI joyGetPosEx(UINT uJoyID, LPJOYINFOEX pji)
+MMRESULT WINAPI hkjoyGetDevCapsW(UINT_PTR uJoyID, LPJOYCAPSW pjc, UINT cbjc)
 {
-	return (joyGetPosEx_Real)(uJoyID, pji);
+	o_joyGetDevCapsW(uJoyID, pjc, cbjc);
 }
 
-typedef MMRESULT(WINAPI* joygetthreshold)(UINT uJoyID, LPUINT puThreshold);
-joygetthreshold joyGetThreshold_Real;
-MMRESULT WINAPI joyGetThreshold(UINT uJoyID, LPUINT puThreshold)
+UINT WINAPI hkjoyGetNumDevs()
 {
-	return (joyGetThreshold_Real)(uJoyID, puThreshold);
+	o_joyGetNumDevs();
 }
 
-typedef MMRESULT(WINAPI* joyreleasecapture)(UINT uJoyID);
-joyreleasecapture joyReleaseCapture_Real;
-MMRESULT WINAPI joyReleaseCapture(UINT uJoyID)
+MMRESULT WINAPI hkjoyGetPos(UINT uJoyID, LPJOYINFO pji)
 {
-	return (joyReleaseCapture_Real)(uJoyID);
+	o_joyGetPos(uJoyID, pji);
 }
 
-typedef MMRESULT(WINAPI* joysetcapture)(HWND hwnd, UINT uJoyID, UINT uPeriod, BOOL fChanged);
-joysetcapture joySetCapture_Real;
-MMRESULT WINAPI joySetCapture(HWND hwnd, UINT uJoyID, UINT uPeriod, BOOL fChanged)
+MMRESULT WINAPI hkjoyGetPosEx(UINT uJoyID, LPJOYINFOEX pji)
 {
-	return (joySetCapture_Real)(hwnd, uJoyID, uPeriod, fChanged);
+	o_joyGetPosEx(uJoyID, pji);
 }
 
-typedef MMRESULT(WINAPI* joysetthreshold)(UINT uJoyID, UINT uThreshold);
-joysetthreshold joySetThreshold_Real;
-MMRESULT WINAPI joySetThreshold(UINT uJoyID, UINT uThreshold)
+MMRESULT WINAPI hkjoyGetThreshold(UINT uJoyID, LPUINT puThreshold)
 {
-	return (joySetThreshold_Real)(uJoyID, uThreshold);
+	o_joyGetThreshold(uJoyID, puThreshold);
 }
 
-typedef BOOL(WINAPI* mcidrivernotify)(HANDLE hwndCallback, MCIDEVICEID wDeviceID, UINT uStatus);
-mcidrivernotify mciDriverNotify_Real;
-BOOL APIENTRY mciDriverNotify(HANDLE hwndCallback, MCIDEVICEID wDeviceID, UINT uStatus)
+MMRESULT WINAPI hkjoyReleaseCapture(UINT uJoyID)
 {
-	return (mciDriverNotify_Real)(hwndCallback, wDeviceID, uStatus);
+	o_joyReleaseCapture(uJoyID);
 }
 
-typedef UINT(WINAPI* mcidriveryield)(MCIDEVICEID wDeviceID);
-mcidriveryield mciDriverYield_Real;
-UINT APIENTRY mciDriverYield(MCIDEVICEID wDeviceID)
+MMRESULT WINAPI hkjoySetCapture(HWND hwnd, UINT uJoyID, UINT uPeriod, bool fChanged)
 {
-	return (mciDriverYield_Real)(wDeviceID);
+	o_joySetCapture(hwnd, uJoyID, uPeriod, fChanged);
 }
 
-typedef BOOL(WINAPI* mcifreecommandresource)(UINT wTable);
-mcifreecommandresource mciFreeCommandResource_Real;
-BOOL APIENTRY mciFreeCommandResource(UINT wTable)
+MMRESULT WINAPI hkjoySetThreshold(UINT uJoyID, UINT uThreshold)
 {
-	return (mciFreeCommandResource_Real)(wTable);
+	o_joySetThreshold(uJoyID, uThreshold);
 }
 
-
-typedef HTASK(WINAPI* mcigetcreatortask)(MCIDEVICEID mciId);
-mcigetcreatortask mciGetCreatorTask_Real;
-HTASK WINAPI mciGetCreatorTask(MCIDEVICEID mciId)
+bool APIENTRY hkmciDriverNotify(HANDLE hwndCallback, MCIDEVICEID wDeviceID, UINT uStatus)
 {
-	return (mciGetCreatorTask_Real)(mciId);
+	o_mciDriverNotify(hwndCallback, wDeviceID, uStatus);
 }
 
-typedef MCIDEVICEID(WINAPI* mcigetdeviceida)(LPCSTR pszDevice);
-mcigetdeviceida mciGetDeviceIDA_Real;
-MCIDEVICEID WINAPI mciGetDeviceIDA(LPCSTR pszDevice)
+UINT APIENTRY hkmciDriverYield(MCIDEVICEID wDeviceID)
 {
-	return (mciGetDeviceIDA_Real)(pszDevice);
+	o_mciDriverYield(wDeviceID);
 }
 
-
-typedef MCIDEVICEID(WINAPI* mcigetdeviceidfromelementida)(DWORD dwElementID, LPCSTR lpstrType);
-mcigetdeviceidfromelementida mciGetDeviceIDFromElementIDA_Real;
-MCIDEVICEID WINAPI mciGetDeviceIDFromElementIDA(DWORD dwElementID, LPCSTR lpstrType)
+bool APIENTRY hkmciFreeCommandResource(UINT wTable)
 {
-	return (mciGetDeviceIDFromElementIDA_Real)(dwElementID, lpstrType);
+	o_mciFreeCommandResource(wTable);
 }
 
-typedef MCIDEVICEID(WINAPI* mcigetdeviceidfromelementidw)(DWORD dwElementID, LPCWSTR lpstrType);
-mcigetdeviceidfromelementidw mciGetDeviceIDFromElementIDW_Real;
-MCIDEVICEID WINAPI mciGetDeviceIDFromElementIDW(DWORD dwElementID, LPCWSTR lpstrType)
+HTASK WINAPI hkmciGetCreatorTask(MCIDEVICEID mciId)
 {
-	return (mciGetDeviceIDFromElementIDW_Real)(dwElementID, lpstrType);
+	o_mciGetCreatorTask(mciId);
 }
 
-typedef MCIDEVICEID(WINAPI* mcigetdeviceidw)(LPCWSTR pszDevice);
-mcigetdeviceidw mciGetDeviceIDW_Real;
-MCIDEVICEID WINAPI mciGetDeviceIDW(LPCWSTR pszDevice)
+MCIDEVICEID WINAPI hkmciGetDeviceIDA(LPCSTR pszDevice)
 {
-	return (mciGetDeviceIDW_Real)(pszDevice);
+	o_mciGetDeviceIDA(pszDevice);
 }
 
-typedef DWORD_PTR(WINAPI* mcigetdriverdata)(MCIDEVICEID wDeviceID);
-mcigetdriverdata mciGetDriverData_Real;
-DWORD_PTR APIENTRY mciGetDriverData(MCIDEVICEID wDeviceID)
+MCIDEVICEID WINAPI hkmciGetDeviceIDFromElementIDA(DWORD dwElementID, LPCSTR lpstrType)
 {
-	return (mciGetDriverData_Real)(wDeviceID);
+	o_mciGetDeviceIDFromElementIDA(dwElementID, lpstrType);
 }
 
-typedef BOOL(WINAPI* mcigeterrorstringa)(MCIERROR mcierr, LPSTR pszText, UINT cchText);
-mcigeterrorstringa mciGetErrorStringA_Real;
-BOOL WINAPI mciGetErrorStringA(MCIERROR mcierr, LPSTR pszText, UINT cchText)
+MCIDEVICEID WINAPI hkmciGetDeviceIDFromElementIDW(DWORD dwElementID, LPCWSTR lpstrType)
 {
-	return (mciGetErrorStringA_Real)(mcierr, pszText, cchText);
+	o_mciGetDeviceIDFromElementIDW(dwElementID, lpstrType);
 }
 
-typedef BOOL(WINAPI* mcigeterrorstringw)(MCIERROR mcierr, LPWSTR pszText, UINT cchText);
-mcigeterrorstringw mciGetErrorStringW_Real;
-BOOL WINAPI mciGetErrorStringW(MCIERROR mcierr, LPWSTR pszText, UINT cchText)
+MCIDEVICEID WINAPI hkmciGetDeviceIDW(LPCWSTR pszDevice)
 {
-	return (mciGetErrorStringW_Real)(mcierr, pszText, cchText);
+	o_mciGetDeviceIDW(pszDevice);
 }
 
-typedef YIELDPROC(WINAPI* mcigetyieldproc)(MCIDEVICEID mciId, LPDWORD pdwYieldData);
-mcigetyieldproc mciGetYieldProc_Real;
-YIELDPROC WINAPI mciGetYieldProc(MCIDEVICEID mciId, LPDWORD pdwYieldData)
+DWORD_PTR APIENTRY hkmciGetDriverData(MCIDEVICEID wDeviceID)
 {
-	return (mciGetYieldProc_Real)(mciId, pdwYieldData);
+	o_mciGetDriverData(wDeviceID);
 }
-
-typedef UINT(WINAPI* mciloadcommandresource)(HANDLE hInstance, LPCWSTR lpResName, UINT wType);
-mciloadcommandresource mciLoadCommandResource_Real;
-UINT APIENTRY mciLoadCommandResource(HANDLE hInstance, LPCWSTR lpResName, UINT wType)
+bool WINAPI hkmciGetErrorStringA(MCIERROR mcierr, LPSTR pszText, UINT cchText)
 {
-	return (mciLoadCommandResource_Real)(hInstance, lpResName, wType);
+	o_mciGetErrorStringA(mcierr, pszText, cchText);
 }
 
-typedef MCIERROR(WINAPI* mcisendcommanda)(MCIDEVICEID mciId, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
-mcisendcommanda mciSendCommandA_Real;
-MCIERROR WINAPI mciSendCommandA(MCIDEVICEID mciId, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+bool WINAPI hkmciGetErrorStringW(MCIERROR mcierr, LPWSTR pszText, UINT cchText)
 {
-	return (mciSendCommandA_Real)(mciId, uMsg, dwParam1, dwParam2);
+	o_mciGetErrorStringW(mcierr, pszText, cchText);
 }
 
-typedef MCIERROR(WINAPI* mcisendcommandw)(MCIDEVICEID mciId, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
-mcisendcommandw mciSendCommandW_Real;
-MCIERROR WINAPI mciSendCommandW(MCIDEVICEID mciId, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+YIELDPROC WINAPI hkmciGetYieldProc(MCIDEVICEID mciId, LPDWORD pdwYieldData)
 {
-	return (mciSendCommandW_Real)(mciId, uMsg, dwParam1, dwParam2);
+	o_mciGetYieldProc(mciId, pdwYieldData);
 }
 
-typedef MCIERROR(WINAPI* mcisendstringa)(LPCSTR lpstrCommand, LPSTR lpstrReturnString, UINT uReturnLength, HWND hwndCallback);
-mcisendstringa mciSendStringA_Real;
-MCIERROR WINAPI mciSendStringA(LPCSTR lpstrCommand, LPSTR lpstrReturnString, UINT uReturnLength, HWND hwndCallback)
+UINT APIENTRY hkmciLoadCommandResource(HANDLE hInstance, LPCWSTR lpResName, UINT wType)
 {
-	return (mciSendStringA_Real)(lpstrCommand, lpstrReturnString, uReturnLength, hwndCallback);
+	o_mciLoadCommandResource(hInstance, lpResName, wType);
 }
 
-typedef MCIERROR(WINAPI* mcisendstringw)(LPCWSTR lpstrCommand, LPWSTR lpstrReturnString, UINT uReturnLength, HWND hwndCallback);
-mcisendstringw mciSendStringW_Real;
-MCIERROR WINAPI mciSendStringW(LPCWSTR lpstrCommand, LPWSTR lpstrReturnString, UINT uReturnLength, HWND hwndCallback)
+MCIERROR WINAPI hkmciSendCommandA(MCIDEVICEID mciId, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
-	return (mciSendStringW_Real)(lpstrCommand, lpstrReturnString, uReturnLength, hwndCallback);
+	o_mciSendCommandA(mciId, uMsg, dwParam1, dwParam2);
 }
 
-void setup_winmm() {
+MCIERROR WINAPI hkmciSendCommandW(MCIDEVICEID mciId, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+{
+	o_mciSendCommandW(mciId, uMsg, dwParam1, dwParam2);
+}
+
+MCIERROR WINAPI hkmciSendStringA(LPCSTR lpstrCommand, LPSTR lpstrReturnString, UINT uReturnLength, HWND hwndCallback)
+{
+	o_mciSendStringA(lpstrCommand, lpstrReturnString, uReturnLength, hwndCallback);
+}
+
+MCIERROR WINAPI hkmciSendStringW(LPCWSTR lpstrCommand, LPWSTR lpstrReturnString, UINT uReturnLength, HWND hwndCallback)
+{
+	o_mciSendStringW(lpstrCommand, lpstrReturnString, uReturnLength, hwndCallback);
+}
+
+bool APIENTRY hkmciSetDriverData(MCIDEVICEID wDeviceID, DWORD_PTR dwData)
+{
+	o_mciSetDriverData(wDeviceID, dwData);
+}
+
+bool WINAPI hkmciSetYieldProc(MCIDEVICEID mciId, YIELDPROC fpYieldProc, DWORD dwYieldData)
+{
+	o_mciSetYieldProc(mciId, fpYieldProc, dwYieldData);
+}
+
+MMRESULT WINAPI hkmidiConnect(HMIDI hmi, HMIDIOUT hmo, LPVOID pReserved)
+{
+	o_midiConnect(hmi, hmo, pReserved);
+}
+
+MMRESULT WINAPI hkmidiDisconnect(HMIDI hmi, HMIDIOUT hmo, LPVOID pReserved)
+{
+	o_midiDisconnect(hmi, hmo, pReserved);
+}
+
+MMRESULT WINAPI hkmidiInAddBuffer(HMIDIIN hmi, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiInAddBuffer(hmi, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiInClose(HMIDIIN hmi)
+{
+	o_midiInClose(hmi);
+}
+
+MMRESULT WINAPI hkmidiInGetDevCapsA(UINT_PTR uDeviceID, LPMIDIINCAPSA pmic, UINT cbmic)
+{
+	o_midiInGetDevCapsA(uDeviceID, pmic, cbmic);
+}
+
+MMRESULT WINAPI hkmidiInGetDevCapsW(UINT_PTR uDeviceID, LPMIDIINCAPSW pmic, UINT cbmic)
+{
+	o_midiInGetDevCapsW(uDeviceID, pmic, cbmic);
+}
+
+MMRESULT WINAPI hkmidiInGetErrorTextA(MMRESULT mmrError, LPSTR pszText, UINT cchText)
+{
+	o_midiInGetErrorTextA(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkmidiInGetErrorTextW(MMRESULT mmrError, LPWSTR pszText, UINT cchText)
+{
+	o_midiInGetErrorTextW(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkmidiInGetID(HMIDIIN hmi, LPUINT puDeviceID)
+{
+	o_midiInGetID(hmi, puDeviceID);
+}
+
+UINT WINAPI hkmidiInGetNumDevs()
+{
+	o_midiInGetNumDevs();
+}
+
+MMRESULT WINAPI hkmidiInMessage(HMIDIIN hmi, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
+{
+	o_midiInMessage(hmi, uMsg, dw1, dw2);
+}
+
+MMRESULT WINAPI hkmidiInOpen(LPHMIDIIN phmi, UINT uDeviceID, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen)
+{
+	o_midiInOpen(phmi, uDeviceID, dwCallback, dwInstance, fdwOpen);
+}
+
+MMRESULT WINAPI hkmidiInPrepareHeader(HMIDIIN hmi, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiInPrepareHeader(hmi, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiInReset(HMIDIIN hmi)
+{
+	o_midiInReset(hmi);
+}
+
+MMRESULT WINAPI hkmidiInStart(HMIDIIN hmi)
+{
+	o_midiInStart(hmi);
+}
+
+MMRESULT WINAPI hkmidiInStop(HMIDIIN hmi)
+{
+	o_midiInStop(hmi);
+}
+
+MMRESULT WINAPI hkmidiInUnprepareHeader(HMIDIIN hmi, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiInUnprepareHeader(hmi, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiOutCacheDrumPatches(HMIDIOUT hmo, UINT uPatch, LPWORD pwkya, UINT fuCache)
+{
+	o_midiOutCacheDrumPatches(hmo, uPatch, pwkya, fuCache);
+}
+
+MMRESULT WINAPI hkmidiOutCachePatches(HMIDIOUT hmo, UINT uBank, LPWORD pwpa, UINT fuCache)
+{
+	o_midiOutCachePatches(hmo, uBank, pwpa, fuCache);
+}
+
+MMRESULT WINAPI hkmidiOutClose(HMIDIOUT hmo)
+{
+	o_midiOutClose(hmo);
+}
+
+MMRESULT WINAPI hkmidiOutGetDevCapsA(UINT_PTR uDeviceID, LPMIDIOUTCAPSA pmoc, UINT cbmoc)
+{
+	o_midiOutGetDevCapsA(uDeviceID, pmoc, cbmoc);
+}
+
+MMRESULT WINAPI hkmidiOutGetDevCapsW(UINT_PTR uDeviceID, LPMIDIOUTCAPSW pmoc, UINT cbmoc)
+{
+	o_midiOutGetDevCapsW(uDeviceID, pmoc, cbmoc);
+}
+
+MMRESULT WINAPI hkmidiOutGetErrorTextA(MMRESULT mmrError, LPSTR pszText, UINT cchText)
+{
+	o_midiOutGetErrorTextA(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkmidiOutGetErrorTextW(MMRESULT mmrError, LPWSTR pszText, UINT cchText)
+{
+	o_midiOutGetErrorTextW(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkmidiOutGetID(HMIDIOUT hmo, LPUINT puDeviceID)
+{
+	o_midiOutGetID(hmo, puDeviceID);
+}
+
+UINT WINAPI hkmidiOutGetNumDevs()
+{
+	o_midiOutGetNumDevs();
+}
+
+MMRESULT WINAPI hkmidiOutGetVolume(HMIDIOUT hmo, LPDWORD pdwVolume)
+{
+	o_midiOutGetVolume(hmo, pdwVolume);
+}
+
+MMRESULT WINAPI hkmidiOutLongMsg(HMIDIOUT hmo, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiOutLongMsg(hmo, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiOutMessage(HMIDIOUT hmo, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
+{
+	o_midiOutMessage(hmo, uMsg, dw1, dw2);
+}
+
+MMRESULT WINAPI hkmidiOutOpen(LPHMIDIOUT phmo, UINT uDeviceID, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen)
+{
+	o_midiOutOpen(phmo, uDeviceID, dwCallback, dwInstance, fdwOpen);
+}
+
+MMRESULT WINAPI hkmidiOutPrepareHeader(HMIDIOUT hmo, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiOutPrepareHeader(hmo, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiOutReset(HMIDIOUT hmo)
+{
+	o_midiOutReset(hmo);
+}
+
+MMRESULT WINAPI hkmidiOutSetVolume(HMIDIOUT hmo, DWORD dwVolume)
+{
+	o_midiOutSetVolume(hmo, dwVolume);
+}
+
+MMRESULT WINAPI hkmidiOutShortMsg(HMIDIOUT hmo, DWORD dwMsg)
+{
+	o_midiOutShortMsg(hmo, dwMsg);
+}
+
+MMRESULT WINAPI hkmidiOutUnprepareHeader(HMIDIOUT hmo, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiOutUnprepareHeader(hmo, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiStreamClose(HMIDISTRM hms)
+{
+	o_midiStreamClose(hms);
+}
+
+MMRESULT WINAPI hkmidiStreamOpen(LPHMIDISTRM phms, LPUINT puDeviceID, DWORD cMidi, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen)
+{
+	o_midiStreamOpen(phms, puDeviceID, cMidi, dwCallback, dwInstance, fdwOpen);
+}
+
+MMRESULT WINAPI hkmidiStreamOut(HMIDISTRM hms, LPMIDIHDR pmh, UINT cbmh)
+{
+	o_midiStreamOut(hms, pmh, cbmh);
+}
+
+MMRESULT WINAPI hkmidiStreamPause(HMIDISTRM hms)
+{
+	o_midiStreamPause(hms);
+}
+
+MMRESULT WINAPI hkmidiStreamPosition(HMIDISTRM hms, LPMMTIME lpmmt, UINT cbmmt)
+{
+	o_midiStreamPosition(hms, lpmmt, cbmmt);
+}
+
+MMRESULT WINAPI hkmidiStreamProperty(HMIDISTRM hms, LPBYTE lppropdata, DWORD dwProperty)
+{
+	o_midiStreamProperty(hms, lppropdata, dwProperty);
+}
+
+MMRESULT WINAPI hkmidiStreamRestart(HMIDISTRM hms)
+{
+	o_midiStreamRestart(hms);
+}
+
+MMRESULT WINAPI hkmidiStreamStop(HMIDISTRM hms)
+{
+	o_midiStreamStop(hms);
+}
+
+MMRESULT WINAPI hkmixerClose(HMIXER hmx)
+{
+	o_mixerClose(hmx);
+}
+
+MMRESULT WINAPI hkmixerGetControlDetailsA(HMIXEROBJ hmxobj, LPMIXERCONTROLDETAILS pmxcd, DWORD fdwDetails)
+{
+	o_mixerGetControlDetailsA(hmxobj, pmxcd, fdwDetails);
+}
+
+MMRESULT WINAPI hkmixerGetControlDetailsW(HMIXEROBJ hmxobj, LPMIXERCONTROLDETAILS pmxcd, DWORD fdwDetails)
+{
+	o_mixerGetControlDetailsW(hmxobj, pmxcd, fdwDetails);
+}
+
+MMRESULT WINAPI hkmixerGetDevCapsA(UINT_PTR uMxId, LPMIXERCAPSA pmxcaps, UINT cbmxcaps)
+{
+	o_mixerGetDevCapsA(uMxId, pmxcaps, cbmxcaps);
+}
+
+MMRESULT WINAPI hkmixerGetDevCapsW(UINT_PTR uMxId, LPMIXERCAPSW pmxcaps, UINT cbmxcaps)
+{
+	o_mixerGetDevCapsW(uMxId, pmxcaps, cbmxcaps);
+}
+
+MMRESULT WINAPI hkmixerGetID(HMIXEROBJ hmxobj, UINT FAR* puMxId, DWORD fdwId)
+{
+	o_mixerGetID(hmxobj, puMxId, fdwId);
+}
+
+MMRESULT WINAPI hkmixerGetLineControlsA(HMIXEROBJ hmxobj, LPMIXERLINECONTROLSA pmxlc, DWORD fdwControls)
+{
+	o_mixerGetLineControlsA(hmxobj, pmxlc, fdwControls);
+}
+
+MMRESULT WINAPI hkmixerGetLineControlsW(HMIXEROBJ hmxobj, LPMIXERLINECONTROLSW pmxlc, DWORD fdwControls)
+{
+	o_mixerGetLineControlsW(hmxobj, pmxlc, fdwControls);
+}
+
+MMRESULT WINAPI hkmixerGetLineInfoA(HMIXEROBJ hmxobj, LPMIXERLINEA pmxl, DWORD fdwInfo)
+{
+	o_mixerGetLineInfoA(hmxobj, pmxl, fdwInfo);
+}
+
+MMRESULT WINAPI hkmixerGetLineInfoW(HMIXEROBJ hmxobj, LPMIXERLINEW pmxl, DWORD fdwInfo)
+{
+	o_mixerGetLineInfoW(hmxobj, pmxl, fdwInfo);
+}
+
+UINT WINAPI hkmixerGetNumDevs()
+{
+	o_mixerGetNumDevs();
+}
+
+DWORD WINAPI hkmixerMessage(HMIXER hmx, UINT uMsg, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+{
+	o_mixerMessage(hmx, uMsg, dwParam1, dwParam2);
+}
+
+MMRESULT WINAPI hkmixerOpen(LPHMIXER phmx, UINT uMxId, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen)
+{
+	o_mixerOpen(phmx, uMxId, dwCallback, dwInstance, fdwOpen);
+}
+
+MMRESULT WINAPI hkmixerSetControlDetails(HMIXEROBJ hmxobj, LPMIXERCONTROLDETAILS pmxcd, DWORD fdwDetails)
+{
+	o_mixerSetControlDetails(hmxobj, pmxcd, fdwDetails);
+}
+
+UINT APIENTRY hkmmDrvInstall(HDRVR hDriver, LPCWSTR wszDrvEntry, DRIVERMSGPROC drvMessage, UINT wFlags)
+{
+	o_mmDrvInstall(hDriver, wszDrvEntry, drvMessage, wFlags);
+}
+
+DWORD APIENTRY hkmmGetCurrentTask()
+{
+	o_mmGetCurrentTask();
+}
+
+VOID APIENTRY hkmmTaskBlock(DWORD h)
+{
+	o_mmTaskBlock(h);
+}
+
+typedef VOID(TASKCALLBACK) (DWORD_PTR dwInst);
+typedef TASKCALLBACK* LPTASKCALLBACK;
+UINT APIENTRY hkmmTaskCreate(LPTASKCALLBACK lpfn, HANDLE FAR* lph, DWORD_PTR dwInst)
+{
+	o_mmTaskCreate(lpfn, lph, dwInst);
+}
+
+bool APIENTRY hkmmTaskSignal(DWORD h)
+{
+	o_mmTaskSignal(h);
+}
+
+VOID APIENTRY hkmmTaskYield()
+{
+	o_mmTaskYield();
+}
+
+MMRESULT WINAPI hkmmioAdvance(HMMIO hmmio, LPMMIOINFO pmmioinfo, UINT fuAdvance)
+{
+	o_mmioAdvance(hmmio, pmmioinfo, fuAdvance);
+}
+
+MMRESULT WINAPI hkmmioAscend(HMMIO hmmio, LPMMCKINFO pmmcki, UINT fuAscend)
+{
+	o_mmioAscend(hmmio, pmmcki, fuAscend);
+}
+
+MMRESULT WINAPI hkmmioClose(HMMIO hmmio, UINT fuClose)
+{
+	o_mmioClose(hmmio, fuClose);
+}
+
+MMRESULT WINAPI hkmmioCreateChunk(HMMIO hmmio, LPMMCKINFO pmmcki, UINT fuCreate)
+{
+	o_mmioCreateChunk(hmmio, pmmcki, fuCreate);
+}
+
+MMRESULT WINAPI hkmmioDescend(HMMIO hmmio, LPMMCKINFO pmmcki, const MMCKINFO FAR* pmmckiParent, UINT fuDescend)
+{
+	o_mmioDescend(hmmio, pmmcki, pmmckiParent, fuDescend);
+}
+
+MMRESULT WINAPI hkmmioFlush(HMMIO hmmio, UINT fuFlush)
+{
+	o_mmioFlush(hmmio, fuFlush);
+}
+
+MMRESULT WINAPI hkmmioGetInfo(HMMIO hmmio, LPMMIOINFO pmmioinfo, UINT fuInfo)
+{
+	o_mmioGetInfo(hmmio, pmmioinfo, fuInfo);
+}
+
+LPMMIOPROC WINAPI hkmmioInstallIOProcA(FOURCC fccIOProc, LPMMIOPROC pIOProc, DWORD dwFlags)
+{
+	o_mmioInstallIOProcA(fccIOProc, pIOProc, dwFlags);
+}
+
+LPMMIOPROC WINAPI hkmmioInstallIOProcW(FOURCC fccIOProc, LPMMIOPROC pIOProc, DWORD dwFlags)
+{
+	o_mmioInstallIOProcW(fccIOProc, pIOProc, dwFlags);
+}
+
+HMMIO WINAPI hkmmioOpenA(LPSTR pszFileName, LPMMIOINFO pmmioinfo, DWORD fdwOpen)
+{
+	o_mmioOpenA(pszFileName, pmmioinfo, fdwOpen);
+}
+
+HMMIO WINAPI hkmmioOpenW(LPWSTR pszFileName, LPMMIOINFO pmmioinfo, DWORD fdwOpen)
+{
+	o_mmioOpenW(pszFileName, pmmioinfo, fdwOpen);
+}
+
+LONG WINAPI hkmmioRead(HMMIO hmmio, HPSTR pch, LONG cch)
+{
+	o_mmioRead(hmmio, pch, cch);
+}
+
+MMRESULT WINAPI hkmmioRenameA(LPCSTR pszFileName, LPCSTR pszNewFileName, LPCMMIOINFO pmmioinfo, DWORD fdwRename)
+{
+	o_mmioRenameA(pszFileName, pszNewFileName, pmmioinfo, fdwRename);
+}
+
+MMRESULT WINAPI hkmmioRenameW(LPCWSTR pszFileName, LPCWSTR pszNewFileName, LPCMMIOINFO pmmioinfo, DWORD fdwRename)
+{
+	o_mmioRenameW(pszFileName, pszNewFileName, pmmioinfo, fdwRename);
+}
+
+LONG WINAPI hkmmioSeek(HMMIO hmmio, LONG lOffset, int iOrigin)
+{
+	o_mmioSeek(hmmio, lOffset, iOrigin);
+}
+
+LRESULT WINAPI hkmmioSendMessage(HMMIO hmmio, UINT uMsg, LPARAM lParam1, LPARAM lParam2)
+{
+	o_mmioSendMessage(hmmio, uMsg, lParam1, lParam2);
+}
+
+MMRESULT WINAPI hkmmioSetBuffer(HMMIO hmmio, LPSTR pchBuffer, LONG cchBuffer, UINT fuBuffer)
+{
+	o_mmioSetBuffer(hmmio, pchBuffer, cchBuffer, fuBuffer);
+}
+
+MMRESULT WINAPI hkmmioSetInfo(HMMIO hmmio, LPCMMIOINFO pmmioinfo, UINT fuInfo)
+{
+	o_mmioSetInfo(hmmio, pmmioinfo, fuInfo);
+}
+
+FOURCC WINAPI hkmmioStringToFOURCCA(LPCSTR sz, UINT uFlags)
+{
+	o_mmioStringToFOURCCA(sz, uFlags);
+}
+
+FOURCC WINAPI hkmmioStringToFOURCCW(LPCWSTR sz, UINT uFlags)
+{
+	o_mmioStringToFOURCCW(sz, uFlags);
+}
+
+LONG WINAPI hkmmioWrite(HMMIO hmmio, const char _huge* pch, LONG cch)
+{
+	o_mmioWrite(hmmio, pch, cch);
+}
+
+UINT WINAPI hkmmsystemGetVersion()
+{
+	o_mmsystemGetVersion();
+}
+
+bool WINAPI hksndPlaySoundA(LPCSTR pszSound, UINT fuSound)
+{
+	o_sndPlaySoundA(pszSound, fuSound);
+}
+
+bool WINAPI hksndPlaySoundW(LPCWSTR pszSound, UINT fuSound)
+{
+	o_sndPlaySoundW(pszSound, fuSound);
+}
+
+MMRESULT WINAPI hktimeBeginPeriod(UINT uPeriod)
+{
+	o_timeBeginPeriod(uPeriod);
+}
+
+MMRESULT WINAPI hktimeEndPeriod(UINT uPeriod)
+{
+	o_timeEndPeriod(uPeriod);
+}
+
+MMRESULT WINAPI hktimeGetDevCaps(LPTIMECAPS ptc, UINT cbtc)
+{
+	o_timeGetDevCaps(ptc, cbtc);
+}
+
+MMRESULT WINAPI hktimeGetSystemTime(LPMMTIME pmmt, UINT cbmmt)
+{
+	o_timeGetSystemTime(pmmt, cbmmt);
+}
+
+DWORD WINAPI hktimeGetTime()
+{
+	o_timeGetTime();
+}
+
+MMRESULT WINAPI hktimeKillEvent(UINT uTimerID)
+{
+	o_timeKillEvent(uTimerID);
+}
+
+MMRESULT WINAPI hktimeSetEvent(UINT uDelay, UINT uResolution, LPTIMECALLBACK fptc, DWORD_PTR dwUser, UINT fuEvent)
+{
+	o_timeSetEvent(uDelay, uResolution, fptc, dwUser, fuEvent);
+}
+
+MMRESULT WINAPI hkwaveInAddBuffer(HWAVEIN hwi, LPWAVEHDR pwh, UINT cbwh)
+{
+	o_waveInAddBuffer(hwi, pwh, cbwh);
+}
+
+MMRESULT WINAPI hkwaveInClose(HWAVEIN hwi)
+{
+	o_waveInClose(hwi);
+}
+
+MMRESULT WINAPI hkwaveInGetDevCapsA(UINT_PTR uDeviceID, LPWAVEINCAPSA pwic, UINT cbwic)
+{
+	o_waveInGetDevCapsA(uDeviceID, pwic, cbwic);
+}
+
+MMRESULT WINAPI hkwaveInGetDevCapsW(UINT_PTR uDeviceID, LPWAVEINCAPSW pwic, UINT cbwic)
+{
+	o_waveInGetDevCapsW(uDeviceID, pwic, cbwic);
+}
+
+MMRESULT WINAPI hkwaveInGetErrorTextA(MMRESULT mmrError, LPSTR pszText, UINT cchText)
+{
+	o_waveInGetErrorTextA(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkwaveInGetErrorTextW(MMRESULT mmrError, LPWSTR pszText, UINT cchText)
+{
+	o_waveInGetErrorTextW(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkwaveInGetID(HWAVEIN hwi, LPUINT puDeviceID)
+{
+	o_waveInGetID(hwi, puDeviceID);
+}
+
+UINT WINAPI hkwaveInGetNumDevs()
+{
+	o_waveInGetNumDevs();
+}
+
+MMRESULT WINAPI hkwaveInGetPosition(HWAVEIN hwi, LPMMTIME pmmt, UINT cbmmt)
+{
+	o_waveInGetPosition(hwi, pmmt, cbmmt);
+}
+
+MMRESULT WINAPI hkwaveInMessage(HWAVEIN hwi, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
+{
+	o_waveInMessage(hwi, uMsg, dw1, dw2);
+}
+
+MMRESULT WINAPI hkwaveInOpen(LPHWAVEIN phwi, UINT uDeviceID, LPCWAVEFORMATEX pwfx, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen)
+{
+	o_waveInOpen(phwi, uDeviceID, pwfx, dwCallback, dwInstance, fdwOpen);
+}
+
+MMRESULT WINAPI hkwaveInPrepareHeader(HWAVEIN hwi, LPWAVEHDR pwh, UINT cbwh)
+{
+	o_waveInPrepareHeader(hwi, pwh, cbwh);
+}
+
+MMRESULT WINAPI hkwaveInReset(HWAVEIN hwi)
+{
+	o_waveInReset(hwi);
+}
+
+MMRESULT WINAPI hkwaveInStart(HWAVEIN hwi)
+{
+	o_waveInStart(hwi);
+}
+
+MMRESULT WINAPI hkwaveInStop(HWAVEIN hwi)
+{
+	o_waveInStop(hwi);
+}
+
+MMRESULT WINAPI hkwaveInUnprepareHeader(HWAVEIN hwi, LPWAVEHDR pwh, UINT cbwh)
+{
+	o_waveInUnprepareHeader(hwi, pwh, cbwh);
+}
+
+MMRESULT WINAPI hkwaveOutBreakLoop(HWAVEOUT hwo)
+{
+	o_waveOutBreakLoop(hwo);
+}
+
+MMRESULT WINAPI hkwaveOutClose(HWAVEOUT hwo)
+{
+	o_waveOutClose(hwo);
+}
+
+MMRESULT WINAPI hkwaveOutGetDevCapsA(UINT_PTR uDeviceID, LPWAVEOUTCAPSA pwoc, UINT cbwoc)
+{
+	o_waveOutGetDevCapsA(uDeviceID, pwoc, cbwoc);
+}
+
+MMRESULT WINAPI hkwaveOutGetDevCapsW(UINT_PTR uDeviceID, LPWAVEOUTCAPSW pwoc, UINT cbwoc)
+{
+	o_waveOutGetDevCapsW(uDeviceID, pwoc, cbwoc);
+}
+
+MMRESULT WINAPI hkwaveOutGetErrorTextA(MMRESULT mmrError, LPSTR pszText, UINT cchText)
+{
+	o_waveOutGetErrorTextA(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkwaveOutGetErrorTextW(MMRESULT mmrError, LPWSTR pszText, UINT cchText)
+{
+	o_waveOutGetErrorTextW(mmrError, pszText, cchText);
+}
+
+MMRESULT WINAPI hkwaveOutGetID(HWAVEOUT hwo, LPUINT puDeviceID)
+{
+	o_waveOutGetID(hwo, puDeviceID);
+}
+
+UINT WINAPI hkwaveOutGetNumDevs()
+{
+	o_waveOutGetNumDevs();
+}
+
+MMRESULT WINAPI hkwaveOutGetPitch(HWAVEOUT hwo, LPDWORD pdwPitch)
+{
+	o_waveOutGetPitch(hwo, pdwPitch);
+}
+
+MMRESULT WINAPI hkwaveOutGetPlaybackRate(HWAVEOUT hwo, LPDWORD pdwRate)
+{
+	o_waveOutGetPlaybackRate(hwo, pdwRate);
+}
+
+MMRESULT WINAPI hkwaveOutGetPosition(HWAVEOUT hwo, LPMMTIME pmmt, UINT cbmmt)
+{
+	o_waveOutGetPosition(hwo, pmmt, cbmmt);
+}
+
+MMRESULT WINAPI hkwaveOutGetVolume(HWAVEOUT hwo, LPDWORD pdwVolume)
+{
+	o_waveOutGetVolume(hwo, pdwVolume);
+}
+
+MMRESULT WINAPI hkwaveOutMessage(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dw1, DWORD_PTR dw2)
+{
+	o_waveOutMessage(hwo, uMsg, dw1, dw2);
+}
+
+MMRESULT WINAPI hkwaveOutOpen(LPHWAVEOUT phwo, UINT uDeviceID, LPCWAVEFORMATEX pwfx, DWORD_PTR dwCallback, DWORD_PTR dwInstance, DWORD fdwOpen)
+{
+	o_waveOutOpen(phwo, uDeviceID, pwfx, dwCallback, dwInstance, fdwOpen);
+}
+
+MMRESULT WINAPI hkwaveOutPause(HWAVEOUT hwo)
+{
+	o_waveOutPause(hwo);
+}
+
+MMRESULT WINAPI hkwaveOutPrepareHeader(HWAVEOUT hwo, LPWAVEHDR pwh, UINT cbwh)
+{
+	o_waveOutPrepareHeader(hwo, pwh, cbwh);
+}
+
+MMRESULT WINAPI hkwaveOutReset(HWAVEOUT hwo)
+{
+	o_waveOutReset(hwo);
+}
+
+MMRESULT WINAPI hkwaveOutRestart(HWAVEOUT hwo)
+{
+	o_waveOutRestart(hwo);
+}
+
+MMRESULT WINAPI hkwaveOutSetPitch(HWAVEOUT hwo, DWORD dwPitch)
+{
+	o_waveOutSetPitch(hwo, dwPitch);
+}
+
+MMRESULT WINAPI hkwaveOutSetPlaybackRate(HWAVEOUT hwo, DWORD dwRate)
+{
+	o_waveOutSetPlaybackRate(hwo, dwRate);
+}
+
+MMRESULT WINAPI hkwaveOutSetVolume(HWAVEOUT hwo, DWORD dwVolume)
+{
+	o_waveOutSetVolume(hwo, dwVolume);
+}
+
+MMRESULT WINAPI hkwaveOutUnprepareHeader(HWAVEOUT hwo, LPWAVEHDR pwh, UINT cbwh)
+{
+	o_waveOutUnprepareHeader(hwo, pwh, cbwh);
+}
+
+MMRESULT WINAPI hkwaveOutWrite(HWAVEOUT hwo, LPWAVEHDR pwh, UINT cbwh)
+{
+	o_waveOutWrite(hwo, pwh, cbwh);
+}
+
+void winmm(bool Free) {
+	if (Free) {
+		(void)FreeLibrary(winmm_dll);
+		return;
+	}
+
 	char path[MAX_PATH]{};
 	CopyMemory(path + GetSystemDirectory(path, MAX_PATH - 12), "\\winmm.dll", 12);
 	winmm_dll = LoadLibrary(path);
@@ -334,191 +1279,184 @@ void setup_winmm() {
 	if (winmm_dll == NULL)
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Source winmm.dll missing");
 
-	mciExecute_Real = (mciexecute)GetProcAddress(winmm_dll, "mciExecute");
-	CloseDriver_Real = (closedriver)GetProcAddress(winmm_dll, "CloseDriver");
-	DefDriverProc_Real = (defdriverproc)GetProcAddress(winmm_dll, "DefDriverProc");
-	DriverCallback_Real = (drivercallback)GetProcAddress(winmm_dll, "DriverCallback");
-	DrvGetModuleHandle_Real = (drvgetmodulehandle)GetProcAddress(winmm_dll, "DrvGetModuleHandle");
-	GetDriverModuleHandle_Real = (getdrivermodulehandle)GetProcAddress(winmm_dll, "GetDriverModuleHandle");
-	OpenDriver_Real = (opendriver)GetProcAddress(winmm_dll, "OpenDriver");
-	PlaySound_Real = (playsound)GetProcAddress(winmm_dll, "PlaySound");
-	PlaySoundA_Real = (playsounda)GetProcAddress(winmm_dll, "PlaySoundA");
-	PlaySoundW_Real = (playsoundw)GetProcAddress(winmm_dll, "PlaySoundW");
-	SendDriverMessage_Real = (senddrivermessage)GetProcAddress(winmm_dll, "SendDriverMessage");
-	WOWAppExit_Real = (wowappexit)GetProcAddress(winmm_dll, "WOWAppExit");
-	auxGetDevCapsA_Real = (auxgetdevcapsa)GetProcAddress(winmm_dll, "auxGetDevCapsA");
-	auxGetDevCapsW_Real = (auxgetdevcapsw)GetProcAddress(winmm_dll, "auxGetDevCapsW");
-	auxGetNumDevs_Real = (auxgetnumdevs)GetProcAddress(winmm_dll, "auxGetNumDevs");
-	auxGetVolume_Real = (auxgetvolume)GetProcAddress(winmm_dll, "auxGetVolume");
-	auxOutMessage_Real = (auxoutmessage)GetProcAddress(winmm_dll, "auxOutMessage");
-	auxSetVolume_Real = (auxsetvolume)GetProcAddress(winmm_dll, "auxSetVolume");
-	joyConfigChanged_Real = (joyconfigchanged)GetProcAddress(winmm_dll, "joyConfigChanged");
-	joyGetDevCapsA_Real = (joygetdevcapsa)GetProcAddress(winmm_dll, "joyGetDevCapsA");
-	joyGetDevCapsW_Real = (joygetdevcapsw)GetProcAddress(winmm_dll, "joyGetDevCapsW");
-	joyGetNumDevs_Real = (joygetnumdevs)GetProcAddress(winmm_dll, "joyGetNumDevs");
-	joyGetPos_Real = (joygetpos)GetProcAddress(winmm_dll, "joyGetPos");
-	joyGetPosEx_Real = (joygetposex)GetProcAddress(winmm_dll, "joyGetPosEx");
-	joyGetThreshold_Real = (joygetthreshold)GetProcAddress(winmm_dll, "joyGetThreshold");
-	joyReleaseCapture_Real = (joyreleasecapture)GetProcAddress(winmm_dll, "joyReleaseCapture");
-	joySetCapture_Real = (joysetcapture)GetProcAddress(winmm_dll, "joySetCapture");
-	joySetThreshold_Real = (joysetthreshold)GetProcAddress(winmm_dll, "joySetThreshold");
-	mciDriverNotify_Real = (mcidrivernotify)GetProcAddress(winmm_dll, "mciDriverNotify");
-	mciDriverYield_Real = (mcidriveryield)GetProcAddress(winmm_dll, "mciDriverYield");
-	mciFreeCommandResource_Real = (mcifreecommandresource)GetProcAddress(winmm_dll, "mciFreeCommandResource");
-	mciGetCreatorTask_Real = (mcigetcreatortask)GetProcAddress(winmm_dll, "mciGetCreatorTask");
-	mciGetDeviceIDA_Real = (mcigetdeviceida)GetProcAddress(winmm_dll, "mciGetDeviceIDA");
-	mciGetDeviceIDFromElementIDA_Real = (mcigetdeviceidfromelementida)GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDA");
-	mciGetDeviceIDFromElementIDW_Real = (mcigetdeviceidfromelementidw)GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDW");
-	mciGetDeviceIDW_Real = (mcigetdeviceidw)GetProcAddress(winmm_dll, "mciGetDeviceIDW");
-	mciGetDriverData_Real = (mcigetdriverdata)GetProcAddress(winmm_dll, "mciGetDriverData");
-	mciGetErrorStringA_Real = (mcigeterrorstringa)GetProcAddress(winmm_dll, "mciGetErrorStringA");
-	mciGetErrorStringW_Real = (mcigeterrorstringw)GetProcAddress(winmm_dll, "mciGetErrorStringW");
-	mciGetYieldProc_Real = (mcigetyieldproc)GetProcAddress(winmm_dll, "mciGetYieldProc");
-	mciLoadCommandResource_Real = (mciloadcommandresource)GetProcAddress(winmm_dll, "mciLoadCommandResource");
-	mciSendCommandA_Real = (mcisendcommanda)GetProcAddress(winmm_dll, "mciSendCommandA");
-	mciSendCommandW_Real = (mcisendcommandw)GetProcAddress(winmm_dll, "mciSendCommandW");
-	mciSendStringA_Real = (mcisendstringa)GetProcAddress(winmm_dll, "mciSendStringA");
-	mciSendStringW_Real = (mcisendstringw)GetProcAddress(winmm_dll, "mciSendStringW");
-
-	/*
-	mciSetDriverData_Real = (mciSetDriverData)GetProcAddress(winmm_dll, "mciSetDriverData");
-	mciSetYieldProc_Real = (mciSetYieldProc)GetProcAddress(winmm_dll, "mciSetYieldProc");
-	midiConnect_Real = (midiConnect)GetProcAddress(winmm_dll, "midiConnect");
-	midiDisconnect_Real = (midiDisconnect)GetProcAddress(winmm_dll, "midiDisconnect");
-	midiInAddBuffer_Real = (midiInAddBuffer)GetProcAddress(winmm_dll, "midiInAddBuffer");
-	midiInClose_Real = (midiInClose)GetProcAddress(winmm_dll, "midiInClose");
-	midiInGetDevCapsA_Real = (midiInGetDevCapsA)GetProcAddress(winmm_dll, "midiInGetDevCapsA");
-	midiInGetDevCapsW_Real = (midiInGetDevCapsW)GetProcAddress(winmm_dll, "midiInGetDevCapsW");
-	midiInGetErrorTextA_Real = (midiInGetErrorTextA)GetProcAddress(winmm_dll, "midiInGetErrorTextA");
-	midiInGetErrorTextW_Real = (midiInGetErrorTextW)GetProcAddress(winmm_dll, "midiInGetErrorTextW");
-	midiInGetID_Real = (midiInGetID)GetProcAddress(winmm_dll, "midiInGetID");
-	midiInGetNumDevs_Real = (midiInGetNumDevs)GetProcAddress(winmm_dll, "midiInGetNumDevs");
-	midiInMessage_Real = (midiInMessage)GetProcAddress(winmm_dll, "midiInMessage");
-	midiInOpen_Real = (midiInOpen)GetProcAddress(winmm_dll, "midiInOpen");
-	midiInPrepareHeader_Real = (midiInPrepareHeader)GetProcAddress(winmm_dll, "midiInPrepareHeader");
-	midiInReset_Real = (midiInReset)GetProcAddress(winmm_dll, "midiInReset");
-	midiInStart_Real = (midiInStart)GetProcAddress(winmm_dll, "midiInStart");
-	midiInStop_Real = (midiInSto)GetProcAddress(winmm_dll, "midiInStop");
-	midiInUnprepareHeader_Real "= ()GetProcAddress(winmm_dll, "midiInUnprepareHeader");
-	midiOutCacheDrumPatches_Real, l = (midiOutCacheDrumPatches)GetProcAddress(winmm_dll, "midiOutCacheDrumPatches");
-	midiOutCachePatches_Real = (midiOutCachePatches)GetProcAddress(winmm_dll, "midiOutCachePatches");
-	midiOutClose_Real = (midiOutClose)GetProcAddress(winmm_dll, "midiOutClose");
-	midiOutGetDevCapsA_Real = (midiOutGetDevCapsA)GetProcAddress(winmm_dll, "midiOutGetDevCapsA");
-	midiOutGetDevCapsW_Real = (midiOutGetDevCaps)GetProcAddress(winmm_dll, "midiOutGetDevCapsW");
-	midiOutGetErrorTextA_Real = (midiOutGetErrorText)GetProcAddress(winmm_dll, "midiOutGetErrorTextA");
-	midiOutGetErrorTextW_Real = (midiOutGetErrorTextW)GetProcAddress(winmm_dll, "midiOutGetErrorTextW");
-	midiOutGetID_Real = (midiOutGetID)GetProcAddress(winmm_dll, "midiOutGetID");
-	midiOutGetNumDevs_Real = (midiOutGetNumDevs)GetProcAddress(winmm_dll, "midiOutGetNumDevs");
-	midiOutGetVolume_Real = (midiOutGetVolume)GetProcAddress(winmm_dll, "midiOutGetVolume");
-	midiOutLongMsg_Real = (midiOutLongMsg)GetProcAddress(winmm_dll, "midiOutLongMsg");
-	midiOutMessage_Real = (midiOutMessage)GetProcAddress(winmm_dll, "midiOutMessage");
-	midiOutOpen_Real = (midiOutOpe)GetProcAddress(winmm_dll, "midiOutOpen");
-	midiOutPrepareHeader_Real = (midiOutPrepareHeader)GetProcAddress(winmm_dll, "midiOutPrepareHeader");
-	midiOutReset_Real = (midiOutReset)GetProcAddress(winmm_dll, "midiOutReset");
-	midiOutSetVolume_Real = (midiOutSetVolume)GetProcAddress(winmm_dll, "midiOutSetVolume");
-	midiOutShortMsg_Real = (midiOutShortMsg)GetProcAddress(winmm_dll, "midiOutShortMsg");
-	midiOutUnprepareHeader_Real = (midiOutUnprepareHeader)GetProcAddress(winmm_dll, "midiOutUnprepareHeader");
-	midiStreamClose_Real = (midiStreamClose)GetProcAddress(winmm_dll, "midiStreamClose");
-	midiStreamOpen_Real = (midiStreamOpen)GetProcAddress(winmm_dll, "midiStreamOpen");
-	midiStreamOut_Real = (midiStreamOut)GetProcAddress(winmm_dll, "midiStreamOut");
-	midiStreamPause_Real = (midiStreamPause)GetProcAddress(winmm_dll, "midiStreamPause");
-	midiStreamPosition_Real = (midiStreamPosition)GetProcAddress(winmm_dll, "midiStreamPosition");
-	midiStreamProperty_Real = (midiStreamProperty)GetProcAddress(winmm_dll, "midiStreamProperty");
-	midiStreamRestart_Real = (midiStreamRestart)GetProcAddress(winmm_dll, "midiStreamRestart");
-	midiStreamStop_Real = (midiStreamStop)GetProcAddress(winmm_dll, "midiStreamStop");
-	mixerClose_Real = (mixerClose)GetProcAddress(winmm_dll, "mixerClose");
-	mixerGetControlDetailsA_Real = (mixerGetControlDetailsA)GetProcAddress(winmm_dll, "mixerGetControlDetailsA");
-	mixerGetControlDetailsW_Real = (mixerGetControlDetailsW)GetProcAddress(winmm_dll, "mixerGetControlDetailsW");
-	mixerGetDevCapsA_Real = (mixerGetDevCapsA)GetProcAddress(winmm_dll, "mixerGetDevCapsA");
-	mixerGetDevCapsW_Real = (mixerGetDevCapsW)GetProcAddress(winmm_dll, "mixerGetDevCapsW");
-	mixerGetID_Real = (mixerGetI)GetProcAddress(winmm_dll, "mixerGetID");
-	mixerGetLineControlsA_Real = (mixerGetLineControls)GetProcAddress(winmm_dll, "mixerGetLineControlsA");
-	mixerGetLineControlsW_Real = (mixerGetLineControlsW)GetProcAddress(winmm_dll, "mixerGetLineControlsW");
-	mixerGetLineInfoA_Real = (mixerGetLineInfoA)GetProcAddress(winmm_dll, "mixerGetLineInfoA");
-	mixerGetLineInfoW_Real = (mixerGetLineInfoW)GetProcAddress(winmm_dll, "mixerGetLineInfoW");
-	mixerGetNumDevs_Real = (mixerGetNumDevs)GetProcAddress(winmm_dll, "mixerGetNumDevs");
-	mixerMessage_Real = (mixerMessage)GetProcAddress(winmm_dll, "mixerMessage");
-	mixerOpen_Real = (mixerOpen)GetProcAddress(winmm_dll, "mixerOpen");
-	mixerSetControlDetails_Real = (mixerSetControlDetails)GetProcAddress(winmm_dll, "mixerSetControlDetails");
-	mmDrvInstall_Real = (mmDrvInstall)GetProcAddress(winmm_dll, "mmDrvInstall");
-	mmGetCurrentTask_Real = (mmGetCurrentTask)GetProcAddress(winmm_dll, "mmGetCurrentTask");
-	mmTaskBlock_Real = (mmTaskBlock)GetProcAddress(winmm_dll, "mmTaskBlock");
-	mmTaskCreate_Real = (mmTaskCreate)GetProcAddress(winmm_dll, "mmTaskCreate");
-	mmTaskSignal_Real = (mmTaskSignal)GetProcAddress(winmm_dll, "mmTaskSignal");
-	mmTaskYield_Real = (mmTaskYield)GetProcAddress(winmm_dll, "mmTaskYield");
-	mmioAdvance_Real = (mmioAdvance)GetProcAddress(winmm_dll, "mmioAdvance");
-	mmioAscend_Real = (mmioAscend)GetProcAddress(winmm_dll, "mmioAscend");
-	mmioClose_Real = (mmioClose)GetProcAddress(winmm_dll, "mmioClose");
-	mmioCreateChunk_Real = (mmioCreateChunk)GetProcAddress(winmm_dll, "mmioCreateChunk");
-	mmioDescend_Real = (mmioDescend)GetProcAddress(winmm_dll, "mmioDescend");
-	mmioFlush_Real = (mmioFlush)GetProcAddress(winmm_dll, "mmioFlush");
-	mmioGetInfo_Real = (mmioGetInfo)GetProcAddress(winmm_dll, "mmioGetInfo");
-	mmioInstallIOProcA_Real = (mmioInstallIOProcA)GetProcAddress(winmm_dll, "mmioInstallIOProcA");
-	mmioInstallIOProcW_Real = (mmioInstallIOProcW)GetProcAddress(winmm_dll, "mmioInstallIOProcW");
-	mmioOpenA_Real = (mmioOpenA)GetProcAddress(winmm_dll, "mmioOpenA");
-	mmioOpenW_Real = (mmioOpenW)GetProcAddress(winmm_dll, "mmioOpenW");
-	mmioRead_Real = (mmioRead)GetProcAddress(winmm_dll, "mmioRead");
-	mmioRenameA_Real = (mmioRenameA)GetProcAddress(winmm_dll, "mmioRenameA");
-	mmioRenameW_Real = (mmioRenameW)GetProcAddress(winmm_dll, "mmioRenameW");
-	mmioSeek_Real = (mmioSeek)GetProcAddress(winmm_dll, "mmioSeek");
-	mmioSendMessage_Real = (mmioSendMessage)GetProcAddress(winmm_dll, "mmioSendMessage");
-	mmioSetBuffer_Real = (mmioSetBuffer)GetProcAddress(winmm_dll, "mmioSetBuffer");
-	mmioSetInfo_Real = (mmioSetInfo)GetProcAddress(winmm_dll, "mmioSetInfo");
-	mmioStringToFOURCCA_Real = (mmioStringToFOURCCA)GetProcAddress(winmm_dll, "mmioStringToFOURCCA");
-	mmioStringToFOURCCW_Real = (mmioStringToFOURCCW)GetProcAddress(winmm_dll, "mmioStringToFOURCCW");
-	mmioWrite_Real = (mmioWrite)GetProcAddress(winmm_dll, "mmioWrite");
-	mmsystemGetVersion_Real = (mmsystemGetVersion)GetProcAddress(winmm_dll, "mmsystemGetVersion");
-	sndPlaySoundA_Real = (sndPlaySoundA)GetProcAddress(winmm_dll, "sndPlaySoundA");
-	sndPlaySoundW_Real = (sndPlaySoundW)GetProcAddress(winmm_dll, "sndPlaySoundW");
-	timeBeginPeriod_Real = (timeBeginPeriod)GetProcAddress(winmm_dll, "timeBeginPeriod");
-	timeEndPeriod_Real = (timeEndPeriod)GetProcAddress(winmm_dll, "timeEndPeriod");
-	timeGetDevCaps_Real = (timeGetDevCaps)GetProcAddress(winmm_dll, "timeGetDevCaps");
-	timeGetSystemTime_Real = (timeGetSystemTime)GetProcAddress(winmm_dll, "timeGetSystemTime");
-	timeGetTime_Real = (timeGetTime)GetProcAddress(winmm_dll, "timeGetTime");
-	timeKillEvent_Real = (timeKillEvent)GetProcAddress(winmm_dll, "timeKillEvent");
-	timeSetEvent_Real = (timeSetEvent)GetProcAddress(winmm_dll, "timeSetEvent");
-	waveInAddBuffer_Real = (waveInAddBuffer)GetProcAddress(winmm_dll, "waveInAddBuffer");
-	waveInClose_Real = (waveInClose)GetProcAddress(winmm_dll, "waveInClose");
-	waveInGetDevCapsA_Real = (waveInGetDevCapsA)GetProcAddress(winmm_dll, "waveInGetDevCapsA");
-	waveInGetDevCapsW_Real = (waveInGetDevCapsW)GetProcAddress(winmm_dll, "waveInGetDevCapsW");
-	waveInGetErrorTextA_Real = (waveInGetErrorTextA)GetProcAddress(winmm_dll, "waveInGetErrorTextA");
-	waveInGetErrorTextW_Real = (waveInGetErrorTextW)GetProcAddress(winmm_dll, "waveInGetErrorTextW");
-	waveInGetID_Real = (waveInGetID)GetProcAddress(winmm_dll, "waveInGetID");
-	waveInGetNumDevs_Real = (waveInGetNumDevs)GetProcAddress(winmm_dll, "waveInGetNumDevs");
-	waveInGetPosition_Real = (waveInGetPosition)GetProcAddress(winmm_dll, "waveInGetPosition");
-	waveInMessage_Real = (waveInMessage)GetProcAddress(winmm_dll, "waveInMessage");
-	waveInOpen_Real = (waveInOpen)GetProcAddress(winmm_dll, "waveInOpen");
-	waveInPrepareHeader_Real = (waveInPrepareHeader)GetProcAddress(winmm_dll, "waveInPrepareHeader");
-	waveInReset_Real = (waveInReset)GetProcAddress(winmm_dll, "waveInReset");
-	waveInStart_Real = (waveInStart)GetProcAddress(winmm_dll, "waveInStart");
-	waveInStop_Real = (waveInStop)GetProcAddress(winmm_dll, "waveInStop");
-	waveInUnprepareHeader_Real = (waveInUnprepareHeader)GetProcAddress(winmm_dll, "waveInUnprepareHeader");
-	waveOutBreakLoop_Real = (waveOutBreakLoop)GetProcAddress(winmm_dll, "waveOutBreakLoop");
-	waveOutClose_Real = (waveOutClose)GetProcAddress(winmm_dll, "waveOutClose");
-	waveOutGetDevCapsA_Real = (waveOutGetDevCapsA)GetProcAddress(winmm_dll, "waveOutGetDevCapsA");
-	waveOutGetDevCapsW_Real = (waveOutGetDevCaps)GetProcAddress(winmm_dll, "waveOutGetDevCapsW");
-	waveOutGetErrorTextA_Real = (waveOutGetErrorText)GetProcAddress(winmm_dll, "waveOutGetErrorTextA");
-	waveOutGetErrorTextW_Real = (waveOutGetErrorTextW)GetProcAddress(winmm_dll, "waveOutGetErrorTextW");
-	waveOutGetID_Real = (waveOutGetID)GetProcAddress(winmm_dll, "waveOutGetID");
-	waveOutGetNumDevs_Real = (waveOutGetNumDevs)GetProcAddress(winmm_dll, "waveOutGetNumDevs");
-	waveOutGetPitch_Real = (waveOutGetPitch)GetProcAddress(winmm_dll, "waveOutGetPitch");
-	waveOutGetPlaybackRate_Real = (waveOutGetPlaybackRate)GetProcAddress(winmm_dll, "waveOutGetPlaybackRate");
-	waveOutGetPosition_Real = (waveOutGetPosition)GetProcAddress(winmm_dll, "waveOutGetPosition");
-	waveOutGetVolume_Real = (waveOutGetVolume)GetProcAddress(winmm_dll, "waveOutGetVolume");
-	waveOutMessage_Real = (waveOutMessage)GetProcAddress(winmm_dll, "waveOutMessage");
-	waveOutOpen_Real = (waveOutOpen)GetProcAddress(winmm_dll, "waveOutOpen");
-	waveOutPause_Real = (waveOutPaus)GetProcAddress(winmm_dll, "waveOutPause");
-	waveOutPrepareHeader_Real = (waveOutPrepareHeader)GetProcAddress(winmm_dll, "waveOutPrepareHeader");
-	waveOutReset_Real = (waveOutReset)GetProcAddress(winmm_dll, "waveOutReset");
-	waveOutRestart_Real = (waveOutRestart)GetProcAddress(winmm_dll, "waveOutRestart");
-	waveOutSetPitch_Real = (waveOutSetPitch)GetProcAddress(winmm_dll, "waveOutSetPitch");
-	waveOutSetPlaybackRate_Real = (waveOutSetPlaybackRate)GetProcAddress(winmm_dll, "waveOutSetPlaybackRate");
-	waveOutSetVolume_Real = (waveOutSetVolume)GetProcAddress(winmm_dll, "waveOutSetVolume");
-	waveOutUnprepareHeader_Real = (waveOutUnprepareHeader)GetProcAddress(winmm_dll, "waveOutUnprepareHeader");
-	waveOutWrite_Real = (waveOutWrite)GetProcAddress(winmm_dll, "waveOutWrit");
-	*/
-}
-
-void free_winmm() {
-	(void)FreeLibrary(winmm_dll);
+	o_mciExecute = reinterpret_cast<t_mciExecute>(GetProcAddress(winmm_dll, "mciExecute"));
+	o_CloseDriver = reinterpret_cast<t_CloseDriver>(GetProcAddress(winmm_dll, "CloseDriver"));
+	o_DefDriverProc = reinterpret_cast<t_DefDriverProc>(GetProcAddress(winmm_dll, "DefDriverProc"));
+	o_DriverCallback = reinterpret_cast<t_DriverCallback>(GetProcAddress(winmm_dll, "DriverCallback"));
+	o_DrvGetModuleHandle = reinterpret_cast<t_DrvGetModuleHandle>(GetProcAddress(winmm_dll, "DrvGetModuleHandle"));
+	o_GetDriverModuleHandle = reinterpret_cast<t_GetDriverModuleHandle>(GetProcAddress(winmm_dll, "GetDriverModuleHandle"));
+	o_OpenDriver = reinterpret_cast<t_OpenDriver>(GetProcAddress(winmm_dll, "OpenDriver"));
+	o_PlaySound = reinterpret_cast<t_PlaySound>(GetProcAddress(winmm_dll, "PlaySound"));
+	o_PlaySoundA = reinterpret_cast<t_PlaySoundA>(GetProcAddress(winmm_dll, "PlaySoundA"));
+	o_PlaySoundW = reinterpret_cast<t_PlaySoundW>(GetProcAddress(winmm_dll, "PlaySoundW"));
+	o_SendDriverMessage = reinterpret_cast<t_SendDriverMessage>(GetProcAddress(winmm_dll, "SendDriverMessage"));
+	o_WOWAppExit = reinterpret_cast<t_WOWAppExit>(GetProcAddress(winmm_dll, "WOWAppExit"));
+	o_auxGetDevCapsA = reinterpret_cast<t_auxGetDevCapsA>(GetProcAddress(winmm_dll, "auxGetDevCapsA"));
+	o_auxGetDevCapsW = reinterpret_cast<t_auxGetDevCapsW>(GetProcAddress(winmm_dll, "auxGetDevCapsW"));
+	o_auxGetNumDevs = reinterpret_cast<t_auxGetNumDevs>(GetProcAddress(winmm_dll, "auxGetNumDevs"));
+	o_auxGetVolume = reinterpret_cast<t_auxGetVolume>(GetProcAddress(winmm_dll, "auxGetVolume"));
+	o_auxOutMessage = reinterpret_cast<t_auxOutMessage>(GetProcAddress(winmm_dll, "auxOutMessage"));
+	o_auxSetVolume = reinterpret_cast<t_auxSetVolume>(GetProcAddress(winmm_dll, "auxSetVolume"));
+	o_joyConfigChanged = reinterpret_cast<t_joyConfigChanged>(GetProcAddress(winmm_dll, "joyConfigChanged"));
+	o_joyGetDevCapsA = reinterpret_cast<t_joyGetDevCapsA>(GetProcAddress(winmm_dll, "joyGetDevCapsA"));
+	o_joyGetDevCapsW = reinterpret_cast<t_joyGetDevCapsW>(GetProcAddress(winmm_dll, "joyGetDevCapsW"));
+	o_joyGetNumDevs = reinterpret_cast<t_joyGetNumDevs>(GetProcAddress(winmm_dll, "joyGetNumDevs"));
+	o_joyGetPos = reinterpret_cast<t_joyGetPos>(GetProcAddress(winmm_dll, "joyGetPos"));
+	o_joyGetPosEx = reinterpret_cast<t_joyGetPosEx>(GetProcAddress(winmm_dll, "joyGetPosEx"));
+	o_joyGetThreshold = reinterpret_cast<t_joyGetThreshold>(GetProcAddress(winmm_dll, "joyGetThreshold"));
+	o_joyReleaseCapture = reinterpret_cast<t_joyReleaseCapture>(GetProcAddress(winmm_dll, "joyReleaseCapture"));
+	o_joySetCapture = reinterpret_cast<t_joySetCapture>(GetProcAddress(winmm_dll, "joySetCapture"));
+	o_joySetThreshold = reinterpret_cast<t_joySetThreshold>(GetProcAddress(winmm_dll, "joySetThreshold"));
+	o_mciDriverNotify = reinterpret_cast<t_mciDriverNotify>(GetProcAddress(winmm_dll, "mciDriverNotify"));
+	o_mciDriverYield = reinterpret_cast<t_mciDriverYield>(GetProcAddress(winmm_dll, "mciDriverYield"));
+	o_mciFreeCommandResource = reinterpret_cast<t_mciFreeCommandResource>(GetProcAddress(winmm_dll, "mciFreeCommandResource"));
+	o_mciGetCreatorTask = reinterpret_cast<t_mciGetCreatorTask>(GetProcAddress(winmm_dll, "mciGetCreatorTask"));
+	o_mciGetDeviceIDA = reinterpret_cast<t_mciGetDeviceIDA>(GetProcAddress(winmm_dll, "mciGetDeviceIDA"));
+	o_mciGetDeviceIDFromElementIDA = reinterpret_cast<t_mciGetDeviceIDFromElementIDA>(GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDA"));
+	o_mciGetDeviceIDFromElementIDW = reinterpret_cast<t_mciGetDeviceIDFromElementIDW>(GetProcAddress(winmm_dll, "mciGetDeviceIDFromElementIDW"));
+	o_mciGetDeviceIDW = reinterpret_cast<t_mciGetDeviceIDW>(GetProcAddress(winmm_dll, "mciGetDeviceIDW"));
+	o_mciGetDriverData = reinterpret_cast<t_mciGetDriverData>(GetProcAddress(winmm_dll, "mciGetDriverData"));
+	o_mciGetErrorStringA = reinterpret_cast<t_mciGetErrorStringA>(GetProcAddress(winmm_dll, "mciGetErrorStringA"));
+	o_mciGetErrorStringW = reinterpret_cast<t_mciGetErrorStringW>(GetProcAddress(winmm_dll, "mciGetErrorStringW"));
+	o_mciGetYieldProc = reinterpret_cast<t_mciGetYieldProc>(GetProcAddress(winmm_dll, "mciGetYieldProc"));
+	o_mciLoadCommandResource = reinterpret_cast<t_mciLoadCommandResource>(GetProcAddress(winmm_dll, "mciLoadCommandResource"));
+	o_mciSendCommandA = reinterpret_cast<t_mciSendCommandA>(GetProcAddress(winmm_dll, "mciSendCommandA"));
+	o_mciSendCommandW = reinterpret_cast<t_mciSendCommandW>(GetProcAddress(winmm_dll, "mciSendCommandW"));
+	o_mciSendStringA = reinterpret_cast<t_mciSendStringA>(GetProcAddress(winmm_dll, "mciSendStringA"));
+	o_mciSendStringW = reinterpret_cast<t_mciSendStringW>(GetProcAddress(winmm_dll, "mciSendStringW"));
+	o_mciSetDriverData = reinterpret_cast<t_mciSetDriverData>(GetProcAddress(winmm_dll, "mciSetDriverData"));
+	o_mciSetYieldProc = reinterpret_cast<t_mciSetYieldProc>(GetProcAddress(winmm_dll, "mciSetYieldProc"));
+	o_midiConnect = reinterpret_cast<t_midiConnect>(GetProcAddress(winmm_dll, "midiConnect"));
+	o_midiDisconnect = reinterpret_cast<t_midiDisconnect>(GetProcAddress(winmm_dll, "midiDisconnect"));
+	o_midiInAddBuffer = reinterpret_cast<t_midiInAddBuffer>(GetProcAddress(winmm_dll, "midiInAddBuffer"));
+	o_midiInClose = reinterpret_cast<t_midiInClose>(GetProcAddress(winmm_dll, "midiInClose"));
+	o_midiInGetDevCapsA = reinterpret_cast<t_midiInGetDevCapsA>(GetProcAddress(winmm_dll, "midiInGetDevCapsA"));
+	o_midiInGetDevCapsW = reinterpret_cast<t_midiInGetDevCapsW>(GetProcAddress(winmm_dll, "midiInGetDevCapsW"));
+	o_midiInGetErrorTextA = reinterpret_cast<t_midiInGetErrorTextA>(GetProcAddress(winmm_dll, "midiInGetErrorTextA"));
+	o_midiInGetErrorTextW = reinterpret_cast<t_midiInGetErrorTextW>(GetProcAddress(winmm_dll, "midiInGetErrorTextW"));
+	o_midiInGetID = reinterpret_cast<t_midiInGetID>(GetProcAddress(winmm_dll, "midiInGetID"));
+	o_midiInGetNumDevs = reinterpret_cast<t_midiInGetNumDevs>(GetProcAddress(winmm_dll, "midiInGetNumDevs"));
+	o_midiInMessage = reinterpret_cast<t_midiInMessage>(GetProcAddress(winmm_dll, "midiInMessage"));
+	o_midiInOpen = reinterpret_cast<t_midiInOpen>(GetProcAddress(winmm_dll, "midiInOpen"));
+	o_midiInPrepareHeader = reinterpret_cast<t_midiInPrepareHeader>(GetProcAddress(winmm_dll, "midiInPrepareHeader"));
+	o_midiInReset = reinterpret_cast<t_midiInReset>(GetProcAddress(winmm_dll, "midiInReset"));
+	o_midiInStart = reinterpret_cast<t_midiInStart>(GetProcAddress(winmm_dll, "midiInStart"));
+	o_midiInStop = reinterpret_cast<t_midiInStop>(GetProcAddress(winmm_dll, "midiInStop"));
+	o_midiInUnprepareHeader = reinterpret_cast<t_midiInUnprepareHeader>(GetProcAddress(winmm_dll, "midiInUnprepareHeader"));
+	o_midiOutCacheDrumPatches = reinterpret_cast<t_midiOutCacheDrumPatches>(GetProcAddress(winmm_dll, "midiOutCacheDrumPatches"));
+	o_midiOutCachePatches = reinterpret_cast<t_midiOutCachePatches>(GetProcAddress(winmm_dll, "midiOutCachePatches"));
+	o_midiOutClose = reinterpret_cast<t_midiOutClose>(GetProcAddress(winmm_dll, "midiOutClose"));
+	o_midiOutGetDevCapsA = reinterpret_cast<t_midiOutGetDevCapsA>(GetProcAddress(winmm_dll, "midiOutGetDevCapsA"));
+	o_midiOutGetDevCapsW = reinterpret_cast<t_midiOutGetDevCapsW>(GetProcAddress(winmm_dll, "midiOutGetDevCapsW"));
+	o_midiOutGetErrorTextA = reinterpret_cast<t_midiOutGetErrorTextA>(GetProcAddress(winmm_dll, "midiOutGetErrorTextA"));
+	o_midiOutGetErrorTextW = reinterpret_cast<t_midiOutGetErrorTextW>(GetProcAddress(winmm_dll, "midiOutGetErrorTextW"));
+	o_midiOutGetID = reinterpret_cast<t_midiOutGetID>(GetProcAddress(winmm_dll, "midiOutGetID"));
+	o_midiOutGetNumDevs = reinterpret_cast<t_midiOutGetNumDevs>(GetProcAddress(winmm_dll, "midiOutGetNumDevs"));
+	o_midiOutGetVolume = reinterpret_cast<t_midiOutGetVolume>(GetProcAddress(winmm_dll, "midiOutGetVolume"));
+	o_midiOutLongMsg = reinterpret_cast<t_midiOutLongMsg>(GetProcAddress(winmm_dll, "midiOutLongMsg"));
+	o_midiOutMessage = reinterpret_cast<t_midiOutMessage>(GetProcAddress(winmm_dll, "midiOutMessage"));
+	o_midiOutOpen = reinterpret_cast<t_midiOutOpen>(GetProcAddress(winmm_dll, "midiOutOpen"));
+	o_midiOutPrepareHeader = reinterpret_cast<t_midiOutPrepareHeader>(GetProcAddress(winmm_dll, "midiOutPrepareHeader"));
+	o_midiOutReset = reinterpret_cast<t_midiOutReset>(GetProcAddress(winmm_dll, "midiOutReset"));
+	o_midiOutSetVolume = reinterpret_cast<t_midiOutSetVolume>(GetProcAddress(winmm_dll, "midiOutSetVolume"));
+	o_midiOutShortMsg = reinterpret_cast<t_midiOutShortMsg>(GetProcAddress(winmm_dll, "midiOutShortMsg"));
+	o_midiOutUnprepareHeader = reinterpret_cast<t_midiOutUnprepareHeader>(GetProcAddress(winmm_dll, "midiOutUnprepareHeader"));
+	o_midiStreamClose = reinterpret_cast<t_midiStreamClose>(GetProcAddress(winmm_dll, "midiStreamClose"));
+	o_midiStreamOpen = reinterpret_cast<t_midiStreamOpen>(GetProcAddress(winmm_dll, "midiStreamOpen"));
+	o_midiStreamOut = reinterpret_cast<t_midiStreamOut>(GetProcAddress(winmm_dll, "midiStreamOut"));
+	o_midiStreamPause = reinterpret_cast<t_midiStreamPause>(GetProcAddress(winmm_dll, "midiStreamPause"));
+	o_midiStreamPosition = reinterpret_cast<t_midiStreamPosition>(GetProcAddress(winmm_dll, "midiStreamPosition"));
+	o_midiStreamProperty = reinterpret_cast<t_midiStreamProperty>(GetProcAddress(winmm_dll, "midiStreamProperty"));
+	o_midiStreamRestart = reinterpret_cast<t_midiStreamRestart>(GetProcAddress(winmm_dll, "midiStreamRestart"));
+	o_midiStreamStop = reinterpret_cast<t_midiStreamStop>(GetProcAddress(winmm_dll, "midiStreamStop"));
+	o_mixerClose = reinterpret_cast<t_mixerClose>(GetProcAddress(winmm_dll, "mixerClose"));
+	o_mixerGetControlDetailsA = reinterpret_cast<t_mixerGetControlDetailsA>(GetProcAddress(winmm_dll, "mixerGetControlDetailsA"));
+	o_mixerGetControlDetailsW = reinterpret_cast<t_mixerGetControlDetailsW>(GetProcAddress(winmm_dll, "mixerGetControlDetailsW"));
+	o_mixerGetDevCapsA = reinterpret_cast<t_mixerGetDevCapsA>(GetProcAddress(winmm_dll, "mixerGetDevCapsA"));
+	o_mixerGetDevCapsW = reinterpret_cast<t_mixerGetDevCapsW>(GetProcAddress(winmm_dll, "mixerGetDevCapsW"));
+	o_mixerGetID = reinterpret_cast<t_mixerGetID>(GetProcAddress(winmm_dll, "mixerGetID"));
+	o_mixerGetLineControlsA = reinterpret_cast<t_mixerGetLineControlsA>(GetProcAddress(winmm_dll, "mixerGetLineControlsA"));
+	o_mixerGetLineControlsW = reinterpret_cast<t_mixerGetLineControlsW>(GetProcAddress(winmm_dll, "mixerGetLineControlsW"));
+	o_mixerGetLineInfoA = reinterpret_cast<t_mixerGetLineInfoA>(GetProcAddress(winmm_dll, "mixerGetLineInfoA"));
+	o_mixerGetLineInfoW = reinterpret_cast<t_mixerGetLineInfoW>(GetProcAddress(winmm_dll, "mixerGetLineInfoW"));
+	o_mixerGetNumDevs = reinterpret_cast<t_mixerGetNumDevs>(GetProcAddress(winmm_dll, "mixerGetNumDevs"));
+	o_mixerMessage = reinterpret_cast<t_mixerMessage>(GetProcAddress(winmm_dll, "mixerMessage"));
+	o_mixerOpen = reinterpret_cast<t_mixerOpen>(GetProcAddress(winmm_dll, "mixerOpen"));
+	o_mixerSetControlDetails = reinterpret_cast<t_mixerSetControlDetails>(GetProcAddress(winmm_dll, "mixerSetControlDetails"));
+	o_mmDrvInstall = reinterpret_cast<t_mmDrvInstall>(GetProcAddress(winmm_dll, "mmDrvInstall"));
+	o_mmGetCurrentTask = reinterpret_cast<t_mmGetCurrentTask>(GetProcAddress(winmm_dll, "mmGetCurrentTask"));
+	o_mmTaskBlock = reinterpret_cast<t_mmTaskBlock>(GetProcAddress(winmm_dll, "mmTaskBlock"));
+	o_mmTaskCreate = reinterpret_cast<t_mmTaskCreate>(GetProcAddress(winmm_dll, "mmTaskCreate"));
+	o_mmTaskSignal = reinterpret_cast<t_mmTaskSignal>(GetProcAddress(winmm_dll, "mmTaskSignal"));
+	o_mmTaskYield = reinterpret_cast<t_mmTaskYield>(GetProcAddress(winmm_dll, "mmTaskYield"));
+	o_mmioAdvance = reinterpret_cast<t_mmioAdvance>(GetProcAddress(winmm_dll, "mmioAdvance"));
+	o_mmioAscend = reinterpret_cast<t_mmioAscend>(GetProcAddress(winmm_dll, "mmioAscend"));
+	o_mmioClose = reinterpret_cast<t_mmioClose>(GetProcAddress(winmm_dll, "mmioClose"));
+	o_mmioCreateChunk = reinterpret_cast<t_mmioCreateChunk>(GetProcAddress(winmm_dll, "mmioCreateChunk"));
+	o_mmioDescend = reinterpret_cast<t_mmioDescend>(GetProcAddress(winmm_dll, "mmioDescend"));
+	o_mmioFlush = reinterpret_cast<t_mmioFlush>(GetProcAddress(winmm_dll, "mmioFlush"));
+	o_mmioGetInfo = reinterpret_cast<t_mmioGetInfo>(GetProcAddress(winmm_dll, "mmioGetInfo"));
+	o_mmioInstallIOProcA = reinterpret_cast<t_mmioInstallIOProcA>(GetProcAddress(winmm_dll, "mmioInstallIOProcA"));
+	o_mmioInstallIOProcW = reinterpret_cast<t_mmioInstallIOProcW>(GetProcAddress(winmm_dll, "mmioInstallIOProcW"));
+	o_mmioOpenA = reinterpret_cast<t_mmioOpenA>(GetProcAddress(winmm_dll, "mmioOpenA"));
+	o_mmioOpenW = reinterpret_cast<t_mmioOpenW>(GetProcAddress(winmm_dll, "mmioOpenW"));
+	o_mmioRead = reinterpret_cast<t_mmioRead>(GetProcAddress(winmm_dll, "mmioRead"));
+	o_mmioRenameA = reinterpret_cast<t_mmioRenameA>(GetProcAddress(winmm_dll, "mmioRenameA"));
+	o_mmioRenameW = reinterpret_cast<t_mmioRenameW>(GetProcAddress(winmm_dll, "mmioRenameW"));
+	o_mmioSeek = reinterpret_cast<t_mmioSeek>(GetProcAddress(winmm_dll, "mmioSeek"));
+	o_mmioSendMessage = reinterpret_cast<t_mmioSendMessage>(GetProcAddress(winmm_dll, "mmioSendMessage"));
+	o_mmioSetBuffer = reinterpret_cast<t_mmioSetBuffer>(GetProcAddress(winmm_dll, "mmioSetBuffer"));
+	o_mmioSetInfo = reinterpret_cast<t_mmioSetInfo>(GetProcAddress(winmm_dll, "mmioSetInfo"));
+	o_mmioStringToFOURCCA = reinterpret_cast<t_mmioStringToFOURCCA>(GetProcAddress(winmm_dll, "mmioStringToFOURCCA"));
+	o_mmioStringToFOURCCW = reinterpret_cast<t_mmioStringToFOURCCW>(GetProcAddress(winmm_dll, "mmioStringToFOURCCW"));
+	o_mmioWrite = reinterpret_cast<t_mmioWrite>(GetProcAddress(winmm_dll, "mmioWrite"));
+	o_mmsystemGetVersion = reinterpret_cast<t_mmsystemGetVersion>(GetProcAddress(winmm_dll, "mmsystemGetVersion"));
+	o_sndPlaySoundA = reinterpret_cast<t_sndPlaySoundA>(GetProcAddress(winmm_dll, "sndPlaySoundA"));
+	o_sndPlaySoundW = reinterpret_cast<t_sndPlaySoundW>(GetProcAddress(winmm_dll, "sndPlaySoundW"));
+	o_timeBeginPeriod = reinterpret_cast<t_timeBeginPeriod>(GetProcAddress(winmm_dll, "timeBeginPeriod"));
+	o_timeEndPeriod = reinterpret_cast<t_timeEndPeriod>(GetProcAddress(winmm_dll, "timeEndPeriod"));
+	o_timeGetDevCaps = reinterpret_cast<t_timeGetDevCaps>(GetProcAddress(winmm_dll, "timeGetDevCaps"));
+	o_timeGetSystemTime = reinterpret_cast<t_timeGetSystemTime>(GetProcAddress(winmm_dll, "timeGetSystemTime"));
+	o_timeGetTime = reinterpret_cast<t_timeGetTime>(GetProcAddress(winmm_dll, "timeGetTime"));
+	o_timeKillEvent = reinterpret_cast<t_timeKillEvent>(GetProcAddress(winmm_dll, "timeKillEvent"));
+	o_timeSetEvent = reinterpret_cast<t_timeSetEvent>(GetProcAddress(winmm_dll, "timeSetEvent"));
+	o_waveInAddBuffer = reinterpret_cast<t_waveInAddBuffer>(GetProcAddress(winmm_dll, "waveInAddBuffer"));
+	o_waveInClose = reinterpret_cast<t_waveInClose>(GetProcAddress(winmm_dll, "waveInClose"));
+	o_waveInGetDevCapsA = reinterpret_cast<t_waveInGetDevCapsA>(GetProcAddress(winmm_dll, "waveInGetDevCapsA"));
+	o_waveInGetDevCapsW = reinterpret_cast<t_waveInGetDevCapsW>(GetProcAddress(winmm_dll, "waveInGetDevCapsW"));
+	o_waveInGetErrorTextA = reinterpret_cast<t_waveInGetErrorTextA>(GetProcAddress(winmm_dll, "waveInGetErrorTextA"));
+	o_waveInGetErrorTextW = reinterpret_cast<t_waveInGetErrorTextW>(GetProcAddress(winmm_dll, "waveInGetErrorTextW"));
+	o_waveInGetID = reinterpret_cast<t_waveInGetID>(GetProcAddress(winmm_dll, "waveInGetID"));
+	o_waveInGetNumDevs = reinterpret_cast<t_waveInGetNumDevs>(GetProcAddress(winmm_dll, "waveInGetNumDevs"));
+	o_waveInGetPosition = reinterpret_cast<t_waveInGetPosition>(GetProcAddress(winmm_dll, "waveInGetPosition"));
+	o_waveInMessage = reinterpret_cast<t_waveInMessage>(GetProcAddress(winmm_dll, "waveInMessage"));
+	o_waveInOpen = reinterpret_cast<t_waveInOpen>(GetProcAddress(winmm_dll, "waveInOpen"));
+	o_waveInPrepareHeader = reinterpret_cast<t_waveInPrepareHeader>(GetProcAddress(winmm_dll, "waveInPrepareHeader"));
+	o_waveInReset = reinterpret_cast<t_waveInReset>(GetProcAddress(winmm_dll, "waveInReset"));
+	o_waveInStart = reinterpret_cast<t_waveInStart>(GetProcAddress(winmm_dll, "waveInStart"));
+	o_waveInStop = reinterpret_cast<t_waveInStop>(GetProcAddress(winmm_dll, "waveInStop"));
+	o_waveInUnprepareHeader = reinterpret_cast<t_waveInUnprepareHeader>(GetProcAddress(winmm_dll, "waveInUnprepareHeader"));
+	o_waveOutBreakLoop = reinterpret_cast<t_waveOutBreakLoop>(GetProcAddress(winmm_dll, "waveOutBreakLoop"));
+	o_waveOutClose = reinterpret_cast<t_waveOutClose>(GetProcAddress(winmm_dll, "waveOutClose"));
+	o_waveOutGetDevCapsA = reinterpret_cast<t_waveOutGetDevCapsA>(GetProcAddress(winmm_dll, "waveOutGetDevCapsA"));
+	o_waveOutGetDevCapsW = reinterpret_cast<t_waveOutGetDevCapsW>(GetProcAddress(winmm_dll, "waveOutGetDevCapsW"));
+	o_waveOutGetErrorTextA = reinterpret_cast<t_waveOutGetErrorTextA>(GetProcAddress(winmm_dll, "waveOutGetErrorTextA"));
+	o_waveOutGetErrorTextW = reinterpret_cast<t_waveOutGetErrorTextW>(GetProcAddress(winmm_dll, "waveOutGetErrorTextW"));
+	o_waveOutGetID = reinterpret_cast<t_waveOutGetID>(GetProcAddress(winmm_dll, "waveOutGetID"));
+	o_waveOutGetNumDevs = reinterpret_cast<t_waveOutGetNumDevs>(GetProcAddress(winmm_dll, "waveOutGetNumDevs"));
+	o_waveOutGetPitch = reinterpret_cast<t_waveOutGetPitch>(GetProcAddress(winmm_dll, "waveOutGetPitch"));
+	o_waveOutGetPlaybackRate = reinterpret_cast<t_waveOutGetPlaybackRate>(GetProcAddress(winmm_dll, "waveOutGetPlaybackRate"));
+	o_waveOutGetPosition = reinterpret_cast<t_waveOutGetPosition>(GetProcAddress(winmm_dll, "waveOutGetPosition"));
+	o_waveOutGetVolume = reinterpret_cast<t_waveOutGetVolume>(GetProcAddress(winmm_dll, "waveOutGetVolume"));
+	o_waveOutMessage = reinterpret_cast<t_waveOutMessage>(GetProcAddress(winmm_dll, "waveOutMessage"));
+	o_waveOutOpen = reinterpret_cast<t_waveOutOpen>(GetProcAddress(winmm_dll, "waveOutOpen"));
+	o_waveOutPause = reinterpret_cast<t_waveOutPause>(GetProcAddress(winmm_dll, "waveOutPause"));
+	o_waveOutPrepareHeader = reinterpret_cast<t_waveOutPrepareHeader>(GetProcAddress(winmm_dll, "waveOutPrepareHeader"));
+	o_waveOutReset = reinterpret_cast<t_waveOutReset>(GetProcAddress(winmm_dll, "waveOutReset"));
+	o_waveOutRestart = reinterpret_cast<t_waveOutRestart>(GetProcAddress(winmm_dll, "waveOutRestart"));
+	o_waveOutSetPitch = reinterpret_cast<t_waveOutSetPitch>(GetProcAddress(winmm_dll, "waveOutSetPitch"));
+	o_waveOutSetPlaybackRate = reinterpret_cast<t_waveOutSetPlaybackRate>(GetProcAddress(winmm_dll, "waveOutSetPlaybackRate"));
+	o_waveOutSetVolume = reinterpret_cast<t_waveOutSetVolume>(GetProcAddress(winmm_dll, "waveOutSetVolume"));
+	o_waveOutUnprepareHeader = reinterpret_cast<t_waveOutUnprepareHeader>(GetProcAddress(winmm_dll, "waveOutUnprepareHeader"));
+	o_waveOutWrite = reinterpret_cast<t_waveOutWrite>(GetProcAddress(winmm_dll, "waveOutWrite"));
 }

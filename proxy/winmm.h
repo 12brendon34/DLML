@@ -1,4 +1,3 @@
 #pragma once
 
-void setup_winmm();
-void free_winmm();
+void winmm(bool Free = false);

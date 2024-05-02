@@ -26,7 +26,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		}
 		globals.MinHookInitialized = true;
 
-		setup_winmm();
+		winmm();
 
 		HANDLE handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CreateHooks, hModule, 0, 0);
 		if (handle != 0)
@@ -39,7 +39,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	}
 	case DLL_PROCESS_DETACH:
 	{
-		(void)free_winmm();
+		(void)winmm(true);
 		(void)MH_Uninitialize();
 
 		if (_DEBUG) {
