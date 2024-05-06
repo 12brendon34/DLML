@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <filesystem>
 #include "MinHook/MinHook.h"
+#include "global.h"
 
 #ifdef _DEBUG
 #  define dbgprintf(...) fprintf(stderr, __VA_ARGS__)

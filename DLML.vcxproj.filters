@@ -11,8 +11,8 @@
     <ClCompile Include="MinHook\trampoline.c" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Util.cpp" />
-    <ClCompile Include="FileName.cpp" />
     <ClCompile Include="proxy\winmm.cpp" />
+    <ClCompile Include="proxy\dsound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
@@ -23,7 +23,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="winmm.def" />
+    <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hooks.h" />
@@ -40,5 +40,6 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="proxy\winmm.h" />
+    <ClInclude Include="proxy\dsound.h" />
   </ItemGroup>
 </Project>

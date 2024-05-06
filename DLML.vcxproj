@@ -44,11 +44,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>winmm</TargetName>
+    <TargetName>DLML</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>winmm</TargetName>
+    <TargetName>DLML</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -68,7 +68,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>winmm.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -93,7 +93,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>winmm.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -106,11 +106,12 @@
     <ClCompile Include="MinHook\hde64.c" />
     <ClCompile Include="MinHook\hook.c" />
     <ClCompile Include="MinHook\trampoline.c" />
+    <ClCompile Include="proxy\dsound.cpp" />
     <ClCompile Include="proxy\winmm.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="winmm.def" />
+    <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="MinHook\table32.h" />
     <ClInclude Include="MinHook\table64.h" />
     <ClInclude Include="MinHook\trampoline.h" />
+    <ClInclude Include="proxy\dsound.h" />
     <ClInclude Include="proxy\winmm.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>

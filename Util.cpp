@@ -11,13 +11,17 @@ fs::path GetWorkingDir() {
 	return path.substr(0, path.find_last_of("/\\"));
 }
 
-//good enough
-bool IsDyingLight() {
+fs::path GetCurrentName(HMODULE hModule) {
 
-	fs::path WDPathName = GetWorkingDir().filename();
+	char path_c[MAX_PATH];
+	(void)GetModuleFileName(hModule, path_c, MAX_PATH);
 
-	if (WDPathName == "Dying Light")
-		return true;
-	
-	return false;
+	return fs::path(path_c).filename();
+}
+
+
+std::string ToLower(std::string data) {
+
+	(void)std::transform(data.begin(), data.end(), data.begin(), [](unsigned char c) { return std::tolower(c); });
+	return data;
 }

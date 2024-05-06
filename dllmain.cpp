@@ -2,7 +2,12 @@
 #include "common.h"
 #include "Hooks.h"
 #include "global.h"
+#include "Util.h"
+
 #include "proxy/winmm.h"
+#include "proxy/dsound.h"
+
+HMODULE dll;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
 	switch (ul_reason_for_call)
@@ -26,7 +31,14 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		}
 		globals.MinHookInitialized = true;
 
-		winmm();
+
+		std::string CurrentName = ToLower(GetCurrentName(hModule).string());
+
+		if (CurrentName == std::string("winmm.dll"))
+			dll = winmm();
+		if (CurrentName == std::string("dsound.dll"))
+			dll = dsound();
+
 
 		HANDLE handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CreateHooks, hModule, 0, 0);
 		if (handle != 0)
@@ -39,7 +51,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	}
 	case DLL_PROCESS_DETACH:
 	{
-		(void)winmm(true);
+		(void)FreeLibrary(dll);
 		(void)MH_Uninitialize();
 
 		if (_DEBUG) {
