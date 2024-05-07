@@ -9,11 +9,12 @@ struct ModInfo
 	std::string ModAuthor = "Unknown Author";
 	std::string ModDescription = "No Description";
 	std::string ModVersion = "Unknown Version";
+	int ModType = 0;
 	bool IsEnabled = 0;
-	bool IsRpack = 0;
 	bool WasInitialized = 0;
 };
 
 extern std::vector<ModInfo> ModInfoList;
 
 void IndexPaks();
+void LoadDlls();

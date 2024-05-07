@@ -71,6 +71,7 @@ BOOL CreateHooks(HMODULE hmodule) {
 
 	globals.WorkingDir = GetWorkingDir();
 	IndexPaks();
+	LoadDlls();
 
 	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
 	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
@@ -81,6 +82,7 @@ BOOL CreateHooks(HMODULE hmodule) {
 	else {
 		(void)dbgprintf("DLML Loaded\n");
 	}
+
 
 	(void)MH_EnableHook(MH_ALL_HOOKS);
 
