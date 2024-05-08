@@ -1,5 +1,4 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
-#include "common.h"
 #include "Hooks.h"
 #include "global.h"
 #include "Util.h"
@@ -32,7 +31,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		globals.MinHookInitialized = true;
 
 
-		std::string CurrentName = ToLower(GetCurrentName(hModule).string());
+		std::string CurrentName = str_tolower(GetCurrentName(hModule).string());
 
 		if (CurrentName == std::string("winmm.dll"))
 			dll = winmm();

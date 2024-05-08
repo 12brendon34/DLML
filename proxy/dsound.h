@@ -1,5 +1,5 @@
 #pragma once
-#include "../common.h"
+#include "../Util.h"
 #include <dsound.h>
 
 HMODULE dsound();

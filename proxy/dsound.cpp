@@ -11,8 +11,6 @@ using t_DirectSoundEnumerateA = HRESULT(WINAPI*)(_In_ LPDSENUMCALLBACKA pDSEnumC
 using t_DirectSoundEnumerateW = HRESULT(WINAPI*)(_In_ LPDSENUMCALLBACKW pDSEnumCallback, _In_opt_ LPVOID pContext);
 using t_DirectSoundFullDuplexCreate = HRESULT(WINAPI*)(_In_opt_ LPCGUID pcGuidCaptureDevice, _In_opt_ LPCGUID pcGuidRenderDevice, _In_ LPCDSCBUFFERDESC pcDSCBufferDesc, _In_ LPCDSBUFFERDESC pcDSBufferDesc, HWND hWnd, DWORD dwLevel, _Outptr_ LPDIRECTSOUNDFULLDUPLEX* ppDSFD, _Outptr_ LPDIRECTSOUNDCAPTUREBUFFER8* ppDSCBuffer8, _Outptr_ LPDIRECTSOUNDBUFFER8* ppDSBuffer8, _Pre_null_ LPUNKNOWN pUnkOuter);
 using t_GetDeviceID = HRESULT(WINAPI*)(_In_opt_ LPCGUID pGuidSrc, _Out_ LPGUID pGuidDest);
-//using t_DllCanUnloadNow = HRESULT (STDAPI*)();
-//using t_DllGetClassObject = HRESULT (STDAPI*)(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID FAR* ppv);
 
 t_DirectSoundCaptureCreate o_DirectSoundCaptureCreate;
 t_DirectSoundCaptureCreate8 o_DirectSoundCaptureCreate8;
@@ -24,8 +22,6 @@ t_DirectSoundEnumerateA o_DirectSoundEnumerateA;
 t_DirectSoundEnumerateW o_DirectSoundEnumerateW;
 t_DirectSoundFullDuplexCreate o_DirectSoundFullDuplexCreate;
 t_GetDeviceID o_GetDeviceID;
-//t_DllCanUnloadNow o_DllCanUnloadNow;
-//t_DllGetClassObject o_DllGetClassObject;
 
 HRESULT WINAPI hkDirectSoundCaptureCreate(_In_opt_ LPCGUID pcGuidDevice, _Outptr_ LPDIRECTSOUNDCAPTURE* ppDSC, _Pre_null_ LPUNKNOWN pUnkOuter)
 {
@@ -77,18 +73,6 @@ HRESULT WINAPI hkGetDeviceID(_In_opt_ LPCGUID pGuidSrc, _Out_ LPGUID pGuidDest)
 	return o_GetDeviceID(pGuidSrc, pGuidDest);
 }
 
-/*
-__control_entrypoint(DllExport) STDAPI  DllCanUnloadNow()
-{
-	return o_DllCanUnloadNow();
-}
-
-_Check_return_ STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID FAR* ppv)
-{
-	return o_DllGetClassObject(rclsid, riid, ppv);
-}
-*/
-
 HMODULE dsound() {
 
 	char path[MAX_PATH]{};
@@ -105,8 +89,6 @@ HMODULE dsound() {
 	o_DirectSoundEnumerateW = reinterpret_cast<t_DirectSoundEnumerateW>(GetProcAddress(dsound_dll, "DirectSoundEnumerateW"));
 	o_DirectSoundFullDuplexCreate = reinterpret_cast<t_DirectSoundFullDuplexCreate>(GetProcAddress(dsound_dll, "DirectSoundFullDuplexCreate"));
 	o_GetDeviceID = reinterpret_cast<t_GetDeviceID>(GetProcAddress(dsound_dll, "GetDeviceID"));
-	//o_DllCanUnloadNow = reinterpret_cast<t_DllCanUnloadNow>(GetProcAddress(dsound_dll, "DllCanUnloadNow"));
-	//o_DllGetClassObject = reinterpret_cast<t_DllGetClassObject>(GetProcAddress(dsound_dll, "DllGetClassObject"));
 
 	if (dsound_dll == NULL)
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Source dsound.dll missing");

@@ -1,4 +1,4 @@
 #pragma once
-#include "common.h"
+#include "Util.h"
 
 BOOL CreateHooks(HMODULE hmodule);
