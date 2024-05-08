@@ -197,8 +197,8 @@ BOOL CreateHooks(HMODULE hmodule) {
 		Fs_Mount_Address = GetProcAddress(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
 		CResourceLoadingRuntime_Create_Address = GetProcAddress(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
 
-		//(void)HookFunction(Fs_Mount_Address, &Fs_Mount_Hook, reinterpret_cast<void**>(&Fs_Mount));
-		//(void)HookFunction(CResourceLoadingRuntime_Create_Address, &CResourceLoadingRuntime_Create_Hook, reinterpret_cast<void**>(&CResourceLoadingRuntime_Create));
+		(void)HookFunction(Fs_Mount_Address, &Fs_Mount_Hook, reinterpret_cast<void**>(&Fs_Mount));
+		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &CResourceLoadingRuntime_Create_Hook, reinterpret_cast<void**>(&CResourceLoadingRuntime_Create));
 
 	}
 	else {
@@ -226,7 +226,10 @@ BOOL CreateHooks(HMODULE hmodule) {
 	{
 		if (kiero::init(type) == kiero::Status::Success)
 		{
-			kiero::bind(8, (void**)&oPresent, hkPresent);
+			if (globals.DyingLight2) {
+				//not dx12 yet bruh
+				kiero::bind(8, (void**)&oPresent, hkPresent);
+			}
 			kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
 			init_hook = true;
 		}
