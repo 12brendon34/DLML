@@ -2,6 +2,8 @@
 #include "global.h"
 #include "Loader.h"
 #include "Util.h"
+#include "kiero/kiero.h"
+#include "Menu.h"
 
 HMODULE GetModuleHandleSimple(LPCSTR lpModuleName) {
 	HMODULE Handle = GetModuleHandle(lpModuleName);
@@ -48,6 +50,29 @@ BOOL CreateHooks(HMODULE hmodule) {
 	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
 	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
 
+
+
+	kiero::RenderType::Enum type = kiero::RenderType::D3D11;;
+
+	if (::GetModuleHandle("d3d11.dll") != NULL)
+		type = kiero::RenderType::D3D11;
+	else if (::GetModuleHandle("d3d12.dll") != NULL)
+		type = kiero::RenderType::D3D12;
+
+
+	bool init_hook = false;
+	do
+	{
+		if (kiero::init(type) == kiero::Status::Success)
+		{
+			kiero::bind(8, (void**)&oPresent, hkPresent);
+			kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
+			init_hook = true;
+		}
+
+	} while (!init_hook);
+
+
 	if (globals.DyingLight2) {
 		(void)dbgprintf("DLML2 Loaded\n");
 	}
@@ -55,16 +80,15 @@ BOOL CreateHooks(HMODULE hmodule) {
 		(void)dbgprintf("DLML Loaded\n");
 	}
 
+	//(void)MH_EnableHook(MH_ALL_HOOKS);
 
-	(void)MH_EnableHook(MH_ALL_HOOKS);
-
-	while (globals.Running)
-	{
-		if (GetAsyncKeyState(VK_DELETE))
-			globals.Running = false;
-
-		Sleep(100);
-	}
+	//while (globals.Running)
+	//{
+	//	if (GetAsyncKeyState(VK_DELETE))
+	//		globals.Running = false;
+	//
+	//	Sleep(100);
+	//}
 
 	return true;
 }

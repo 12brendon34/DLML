@@ -5,6 +5,7 @@
 
 #include "proxy/winmm.h"
 #include "proxy/dsound.h"
+#include "kiero/kiero.h"
 
 HMODULE dll;
 
@@ -50,6 +51,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 	}
 	case DLL_PROCESS_DETACH:
 	{
+		(void)kiero::shutdown();
 		(void)FreeLibrary(dll);
 		(void)MH_Uninitialize();
 

@@ -12,13 +12,18 @@
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="proxy\winmm.cpp" />
     <ClCompile Include="proxy\dsound.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="kiero\kiero.cpp" />
+    <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
       <UniqueIdentifier>{5b77ec94-6833-4008-8a7c-42abc14d8442}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Imgui">
-      <UniqueIdentifier>{e36f8510-0f3a-4dea-99ff-f06b9a552fa0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,5 +44,15 @@
     <ClInclude Include="Util.h" />
     <ClInclude Include="proxy\winmm.h" />
     <ClInclude Include="proxy\dsound.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="kiero\kiero.h" />
+    <ClInclude Include="Menu.h" />
   </ItemGroup>
 </Project>

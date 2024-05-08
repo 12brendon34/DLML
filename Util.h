@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <iostream>
 #include <windows.h>
-#include <windows.h>
 #include <algorithm>
 #include <filesystem>
 #include "MinHook/MinHook.h"
