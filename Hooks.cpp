@@ -3,35 +3,6 @@
 #include "Loader.h"
 #include "Util.h"
 
-typedef unsigned __int64 DWORD64, * PDWORD64;
-template<size_t size, typename T> class buffer {
-	char buffer[size];
-	T data;
-public:
-	operator T() { return data; }
-	T operator->() { return data; }
-	T& operator=(const T& other) { data = other; return data; }
-	T& operator*=(const T& other) { data *= other; return data; }
-	T operator*(const T& other) const { return data * other; }
-	T& operator/=(const T& other) { data /= other; return data; }
-	T operator/(const T& other) const { return data / other; }
-	T& operator+=(const T& other) { data += other; return data; }
-	T operator+(const T& other) const { return data + other; }
-	T& operator-=(const T& other) { data -= other; return data; }
-	T operator-(const T& other) const { return data - other; }
-};
-
-struct fs_mount_path { //fs::mount_path
-public:
-	union {
-		const char* root_path;
-		buffer<0x8, const char*> unique_tail;
-		buffer<0x10, const char*> full_path;
-	};
-};
-//"Borrowed from EricPlayZ on discord" Bc Im Lazy
-
-
 HMODULE GetModuleHandleSimple(LPCSTR lpModuleName) {
 	HMODULE Handle = GetModuleHandle(lpModuleName);
 	if (Handle)
@@ -67,6 +38,7 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p : %s", target, statusCode);
 	}
 }
+
 BOOL CreateHooks(HMODULE hmodule) {
 
 	globals.WorkingDir = GetWorkingDir();
