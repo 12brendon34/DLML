@@ -4,6 +4,9 @@
 #include "Util.h"
 #include "kiero/kiero.h"
 #include "Menu.h"
+#include "impl/d3d11_impl.h"
+#include "impl/d3d12_impl.h"
+#include "imgui/imgui.h"
 
 HMODULE GetModuleHandleSimple(LPCSTR lpModuleName) {
 	HMODULE Handle = GetModuleHandle(lpModuleName);
@@ -46,7 +49,7 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
 add_source Add_Source_Real;
 bool Add_Source(char const* Path, int FFSAddSourceFlags) {
-	AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
+	//AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
 	(void)dbgprintf("Added Source: %s, Flags: %i\n", Path, FFSAddSourceFlags);
 	return Add_Source_Real(Path, FFSAddSourceFlags);
 }
@@ -105,7 +108,7 @@ bool Fs_Mount_Hook(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_
 		std::string full_path = reinterpret_cast<const char*>(reinterpret_cast<DWORD64>((const char*)mount_path->full_path) & 0x1fffffffffffffff);
 		//char buffer[MAX_PATH];
 
-		AddLog("Added Source : %s, Flags %i\n", full_path.c_str(), MountArgs);
+		//AddLog("Added Source : %s, Flags %i\n", full_path.c_str(), MountArgs);
 		(void)dbgprintf("Added Source: %s, Flags: %i\n", full_path.c_str(), MountArgs);
 		//sprintf(buffer, "Added Source : %s, Flags %i\n", full_path.c_str(), MountArgs);
 		//CLogV_Hook(3, (char*)"DLML2", NULL, NULL, NULL, NULL, buffer, NULL);
@@ -211,30 +214,33 @@ BOOL CreateHooks(HMODULE hmodule) {
 		(void)HookFunction(Add_Source_Address, &Add_Source, reinterpret_cast<void**>(&Add_Source_Real));
 	}
 
-
 	(void)MH_EnableHook(MH_ALL_HOOKS);
-
-	kiero::RenderType::Enum type = kiero::RenderType::D3D11;;
-
-	if (::GetModuleHandle("d3d11.dll") != NULL)
-		type = kiero::RenderType::D3D11;
-	else if (::GetModuleHandle("d3d12.dll") != NULL)
-		type = kiero::RenderType::D3D12;
 
 	bool init_hook = false;
 	do
 	{
-		if (kiero::init(type) == kiero::Status::Success)
-		{
-			if (globals.DyingLight2) {
-				//not dx12 yet bruh
-				kiero::bind(8, (void**)&oPresent, hkPresent);
-			}
-			kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
-			init_hook = true;
-		}
+		kiero::RenderType::Enum type = kiero::RenderType::None;
 
+		if (GetModuleHandle("d3d11.dll") != NULL)
+			type = kiero::RenderType::D3D11;
+
+		if (GetModuleHandle("d3d12.dll") != NULL)
+			type = kiero::RenderType::D3D12;
+
+		if (type != kiero::RenderType::None) {
+			if (kiero::init(type) == kiero::Status::Success)
+			{
+				if (globals.DyingLight2)
+					impl::d3d12::init();
+				else
+					impl::d3d11::init();
+
+				init_hook = true;
+			}
+		}
 	} while (!init_hook);
+
+	ImGui::ShowDemoWindow();
 
 	return true;
 }

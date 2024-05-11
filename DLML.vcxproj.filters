@@ -20,6 +20,10 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="kiero\kiero.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="impl\d3d11_impl.cpp" />
+    <ClCompile Include="impl\d3d12_impl.cpp" />
+    <ClCompile Include="impl\win32_impl.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
@@ -54,5 +58,9 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="kiero\kiero.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="impl\d3d11_impl.h" />
+    <ClInclude Include="impl\d3d12_impl.h" />
+    <ClInclude Include="impl\win32_impl.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
   </ItemGroup>
 </Project>
