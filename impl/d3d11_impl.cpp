@@ -55,11 +55,14 @@ namespace impl {
 
 				d3d11RenderTargetView = CreateRenderTargetView(pSwapChain);
 
+				impl::win32::init(desc.OutputWindow);
+				/*
 #ifndef LLMH_IMPL_DISABLE_DEBUG
 				std::thread([&desc]() { impl::win32::init(desc.OutputWindow); }).detach();
 #else 
 				impl::win32::init(desc.OutputWindow);
 #endif
+				*/
 
 				ImGui::CreateContext();
 				ImGui::GetIO().IniFilename = nullptr;
@@ -80,7 +83,7 @@ namespace impl {
 
 					Menu::FirstTimeRunning();
 					//if (Menu::menuToggle.GetValue())
-					//	Menu::Render();
+					Menu::Render();
 
 					ImGui::EndFrame();
 					ImGui::Render();

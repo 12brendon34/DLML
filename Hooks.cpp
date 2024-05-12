@@ -227,20 +227,20 @@ BOOL CreateHooks(HMODULE hmodule) {
 		if (GetModuleHandle("d3d12.dll") != NULL)
 			type = kiero::RenderType::D3D12;
 
-		if (type != kiero::RenderType::None) {
-			if (kiero::init(type) == kiero::Status::Success)
-			{
-				if (globals.DyingLight2)
-					impl::d3d12::init();
-				else
-					impl::d3d11::init();
+		if (!type)
+			continue;
 
-				init_hook = true;
-			}
-		}
+		if (kiero::init(type) != kiero::Status::Success)
+			continue;
+
+		if (type == 4)
+			impl::d3d12::init();
+		else
+			impl::d3d11::init();
+
+		init_hook = true;
+
 	} while (!init_hook);
-
-	ImGui::ShowDemoWindow();
 
 	return true;
 }

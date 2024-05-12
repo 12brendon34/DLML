@@ -4,4 +4,5 @@
 namespace Menu {
 	extern void InitImGui();
 	extern void FirstTimeRunning();
+	extern void Render();
 }

@@ -13,7 +13,6 @@
     <ClCompile Include="proxy\winmm.cpp" />
     <ClCompile Include="proxy\dsound.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
@@ -24,6 +23,7 @@
     <ClCompile Include="impl\d3d12_impl.cpp" />
     <ClCompile Include="impl\win32_impl.cpp" />
     <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
