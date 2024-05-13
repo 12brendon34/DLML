@@ -49,7 +49,7 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
 add_source Add_Source_Real;
 bool Add_Source(char const* Path, int FFSAddSourceFlags) {
-	//AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
+	Menu::AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
 	(void)dbgprintf("Added Source: %s, Flags: %i\n", Path, FFSAddSourceFlags);
 	return Add_Source_Real(Path, FFSAddSourceFlags);
 }
@@ -98,7 +98,7 @@ public:
 		buffer<0x10, const char*> full_path;
 	};
 };
-//EricPlayZ helped me with the fs_mount_path struct, let him copy my dl2 fs_mount hook after I figured out how it works (now I'm out of buisness as his mod is simply better)
+//EricPlayZ helped me with the fs_mount_path struct,So I let him copy my dl2 fs_mount hook after I figured out how it works (now I'm out of buisness as his mod is just simply better)
 
 typedef bool(__cdecl* _Fs_Mount)(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_3);
 _Fs_Mount Fs_Mount = nullptr;
@@ -106,12 +106,9 @@ _Fs_Mount Fs_Mount = nullptr;
 bool Fs_Mount_Hook(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_3) {
 	if (mount_path->full_path != NULL) {
 		std::string full_path = reinterpret_cast<const char*>(reinterpret_cast<DWORD64>((const char*)mount_path->full_path) & 0x1fffffffffffffff);
-		//char buffer[MAX_PATH];
 
-		//AddLog("Added Source : %s, Flags %i\n", full_path.c_str(), MountArgs);
+		Menu::AddLog("Added Source : %s, Flags %i\n", full_path.c_str(), MountArgs);
 		(void)dbgprintf("Added Source: %s, Flags: %i\n", full_path.c_str(), MountArgs);
-		//sprintf(buffer, "Added Source : %s, Flags %i\n", full_path.c_str(), MountArgs);
-		//CLogV_Hook(3, (char*)"DLML2", NULL, NULL, NULL, NULL, buffer, NULL);
 	}
 
 	return Fs_Mount(mount_path, MountArgs, NULL);
@@ -145,45 +142,28 @@ bool CResourceLoadingRuntime_Create_Hook(bool dontcare) {
 	for (size_t i = 0; i < ModInfoList.size(); i++)
 		if (ModInfoList[i].ModType == 0)
 			(void)EasyAdd_Source(ModInfoList[i].ModPath.c_str(), 1);
-	/*
-	for (size_t i = 0; i < ModInfoList.size(); i++) {
-		//not a pak
-		if (ModInfoList[i].ModType == 0) {
-			std::unique_ptr<fs_mount_path> MountPath = std::make_unique<fs_mount_path>();
-
-			std::string Path = ModInfoList[i].ModPath;
-			std::string Tail = Path;
-
-			//full path to pak, "E:\SteamLibrary\steamapps\common\Dying Light 2\ph\work\bin\x64\Mods\Paks\FOV PAK.pak"
-			MountPath->full_path = Path.c_str();
-
-			Path.erase(Path.find("ph") + 2);
-
-			//DL2 Root, "E:\SteamLibrary\steamapps\common\Dying Light 2"
-			MountPath->root_path = Path.c_str();
-
-
-			(void)Tail.erase(0, Tail.find("ph") + 2);
-
-			//Tail, "ph\work\bin\x64\Mods\Paks\FOV PAK.pak"
-			MountPath->unique_tail = Tail.c_str();
-
-			if (!Fs_Mount_Hook(MountPath.get(), 1, nullptr)) {
-				(void)dbgprintf("Pak Load Failed: %s\n", Tail.c_str());
-			}
-		}
-	}
-	*/
 	return CResourceLoadingRuntime_Create(dontcare);
+}
+kiero::RenderType::Enum rendererAPI = kiero::RenderType::None;
+
+//"borrowed" from egametools lmao, dw he cool af
+typedef bool(__cdecl* t_detourReadVideoSettings)(LPVOID instance, LPVOID file, bool flag1);
+t_detourReadVideoSettings o_ReadVideoSettings = nullptr;
+
+static bool hkReadVideoSettings(LPVOID instance, LPVOID file, bool flag1) {
+	if (rendererAPI != kiero::RenderType::None)
+		return o_ReadVideoSettings(instance, file, flag1);
+
+	DWORD renderer = *reinterpret_cast<PDWORD>(reinterpret_cast<DWORD64>(instance) + 0x7C);
+	rendererAPI = !renderer ? kiero::RenderType::D3D11 : kiero::RenderType::D3D12;
+
+	return o_ReadVideoSettings(instance, file, flag1);
 }
 
 FARPROC Fs_Mount_Address;
 FARPROC CResourceLoadingRuntime_Create_Address;
+FARPROC ReadVideoSettings_Addr;
 #pragma endregion DyingLight2
-
-
-
-
 
 BOOL CreateHooks(HMODULE hmodule) {
 
@@ -199,10 +179,13 @@ BOOL CreateHooks(HMODULE hmodule) {
 
 		Fs_Mount_Address = GetProcAddress(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
 		CResourceLoadingRuntime_Create_Address = GetProcAddress(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
+		ReadVideoSettings_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x10bdab0);//should eventually do some aob ahh stuff
+
 
 		(void)HookFunction(Fs_Mount_Address, &Fs_Mount_Hook, reinterpret_cast<void**>(&Fs_Mount));
 		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &CResourceLoadingRuntime_Create_Hook, reinterpret_cast<void**>(&CResourceLoadingRuntime_Create));
 
+		(void)HookFunction(ReadVideoSettings_Addr, &hkReadVideoSettings, reinterpret_cast<void**>(&o_ReadVideoSettings));
 	}
 	else {
 		(void)dbgprintf("DLML Loaded\n");
@@ -216,27 +199,21 @@ BOOL CreateHooks(HMODULE hmodule) {
 
 	(void)MH_EnableHook(MH_ALL_HOOKS);
 
+
 	bool init_hook = false;
-	do
-	{
-		kiero::RenderType::Enum type = kiero::RenderType::None;
+	do {
+		if (!globals.DyingLight2)
+			rendererAPI = kiero::RenderType::D3D11;
 
-		if (GetModuleHandle("d3d11.dll") != NULL)
-			type = kiero::RenderType::D3D11;
-
-		if (GetModuleHandle("d3d12.dll") != NULL)
-			type = kiero::RenderType::D3D12;
-
-		if (!type)
+		if (kiero::init(rendererAPI) != kiero::Status::Success)
 			continue;
 
-		if (kiero::init(type) != kiero::Status::Success)
-			continue;
-
-		if (type == 4)
-			impl::d3d12::init();
-		else
+		if (rendererAPI == kiero::RenderType::D3D11) {
 			impl::d3d11::init();
+		}
+		else {
+			impl::d3d12::init();
+		}
 
 		init_hook = true;
 

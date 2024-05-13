@@ -56,13 +56,6 @@ namespace impl {
 				d3d11RenderTargetView = CreateRenderTargetView(pSwapChain);
 
 				impl::win32::init(desc.OutputWindow);
-				/*
-#ifndef LLMH_IMPL_DISABLE_DEBUG
-				std::thread([&desc]() { impl::win32::init(desc.OutputWindow); }).detach();
-#else 
-				impl::win32::init(desc.OutputWindow);
-#endif
-				*/
 
 				ImGui::CreateContext();
 				ImGui::GetIO().IniFilename = nullptr;
@@ -82,8 +75,8 @@ namespace impl {
 					ImGui::NewFrame();
 
 					Menu::FirstTimeRunning();
-					//if (Menu::menuToggle.GetValue())
-					Menu::Render();
+					if (Menu::menuToggle)
+						Menu::Render();
 
 					ImGui::EndFrame();
 					ImGui::Render();
@@ -94,9 +87,9 @@ namespace impl {
 
 					return oPresent(pSwapChain, SyncInterval, Flags);
 				} catch (const std::exception& e) {
-					//spdlog::error("Exception thrown rendering ImGui in DX11: {}", e.what());
+					(void)dbgprintf("Exception thrown rendering ImGui in DX11: {%s}\n", e.what());
 					if (retries >= 6) {
-						//spdlog::error("Retried rendering ImGui in DX11 6 times, game will exit now.");
+						(void)dbgprintf("Retried rendering ImGui in DX11 6 times, game will exit now.\n");
 						IM_ASSERT(retries < 6 && "Retried rendering ImGui in DX11 6 times, game will exit now.");
 					}
 				}

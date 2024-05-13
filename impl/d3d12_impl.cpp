@@ -1,5 +1,4 @@
 ﻿#include "d3d12_impl.h"
-#include <d3d12.h>
 
 
 namespace impl {
@@ -114,8 +113,8 @@ namespace impl {
 					ImGui::NewFrame();
 
 					Menu::FirstTimeRunning();
-					//if (Menu::menuToggle.GetValue())
-					Menu::Render();
+					if (Menu::menuToggle)
+						Menu::Render();
 
 					ImGui::Render();
 
@@ -148,9 +147,9 @@ namespace impl {
 
 					break;
 				} catch (const std::exception& e) {
-					//spdlog::error("Exception thrown rendering ImGui in DX12: {}", e.what());
+					(void)dbgprintf("Exception thrown rendering ImGui in DX12: {%s}\n", e.what());
 					if (retries >= 6) {
-						//spdlog::error("Retried rendering ImGui in DX12 6 times, game will exit now.");
+						(void)dbgprintf("Retried rendering ImGui in DX12 6 times, game will exit now.\n");
 						IM_ASSERT(retries < 6 && "Retried rendering ImGui in DX12 6 times, game will exit now.");
 					}
 				}

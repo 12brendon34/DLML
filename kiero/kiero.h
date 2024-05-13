@@ -8,30 +8,7 @@
 
 #define KIERO_VERSION "1.2.12"
 
-#define KIERO_INCLUDE_D3D9   0 // 1 if you need D3D9 hook
-#define KIERO_INCLUDE_D3D10  0 // 1 if you need D3D10 hook
-#define KIERO_INCLUDE_D3D11  1 // 1 if you need D3D11 hook
-#define KIERO_INCLUDE_D3D12  1 // 1 if you need D3D12 hook
-#define KIERO_INCLUDE_OPENGL 0 // 1 if you need OpenGL hook
-#define KIERO_INCLUDE_VULKAN 0 // 1 if you need Vulkan hook
-#define KIERO_USE_MINHOOK    1 // 1 if you will use kiero::bind function
-
-#define KIERO_ARCH_X64 1
-#define KIERO_ARCH_X86 0
-
-#if defined(_M_X64)	
-# undef  KIERO_ARCH_X64
-# define KIERO_ARCH_X64 1
-#else
-# undef  KIERO_ARCH_X86
-# define KIERO_ARCH_X86 1
-#endif
-
-#if KIERO_ARCH_X64
 typedef uint64_t uint150_t;
-#else
-typedef uint32_t uint150_t;
-#endif
 
 namespace kiero
 {
@@ -56,15 +33,8 @@ namespace kiero
 		{
 			None,
 
-			D3D9,
-			D3D10,
 			D3D11,
-			D3D12,
-
-			OpenGL,
-			Vulkan,
-
-			Auto
+			D3D12
 		};
 	};
 
@@ -78,4 +48,4 @@ namespace kiero
 	uint150_t* getMethodsTable();
 }
 
-#endif // __KIERO_H__
+#endif
