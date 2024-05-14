@@ -206,13 +206,20 @@ namespace impl {
 		}
 
 		void init() {
-			assert(kiero::bind(140, (LPVOID*)&oPresent, hkPresent12) == kiero::Status::Success);
-			assert(kiero::bind(154, (LPVOID*)&oPresent1, hkPresent112) == kiero::Status::Success);
+			kiero::Status::Enum ret;
 
-			assert(kiero::bind(145, (LPVOID*)&oResizeBuffers, hookResizeBuffers12) == kiero::Status::Success);
-			assert(kiero::bind(171, (LPVOID*)&oResizeBuffers1, hookResizeBuffers112) == kiero::Status::Success);
+			ret = kiero::bind(140, (LPVOID*)&oPresent, hkPresent12);
+				assert(ret == kiero::Status::Success);
+			ret = kiero::bind(154, (LPVOID*)&oPresent1, hkPresent112);
+				assert(ret == kiero::Status::Success);
 
-			assert(kiero::bind(54, (LPVOID*)&oExecuteCommandLists, hookExecuteCommandLists12) == kiero::Status::Success);
+			ret = kiero::bind(145, (LPVOID*)&oResizeBuffers, hookResizeBuffers12);
+				assert(ret == kiero::Status::Success);
+			ret = kiero::bind(171, (LPVOID*)&oResizeBuffers1, hookResizeBuffers112);
+				assert(ret == kiero::Status::Success);
+
+			ret = kiero::bind(54, (LPVOID*)&oExecuteCommandLists, hookExecuteCommandLists12);
+				assert(ret == kiero::Status::Success);
 		}
 	}
 }

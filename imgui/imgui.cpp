@@ -4112,7 +4112,7 @@ void ImGui::Render()
     if (!g.BackgroundDrawList.VtxBuffer.empty())
         AddDrawListToDrawData(&g.DrawDataBuilder.Layers[0], &g.BackgroundDrawList);
 
-    ImGuiWindow* windows_to_render_top_most[2];
+    ImGuiWindow* windows_to_render_top_most[2]{};
     windows_to_render_top_most[0] = (g.NavWindowingTarget && !(g.NavWindowingTarget->Flags & ImGuiWindowFlags_NoBringToFrontOnFocus)) ? g.NavWindowingTarget->RootWindow : NULL;
     windows_to_render_top_most[1] = g.NavWindowingTarget ? g.NavWindowingList : NULL;
     for (int n = 0; n != g.Windows.Size; n++)
@@ -9690,7 +9690,7 @@ static void ImeSetInputScreenPosFn_DefaultImpl(int x, int y)
     if (HWND hwnd = (HWND)io.ImeWindowHandle)
         if (HIMC himc = ::ImmGetContext(hwnd))
         {
-            COMPOSITIONFORM cf;
+            COMPOSITIONFORM cf{};
             cf.ptCurrentPos.x = x;
             cf.ptCurrentPos.y = y;
             cf.dwStyle = CFS_FORCE_POSITION;
@@ -9943,7 +9943,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         static void NodeTabBar(ImGuiTabBar* tab_bar)
         {
             // Standalone tab bars (not associated to docking/windows functionality) currently hold no discernible strings.
-            char buf[256];
+            char buf[256]{};
             char* p = buf;
             const char* buf_end = buf + IM_ARRAYSIZE(buf);
             ImFormatString(p, buf_end - p, "TabBar (%d tabs)%s", tab_bar->Tabs.Size, (tab_bar->PrevFrameVisible < ImGui::GetFrameCount() - 2) ? " *Inactive*" : "");

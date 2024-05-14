@@ -208,6 +208,7 @@ BOOL CreateHooks(HMODULE hmodule) {
 		if (kiero::init(rendererAPI) != kiero::Status::Success)
 			continue;
 
+
 		if (rendererAPI == kiero::RenderType::D3D11) {
 			impl::d3d11::init();
 		}

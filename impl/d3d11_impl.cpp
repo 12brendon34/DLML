@@ -106,8 +106,13 @@ namespace impl {
 		}
 
 		void init() {
-			assert(kiero::bind(8, (LPVOID*)&oPresent, hkPresent11) == kiero::Status::Success);
-			assert(kiero::bind(13, (LPVOID*)&oResizeBuffers, hkResizeBuffers11) == kiero::Status::Success);
+			kiero::Status::Enum ret;
+
+			ret = kiero::bind(8, (LPVOID*)&oPresent, hkPresent11);
+			assert(ret == kiero::Status::Success);
+
+			ret = kiero::bind(13, (LPVOID*)&oResizeBuffers, hkResizeBuffers11);
+			assert(ret == kiero::Status::Success);
 		}
 	}
 }
