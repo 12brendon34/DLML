@@ -44,24 +44,27 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 	}
 }
 
+
+
+
 #pragma region DyingLight
 
 typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
-add_source Add_Source_Real;
-bool Add_Source(char const* Path, int FFSAddSourceFlags) {
+add_source o_Add_Source;
+bool hkAdd_Source(char const* Path, int FFSAddSourceFlags) {
 	Menu::AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
 	(void)dbgprintf("Added Source: %s, Flags: %i\n", Path, FFSAddSourceFlags);
-	return Add_Source_Real(Path, FFSAddSourceFlags);
+	return o_Add_Source(Path, FFSAddSourceFlags);
 }
 
 typedef void(__cdecl* initializegamescript)(LPCSTR locale);
-initializegamescript InitializeGameScript_Real;
-void InitializeGameScript(LPCSTR locale) {
+initializegamescript o_InitializeGameScript;
+void hkInitializeGameScript(LPCSTR locale) {
 	for (size_t i = 0; i < ModInfoList.size(); i++)
 		if (ModInfoList[i].ModType == 0)
-			(void)Add_Source(ModInfoList[i].ModPath.c_str(), 9);
+			(void)hkAdd_Source(ModInfoList[i].ModPath.c_str(), 9);
 
-	return InitializeGameScript_Real(locale);
+	return o_InitializeGameScript(locale);
 }
 
 FARPROC InitializeGameScript_Address;
@@ -101,9 +104,9 @@ public:
 //EricPlayZ helped me with the fs_mount_path struct,So I let him copy my dl2 fs_mount hook after I figured out how it works (now I'm out of buisness as his mod is just simply better)
 
 typedef bool(__cdecl* _Fs_Mount)(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_3);
-_Fs_Mount Fs_Mount = nullptr;
+_Fs_Mount o_Fs_Mount = nullptr;
 
-bool Fs_Mount_Hook(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_3) {
+bool hkFs_Mount(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_3) {
 	if (mount_path->full_path != NULL) {
 		std::string full_path = reinterpret_cast<const char*>(reinterpret_cast<DWORD64>((const char*)mount_path->full_path) & 0x1fffffffffffffff);
 
@@ -111,7 +114,7 @@ bool Fs_Mount_Hook(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_
 		(void)dbgprintf("Added Source: %s, Flags: %i\n", full_path.c_str(), MountArgs);
 	}
 
-	return Fs_Mount(mount_path, MountArgs, NULL);
+	return o_Fs_Mount(mount_path, MountArgs, NULL);
 }
 
 
@@ -132,17 +135,17 @@ bool EasyAdd_Source(const char* PakPath, int Args) {
 	Path->unique_tail = tail.c_str();
 	Path->full_path = PakPath;
 
-	return Fs_Mount_Hook(Path, Args, NULL);
+	return hkFs_Mount(Path, Args, NULL);
 }
 
 typedef bool(__cdecl* _CResourceLoadingRuntime_Create)(bool dontcare);
-_CResourceLoadingRuntime_Create CResourceLoadingRuntime_Create = nullptr;
+_CResourceLoadingRuntime_Create o_CResourceLoadingRuntime_Create = nullptr;
 
-bool CResourceLoadingRuntime_Create_Hook(bool dontcare) {
+bool hkCResourceLoadingRuntime_Create(bool dontcare) {
 	for (size_t i = 0; i < ModInfoList.size(); i++)
 		if (ModInfoList[i].ModType == 0)
 			(void)EasyAdd_Source(ModInfoList[i].ModPath.c_str(), 1);
-	return CResourceLoadingRuntime_Create(dontcare);
+	return o_CResourceLoadingRuntime_Create(dontcare);
 }
 kiero::RenderType::Enum rendererAPI = kiero::RenderType::None;
 
@@ -165,6 +168,53 @@ FARPROC CResourceLoadingRuntime_Create_Address;
 FARPROC ReadVideoSettings_Addr;
 #pragma endregion DyingLight2
 
+
+typedef void(__cdecl* _clogv)(int LogType, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg);
+_clogv CLogV = nullptr;
+void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg) {
+	std::string Message;
+
+	if (logtype == 5)
+		Message.append(" DBUG :");
+	else if (logtype == 4)
+		Message.append(" WARN :");
+	else if (logtype == 3)
+		Message.append(" INFO :");
+	else if (logtype == 2)
+		Message.append(" ERRR :");
+
+	Message.append(" [" + (std::string)thread + "] ");
+
+	if (CLFilterAction == 2)
+		Message.append("| ");
+	else
+		Message.append("> ");
+
+	char Buffer[65528];
+	vsprintf(Buffer, message, (va_list)printarg);
+	Message.append(Buffer);
+
+	(void)dbgprintf("%s", Message.c_str());
+	return CLogV(logtype, thread, sourcefile, linenumber, CLFilterAction, CLLineMode, message, printarg);
+}
+
+
+typedef int* (*logsettingsinstance)();
+logsettingsinstance o_LogSettingsInstance;
+int* hkLogSettingsInstance() {
+	int* logint = o_LogSettingsInstance();
+	*logint = INT_MAX;
+	return logint;
+}
+
+int hkGetCategoryLevel(int This, char* Catagory) {
+	return INT_MAX;
+}
+
+FARPROC LogSettingsInstance_Address;
+FARPROC GetCategoryLevel_Address;
+FARPROC CLogV_Address;
+
 BOOL CreateHooks(HMODULE hmodule) {
 
 	globals.WorkingDir = GetWorkingDir();
@@ -179,11 +229,11 @@ BOOL CreateHooks(HMODULE hmodule) {
 
 		Fs_Mount_Address = GetProcAddress(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
 		CResourceLoadingRuntime_Create_Address = GetProcAddress(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
-		ReadVideoSettings_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x10bdab0);//should eventually do some aob ahh stuff
+		ReadVideoSettings_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x10bdab0);//should eventually do some aob ahh stuff or smt Idn
 
 
-		(void)HookFunction(Fs_Mount_Address, &Fs_Mount_Hook, reinterpret_cast<void**>(&Fs_Mount));
-		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &CResourceLoadingRuntime_Create_Hook, reinterpret_cast<void**>(&CResourceLoadingRuntime_Create));
+		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount));
+		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &hkCResourceLoadingRuntime_Create, reinterpret_cast<void**>(&o_CResourceLoadingRuntime_Create));
 
 		(void)HookFunction(ReadVideoSettings_Addr, &hkReadVideoSettings, reinterpret_cast<void**>(&o_ReadVideoSettings));
 	}
@@ -193,9 +243,19 @@ BOOL CreateHooks(HMODULE hmodule) {
 		InitializeGameScript_Address = GetProcAddressSimple(EngineDll, "InitializeGameScript");
 		Add_Source_Address = GetProcAddressSimple(FilesystemDll, "?add_source@fs@@YA_NPEBDW4ENUM@FFSAddSourceFlags@@@Z");
 
-		(void)HookFunction(InitializeGameScript_Address, &InitializeGameScript, reinterpret_cast<void**>(&InitializeGameScript_Real));
-		(void)HookFunction(Add_Source_Address, &Add_Source, reinterpret_cast<void**>(&Add_Source_Real));
+		(void)HookFunction(InitializeGameScript_Address, &hkInitializeGameScript, reinterpret_cast<void**>(&o_InitializeGameScript));
+		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
 	}
+
+	LogSettingsInstance_Address = GetProcAddress(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
+	GetCategoryLevel_Address = GetProcAddress(FilesystemDll, "?GetCategoryLevel@Settings@Log@@QEBA?AW4TYPE@ELevel@2@PEBD@Z");
+	CLogV_Address = GetProcAddress(FilesystemDll, "?_CLogV@@YAXW4TYPE@ELevel@Log@@PEBD1HW4ENUM@CLFilterAction@@W44CLLineMode@@1PEAD@Z");
+
+	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
+	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
+	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
+
+
 
 	(void)MH_EnableHook(MH_ALL_HOOKS);
 
