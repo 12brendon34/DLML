@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include <cstdint>
 #include "Fonts.h"
+#include "Hooks.h"
 
 namespace Menu {
 	bool menuToggle = false;

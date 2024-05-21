@@ -7,6 +7,7 @@
 #include "impl/d3d11_impl.h"
 #include "impl/d3d12_impl.h"
 #include "imgui/imgui.h"
+#include <fstream>
 
 HMODULE GetModuleHandleSimple(LPCSTR lpModuleName) {
 	HMODULE Handle = GetModuleHandle(lpModuleName);
@@ -52,8 +53,6 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
 add_source o_Add_Source;
 bool hkAdd_Source(char const* Path, int FFSAddSourceFlags) {
-	Menu::AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
-	(void)dbgprintf("Added Source: %s, Flags: %i\n", Path, FFSAddSourceFlags);
 	return o_Add_Source(Path, FFSAddSourceFlags);
 }
 
@@ -168,7 +167,6 @@ FARPROC CResourceLoadingRuntime_Create_Address;
 FARPROC ReadVideoSettings_Addr;
 #pragma endregion DyingLight2
 
-
 typedef void(__cdecl* _clogv)(int LogType, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg);
 _clogv CLogV = nullptr;
 void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg) {
@@ -215,6 +213,278 @@ FARPROC LogSettingsInstance_Address;
 FARPROC GetCategoryLevel_Address;
 FARPROC CLogV_Address;
 
+
+
+
+
+
+
+FARPROC OpenPack_Addr; 
+FARPROC LoadData_Addr;
+FARPROC CResourceDataPack_Addr;
+
+//typedef struct SFsFile SFsFile, * PSFsFile;
+
+/*
+struct SFsFile {
+	buffer<0x0, LONGLONG*> FsFileFileVtable; 	//Length 0x8
+	//buffer<0x8, SFsFile*> SFsFile; 				//Length 0x8
+};
+*/
+
+typedef unsigned int    undefined4;
+typedef unsigned long long    undefined8;
+
+struct CResourceDataPack { //fs::mount_path
+public:
+	union {
+		LONGLONG* SFsFile; 						//Length 0x8
+		buffer<0x8, UINT> C2;					//Length 0x4
+		buffer<0xc, char>C3;					//Length 0x1
+		buffer<0xd, char>C4;					//Length 0x1
+		buffer<0xe, char>C5;					//Length 0x1
+		buffer<0xf, char>C6;					//Length 0x1
+		buffer<0x10, LONGLONG*>EventA;			//Length 0x8
+		buffer<0x18, UINT>C8;					//Length 0x4  //0 or 192 or smt other bullcrap, it changes, this is used as a flag sometimes, not sure
+		buffer<0x1c, undefined4> RpackReference; //Length 0x4 //could be some data, sometimes its just 160,
+		buffer<0x20, UINT>C10;					//Length 0x4  //not sure, seen it be data, but ive also seen it just be "00 00 00 A0"
+		buffer<0x24, UINT>C11;					//Length 0x1	//seen as 15 or 1
+		buffer<0x28, UINT>C15;					//Length 0x4	//seen as 15 or 192
+		buffer<0x2c, UINT>C16;					//Length 0x4	//0 or 570433536
+		buffer<0x30, UINT>C17;					//Length 0x4	//0 or 1
+		buffer<0x34, UINT>C18;					//Length 0x4	//0 or 232
+		buffer<0x38, UINT>C19;					//Length 0x4	//0 or 840376832
+		buffer<0x3c, UINT>C20;					//Length 0x4	//29 or 1
+		buffer<0x40, UINT>C21;					//Length 0x4	//0 or 280
+		buffer<0x44, UINT>C22;					//Length 0x4
+		buffer<0x48, void*>C23;					//Length 0x8
+		buffer<0x50, undefined8>C24;			//Length 0x4					// something interesting but always zero
+		buffer<0x58, undefined4>C29;			//Length 0x4	//61 or = lmao
+		buffer<0x5c, char>C30;					//Length 0x1	//70 or 57
+		buffer<0x5d, char>C31;					//Length 0x1	//01
+		buffer<0x5e, char>C32;					//Length 0x1
+		buffer<0x5f, char>C33;					//Length 0x1
+		buffer<0x60, void*>C34;					//Length 0x8
+		buffer<0x68, UINT>C35;					//Length 0x4
+		buffer<0x6c, UINT>C36;					//Length 0x4
+		buffer<0x70, undefined4>C37;			//Length 0x4	//61 or = lmao
+		buffer<0x74, char>C38;					//Length 0x1
+		buffer<0x75, char>C39;					//Length 0x1
+		buffer<0x76, char>C40;					//Length 0x1
+		buffer<0x77, char>C41;					//Length 0x1
+		buffer<0x78, void*>C42;					//Length 0x8
+		buffer<0x80, UINT>C43;					//Length 0x4
+		buffer<0x84, UINT>C44;					//Length 0x4
+		buffer<0x88, ULONGLONG>C45;				//Length 0x8	//61 or = lmao
+		buffer<0x90, void*>C46;					//Length 0x8
+		buffer<0x98, UINT>C47;					//Length 0x4
+		buffer<0x9c, UINT>C48;					//Length 0x4
+		buffer<0xa0, undefined4>C49;			//Length 0x4	//61 or = lmao
+		buffer<0xa4, char>C50;					//Length 0x1
+		buffer<0xa5, char>C51;					//Length 0x1
+		buffer<0xa6, char>C52;					//Length 0x1
+		buffer<0xa7, char>C53;					//Length 0x1
+		buffer<0xa8, void*>C54;					//Length 0x8
+		buffer<0xb0, UINT>C55;					//Length 0x4
+		buffer<0xb4, UINT>C56;					//Length 0x4
+		buffer<0xb8, undefined4>C57;			//Length 0x4	//61 or = lmao
+		buffer<0xbc, char>C58;					//Length 0x1
+		buffer<0xbd, char>C59;					//Length 0x1
+		buffer<0xbe, char>C60;					//Length 0x1
+		buffer<0xbf, char>C61;					//Length 0x1
+		buffer<0xc0, undefined8> PackName;		//Length 0x8
+		buffer<0xc8, undefined8> Patch;			//Length 0x8
+	};
+};
+
+typedef CResourceDataPack*(__cdecl* t_CResourceDataPack)(CResourceDataPack* othis);
+t_CResourceDataPack o_CResourceDataPack = nullptr;
+
+CResourceDataPack* hkCResourceDataPack(CResourceDataPack* othis)
+{
+	return o_CResourceDataPack(othis);
+}
+
+typedef int(__cdecl* t_OpenPack)(CResourceDataPack* othis, char* param_1, UINT param_2);
+t_OpenPack o_OpenPack = nullptr;
+int hkOpenPack(CResourceDataPack* othis, char* path, UINT flags) {
+
+
+	auto pathstr = (std::string)path;
+
+	if (pathstr.find("common_textures_0_pc") != std::string::npos) {
+
+		std::thread([]() {
+			test((char*)"E:\\SteamLibrary\\steamapps\\common\\Dying Light\\DW\\Data\\Arr this be the bad blood textures.rpacz");
+		}).detach();
+	}
+
+
+
+	(void)dbgprintf("***********\n");
+	(void)dbgprintf("OpenPack \n");
+	(void)dbgprintf("RpackPath :%s\n", path);
+	(void)dbgprintf("flags :%i\n", flags);
+	(void)dbgprintf("CResourceDataPack : \n");
+	(void)dbgprintf("C8 :%i \n", (UINT)othis->C8);
+
+	int i;
+	for (i = 0; i < 208; i++)
+	{
+		unsigned char c = ((char*)othis)[i];
+		(void)dbgprintf("%02x ", c);
+	}
+
+	int bruh = o_OpenPack(othis, path, flags);
+
+	(void)dbgprintf("\nOpenPack Result :%i\n", bruh);
+	(void)dbgprintf("CResourceDataPack After : \n");
+	i = 0;
+	for (i = 0; i < 208; i++)
+	{
+		unsigned char c = ((char*)othis)[i];
+		(void)dbgprintf("%02x ", c);
+	}
+
+	(void)dbgprintf("\nCResourceDataPack* :%p\n", othis);
+	(void)dbgprintf("***********\n\n");
+
+	return bruh;
+}
+
+typedef int(__cdecl* t_LoadData)(CResourceDataPack* othis, bool param_1);
+t_LoadData o_LoadData = nullptr;
+int hkLoadData(CResourceDataPack* othis, bool param_1) {
+	int bruh = o_LoadData(othis,  param_1);
+
+	/*
+	(void)dbgprintf("***********\n");
+	(void)dbgprintf("LoadData\n\n");
+	(void)dbgprintf("CResourceDataPack* :%p\n", othis);
+	(void)dbgprintf("param_1 :%i\n", param_1);
+	(void)dbgprintf("***********\n\n");*/
+	return bruh;
+}
+
+bool FUN_180026c40(LONGLONG* param_1, byte param_2, byte param_3)
+{
+	HANDLE pvVar1;
+	char extraout_var;
+
+	pvVar1 = CreateEventA(NULL, (UINT)param_2, (UINT)param_3, NULL);
+	*param_1 = (LONGLONG)pvVar1;
+	return (char)pvVar1 != 0;
+}
+
+CResourceDataPack* CResourceDataPackClone() {
+
+	UINT8 param = 0x80; //not even sure what this does , 0x20 or 0x80
+
+	auto alloc = malloc(208); //CResourceDataPack is 208 
+	memset(alloc, 0, 208);
+
+	auto resorce = reinterpret_cast<CResourceDataPack*>(alloc);
+	
+	resorce->C29 = 61;
+	resorce->C37 = 61;
+	resorce->C45 = 61;
+	resorce->C49 = 61;
+	resorce->C57 = 61;
+	
+	LONGLONG* puVar1 = (LONGLONG*)_aligned_malloc(0x30, 0x10);
+	*puVar1 = 0;
+
+	puVar1[1] = 0;
+	puVar1[2] = 0;
+	puVar1[3] = 0;
+	puVar1[4] = 0;
+	puVar1[5] = 1;
+	FUN_180026c40(puVar1 + 3, 1, 0);
+
+	resorce->EventA = puVar1;
+
+	resorce->C2 = 0xfffffff6;
+
+	//resorce->RpackReference = (undefined4)resorce->RpackReference + 1;
+
+	//guessing some varriables
+	resorce->RpackReference = 160; //not sure how this is done
+	resorce->C11 = 15;
+	resorce->C15 = 15;
+	resorce->C17 = 1;
+	resorce->C20 = 1;
+	resorce->C31 = 1;
+
+	return resorce;
+}
+
+void test(char* Path) {
+
+	CResourceDataPack* resorce = CResourceDataPackClone();
+	
+	bool param_6 = false; // I think this is only used on the engine.dll
+
+	UINT uVar6 = 0x102;
+	if (param_6 != false) {
+		uVar6 = 0x100;
+	}
+
+	if ((uVar6 & 1) != 0) {
+		resorce->C8 = resorce->C8 | 0x1000000;
+	}
+	if ((uVar6 & 8) != 0) {
+		resorce->C8 = resorce->C8 | 0x1000000;
+	}
+	if ((uVar6 & 4) != 0) {
+		resorce->C8 = resorce->C8 | 0x4000000;
+	}
+
+	//resorce->Patch = true;
+
+
+	auto OpenPacKRet = hkOpenPack(resorce, Path, uVar6);
+
+	if (OpenPacKRet < 0) {
+		//resorce->PackName = 0;
+		//UnloadRpack(resorce);
+	}
+	auto LoadDataRet = hkLoadData(resorce, true);
+	(void)dbgprintf("**********************\n");
+	(void)dbgprintf("**********************\n");
+	(void)dbgprintf("LoadDataRet : %i\n", LoadDataRet);
+	(void)dbgprintf("**********************\n");
+	(void)dbgprintf("**********************\n");
+
+	if (LoadDataRet < 0) {
+		//FUN_1804002a0(param_1, local_98, pCVar8);
+		//resorce->PackName = 0;
+		//UnloadRpack(resorce);
+		//::CResourceDataPack::ClosePackFiles(pCVar8);
+	}
+}
+
+typedef int(__cdecl* t_CMonitor)(bool dontcare);
+t_CMonitor o_CMonitor = nullptr;
+void hkCMonitor(bool dontcare) {
+	o_CMonitor(dontcare);
+}
+
+FARPROC CMonitor_Addr;
+
+
+typedef void(__cdecl* t_AddRpackReference)(CResourceDataPack* othis);
+t_AddRpackReference o_AddRpackReference = nullptr;
+
+#include <stdio.h>
+#include <intrin.h>
+#pragma intrinsic(_ReturnAddress)
+
+void AddRpackReference(CResourceDataPack* othis) {
+	(void)dbgprintf("AddRpackReference\n");
+	(void)dbgprintf("Return address from % s: % p\n", __FUNCTION__, _ReturnAddress());
+	return o_AddRpackReference(othis);
+}
+
 BOOL CreateHooks(HMODULE hmodule) {
 
 	globals.WorkingDir = GetWorkingDir();
@@ -245,6 +515,20 @@ BOOL CreateHooks(HMODULE hmodule) {
 
 		(void)HookFunction(InitializeGameScript_Address, &hkInitializeGameScript, reinterpret_cast<void**>(&o_InitializeGameScript));
 		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
+
+
+		CResourceDataPack_Addr = GetProcAddressSimple(EngineDll, "??0CResourceDataPack@@QEAA@XZ");
+		(void)HookFunction(CResourceDataPack_Addr, &hkCResourceDataPack, reinterpret_cast<void**>(&o_CResourceDataPack));
+
+		OpenPack_Addr = GetProcAddressSimple(EngineDll, "?OpenPack@CResourceDataPack@@QEAA?AW4ENUM@EResPackErrorCode@@PEBDI@Z");
+		(void)HookFunction(OpenPack_Addr, &hkOpenPack, reinterpret_cast<void**>(&o_OpenPack));
+
+		LoadData_Addr = GetProcAddressSimple(EngineDll, "?LoadData@CResourceDataPack@@QEAA?AW4ENUM@EResPackErrorCode@@_N@Z");
+		(void)HookFunction(LoadData_Addr, &hkLoadData, reinterpret_cast<void**>(&o_LoadData));
+
+		CMonitor_Addr = GetProcAddressSimple(EngineDll, "?GetInstance@CMonitor@Anim@@SAPEAV12@_N@Z");
+		(void)HookFunction(CMonitor_Addr, &hkCMonitor, reinterpret_cast<void**>(&o_CMonitor));
+
 	}
 
 	LogSettingsInstance_Address = GetProcAddress(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
@@ -254,6 +538,11 @@ BOOL CreateHooks(HMODULE hmodule) {
 	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
 	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
 	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
+
+	FARPROC SEGGS = GetProcAddressSimple(EngineDll, "?AddRpackReference@CResourceDataPack@@QEAAXXZ");
+
+
+	HookFunction(SEGGS, &AddRpackReference, reinterpret_cast<void**>(&o_AddRpackReference));
 
 
 

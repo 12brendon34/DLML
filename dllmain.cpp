@@ -21,6 +21,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 			(void)freopen("CONOUT$", "w", stderr);
 			(void)freopen("CONOUT$", "w", stdout);
+
+			(void)freopen("stdout.txt", "w", stdout);
+			(void)freopen("stderr.txt", "w", stderr);
 		}
 
 		MH_STATUS status = MH_Initialize();
