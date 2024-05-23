@@ -145,14 +145,16 @@ bool hkCResourceLoadingRuntime_Create(bool dontcare) {
 	for (size_t i = 0; i < ModInfoList.size(); i++)
 		if (ModInfoList[i].ModType == 0)
 			(void)EasyAdd_Source(ModInfoList[i].ModPath.c_str(), 1);
+
 	return o_CResourceLoadingRuntime_Create(dontcare);
 }
-kiero::RenderType::Enum rendererAPI = kiero::RenderType::None;
+
 
 //"borrowed" from egametools lmao, dw he cool af
 typedef bool(__cdecl* t_detourReadVideoSettings)(LPVOID instance, LPVOID file, bool flag1);
 t_detourReadVideoSettings o_ReadVideoSettings = nullptr;
 
+kiero::RenderType::Enum rendererAPI = kiero::RenderType::None;
 static bool hkReadVideoSettings(LPVOID instance, LPVOID file, bool flag1) {
 	if (rendererAPI != kiero::RenderType::None)
 		return o_ReadVideoSettings(instance, file, flag1);
@@ -195,6 +197,7 @@ void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int
 	Message.append(Buffer);
 
 	(void)dbgprintf("%s", Message.c_str());
+	Menu::AddLog("%s", Message.c_str());
 	return CLogV(logtype, thread, sourcefile, linenumber, CLFilterAction, CLLineMode, message, printarg);
 }
 
@@ -211,54 +214,12 @@ int hkGetCategoryLevel(int This, char* Catagory) {
 	return INT_MAX;
 }
 
+
 FARPROC LogSettingsInstance_Address;
 FARPROC GetCategoryLevel_Address;
 FARPROC CLogV_Address;
 
-BOOL CreateHooks(HMODULE hmodule) {
-
-	globals.WorkingDir = GetWorkingDir();
-	IndexPaks();
-	LoadDlls();
-
-	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
-	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
-
-	if (globals.DyingLight2) {
-		(void)dbgprintf("DLML2 Loaded\n");
-
-		Fs_Mount_Address = GetProcAddress(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
-		CResourceLoadingRuntime_Create_Address = GetProcAddress(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
-		ReadVideoSettings_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x10bdab0);//should eventually do some aob ahh stuff or smt Idn
-
-
-		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount));
-		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &hkCResourceLoadingRuntime_Create, reinterpret_cast<void**>(&o_CResourceLoadingRuntime_Create));
-
-		(void)HookFunction(ReadVideoSettings_Addr, &hkReadVideoSettings, reinterpret_cast<void**>(&o_ReadVideoSettings));
-	}
-	else {
-		(void)dbgprintf("DLML Loaded\n");
-
-		InitializeGameScript_Address = GetProcAddressSimple(EngineDll, "InitializeGameScript");
-		Add_Source_Address = GetProcAddressSimple(FilesystemDll, "?add_source@fs@@YA_NPEBDW4ENUM@FFSAddSourceFlags@@@Z");
-
-		(void)HookFunction(InitializeGameScript_Address, &hkInitializeGameScript, reinterpret_cast<void**>(&o_InitializeGameScript));
-		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
-	}
-
-	LogSettingsInstance_Address = GetProcAddress(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
-	GetCategoryLevel_Address = GetProcAddress(FilesystemDll, "?GetCategoryLevel@Settings@Log@@QEBA?AW4TYPE@ELevel@2@PEBD@Z");
-	CLogV_Address = GetProcAddress(FilesystemDll, "?_CLogV@@YAXW4TYPE@ELevel@Log@@PEBD1HW4ENUM@CLFilterAction@@W44CLLineMode@@1PEAD@Z");
-
-	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
-	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
-	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
-
-
-
-	(void)MH_EnableHook(MH_ALL_HOOKS);
-
+void HookRenderer() {
 
 	bool init_hook = false;
 	do {
@@ -279,6 +240,58 @@ BOOL CreateHooks(HMODULE hmodule) {
 		init_hook = true;
 
 	} while (!init_hook);
+}
+
+
+BOOL CreateHooks(HMODULE hmodule) {
+
+	globals.WorkingDir = GetWorkingDir();
+	IndexPaks();
+	LoadDlls();
+
+	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
+	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
+
+	if (globals.DyingLight2) {
+		ReadVideoSettings_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x10bdab0);//should eventually do some aob ahh stuff or smt Idn
+
+		(void)HookFunction(ReadVideoSettings_Addr, &hkReadVideoSettings, reinterpret_cast<void**>(&o_ReadVideoSettings));
+
+		(void)MH_EnableHook(ReadVideoSettings_Addr);
+	}
+
+	std::thread([]() {
+		HookRenderer();
+	}).detach();
+
+	if (globals.DyingLight2) {
+		(void)dbgprintf("DLML2 Loaded\n");
+
+		Fs_Mount_Address = GetProcAddressSimple(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
+		CResourceLoadingRuntime_Create_Address = GetProcAddressSimple(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
+
+		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount));
+		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &hkCResourceLoadingRuntime_Create, reinterpret_cast<void**>(&o_CResourceLoadingRuntime_Create));
+	}
+	else {
+		(void)dbgprintf("DLML Loaded\n");
+
+		InitializeGameScript_Address = GetProcAddressSimple(EngineDll, "InitializeGameScript");
+		Add_Source_Address = GetProcAddressSimple(FilesystemDll, "?add_source@fs@@YA_NPEBDW4ENUM@FFSAddSourceFlags@@@Z");
+
+		(void)HookFunction(InitializeGameScript_Address, &hkInitializeGameScript, reinterpret_cast<void**>(&o_InitializeGameScript));
+		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
+	}
+
+	LogSettingsInstance_Address = GetProcAddressSimple(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
+	GetCategoryLevel_Address = GetProcAddressSimple(FilesystemDll, "?GetCategoryLevel@Settings@Log@@QEBA?AW4TYPE@ELevel@2@PEBD@Z");
+	CLogV_Address = GetProcAddressSimple(FilesystemDll, "?_CLogV@@YAXW4TYPE@ELevel@Log@@PEBD1HW4ENUM@CLFilterAction@@W44CLLineMode@@1PEAD@Z");
+
+	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
+	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
+	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
+
+	(void)MH_EnableHook(MH_ALL_HOOKS);
 
 	return true;
 }
