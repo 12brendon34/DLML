@@ -27,7 +27,7 @@ FARPROC GetProcAddressSimple(HMODULE hModule, LPCSTR lpProcName) {
 	return Address;
 }
 
-void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
+void HookFunction(LPVOID target, LPVOID destination, LPVOID* original, bool enable = false) {
 
 	if (!globals.MinHookInitialized && MH_Initialize() == MH_OK) {
 		globals.MinHookInitialized = true;
@@ -40,8 +40,10 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 		(void)dbgprintf("Hooked %p -> %p\n", target, destination);
 	}
 	else {
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p : %s", target, statusCode);
+		MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p : %s", target, statusCode.c_str());
 	}
+	if (enable)
+		(void)MH_EnableHook(target);
 }
 
 
@@ -52,8 +54,6 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original) {
 typedef bool(*add_source)(char const* Path, int FFSAddSourceFlags);
 add_source o_Add_Source;
 bool hkAdd_Source(char const* Path, int FFSAddSourceFlags) {
-	Menu::AddLog("Added Source : %s, Flags %i\n", Path, FFSAddSourceFlags);
-	(void)dbgprintf("Added Source: %s, Flags: %i\n", Path, FFSAddSourceFlags);
 	return o_Add_Source(Path, FFSAddSourceFlags);
 }
 
@@ -114,6 +114,7 @@ bool hkFs_Mount(fs_mount_path* mount_path, USHORT MountArgs, __int64** param_3) 
 		(void)dbgprintf("Added Source: %s, Flags: %i\n", full_path.c_str(), MountArgs);
 	}
 
+
 	return o_Fs_Mount(mount_path, MountArgs, NULL);
 }
 
@@ -147,22 +148,6 @@ bool hkCResourceLoadingRuntime_Create(bool dontcare) {
 			(void)EasyAdd_Source(ModInfoList[i].ModPath.c_str(), 1);
 
 	return o_CResourceLoadingRuntime_Create(dontcare);
-}
-
-
-//"borrowed" from egametools lmao, dw he cool af
-typedef bool(__cdecl* t_detourReadVideoSettings)(LPVOID instance, LPVOID file, bool flag1);
-t_detourReadVideoSettings o_ReadVideoSettings = nullptr;
-
-kiero::RenderType::Enum rendererAPI = kiero::RenderType::None;
-static bool hkReadVideoSettings(LPVOID instance, LPVOID file, bool flag1) {
-	if (rendererAPI != kiero::RenderType::None)
-		return o_ReadVideoSettings(instance, file, flag1);
-
-	DWORD renderer = *reinterpret_cast<PDWORD>(reinterpret_cast<DWORD64>(instance) + 0x7C);
-	rendererAPI = !renderer ? kiero::RenderType::D3D11 : kiero::RenderType::D3D12;
-
-	return o_ReadVideoSettings(instance, file, flag1);
 }
 
 FARPROC Fs_Mount_Address;
@@ -219,59 +204,84 @@ FARPROC LogSettingsInstance_Address;
 FARPROC GetCategoryLevel_Address;
 FARPROC CLogV_Address;
 
+
+
+typedef bool (*t_IsDx12Enabled)();
+t_IsDx12Enabled o_IsDx12Enabled;
+bool hkIsDx12Enabled() {
+	return o_IsDx12Enabled();
+}
+
+
+bool is_initialized;
+typedef bool (*t_LoadResources)(_int64 a);
+t_LoadResources o_LoadResources;
+bool hkLoadResources(_int64 a) {
+	is_initialized = true;
+	return o_LoadResources(a);
+}
+
+kiero::RenderType::Enum rendererAPI = kiero::RenderType::D3D11;
+
 void HookRenderer() {
 
 	bool init_hook = false;
 	do {
-		if (!globals.DyingLight2)
-			rendererAPI = kiero::RenderType::D3D11;
+
+		if (globals.DyingLight2) {
+
+			if (!is_initialized)
+				continue;
+
+			if (hkIsDx12Enabled())
+				rendererAPI = kiero::RenderType::D3D12;
+			else 
+				rendererAPI = kiero::RenderType::D3D11;
+
+		}
 
 		if (kiero::init(rendererAPI) != kiero::Status::Success)
 			continue;
 
 
-		if (rendererAPI == kiero::RenderType::D3D11) {
+		if (rendererAPI == kiero::RenderType::D3D11)
 			impl::d3d11::init();
-		}
-		else {
+		else
 			impl::d3d12::init();
-		}
+
 
 		init_hook = true;
 
 	} while (!init_hook);
 }
 
-
 BOOL CreateHooks(HMODULE hmodule) {
 
 	globals.WorkingDir = GetWorkingDir();
-	IndexPaks();
+
 	LoadDlls();
 
 	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
 	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
 
-	if (globals.DyingLight2) {
-		ReadVideoSettings_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x10bdab0);//should eventually do some aob ahh stuff or smt Idn
-
-		(void)HookFunction(ReadVideoSettings_Addr, &hkReadVideoSettings, reinterpret_cast<void**>(&o_ReadVideoSettings));
-
-		(void)MH_EnableHook(ReadVideoSettings_Addr);
-	}
-
-	std::thread([]() {
-		HookRenderer();
-	}).detach();
+	LogSettingsInstance_Address = GetProcAddressSimple(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
+	GetCategoryLevel_Address = GetProcAddressSimple(FilesystemDll, "?GetCategoryLevel@Settings@Log@@QEBA?AW4TYPE@ELevel@2@PEBD@Z");
+	CLogV_Address = GetProcAddressSimple(FilesystemDll, "?_CLogV@@YAXW4TYPE@ELevel@Log@@PEBD1HW4ENUM@CLFilterAction@@W44CLLineMode@@1PEAD@Z");
 
 	if (globals.DyingLight2) {
 		(void)dbgprintf("DLML2 Loaded\n");
 
-		Fs_Mount_Address = GetProcAddressSimple(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
-		CResourceLoadingRuntime_Create_Address = GetProcAddressSimple(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
+		FARPROC LoadResources_Address = GetProcAddressSimple(EngineDll, "?LoadResources@CResourceLoadingRuntime@@QEAA_NXZ");
+		FARPROC IsDx12Enabled_Address = GetProcAddressSimple(FilesystemDll, "?IsDx12Enabled@renderer_status@@YA_NXZ");
 
-		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount));
+		CResourceLoadingRuntime_Create_Address = GetProcAddressSimple(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
+		Fs_Mount_Address = GetProcAddressSimple(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
+
+		(void)HookFunction(LoadResources_Address, &hkLoadResources, reinterpret_cast<void**>(&o_LoadResources), true);
+		(void)HookFunction(IsDx12Enabled_Address, &hkIsDx12Enabled, reinterpret_cast<void**>(&o_IsDx12Enabled));
+
 		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &hkCResourceLoadingRuntime_Create, reinterpret_cast<void**>(&o_CResourceLoadingRuntime_Create));
+		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount));
 	}
 	else {
 		(void)dbgprintf("DLML Loaded\n");
@@ -283,15 +293,16 @@ BOOL CreateHooks(HMODULE hmodule) {
 		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
 	}
 
-	LogSettingsInstance_Address = GetProcAddressSimple(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
-	GetCategoryLevel_Address = GetProcAddressSimple(FilesystemDll, "?GetCategoryLevel@Settings@Log@@QEBA?AW4TYPE@ELevel@2@PEBD@Z");
-	CLogV_Address = GetProcAddressSimple(FilesystemDll, "?_CLogV@@YAXW4TYPE@ELevel@Log@@PEBD1HW4ENUM@CLFilterAction@@W44CLLineMode@@1PEAD@Z");
-
 	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
 	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
 	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
 
 	(void)MH_EnableHook(MH_ALL_HOOKS);
+
+	IndexPaks();
+
+	HookRenderer();
+
 
 	return true;
 }
