@@ -221,7 +221,6 @@ FARPROC CLogV_Address;
 
 FARPROC OpenPack_Addr; 
 FARPROC LoadData_Addr;
-FARPROC CResourceDataPack_Addr;
 
 //typedef struct SFsFile SFsFile, * PSFsFile;
 
@@ -297,29 +296,9 @@ public:
 	};
 };
 
-typedef CResourceDataPack*(__cdecl* t_CResourceDataPack)(CResourceDataPack* othis);
-t_CResourceDataPack o_CResourceDataPack = nullptr;
-
-CResourceDataPack* hkCResourceDataPack(CResourceDataPack* othis)
-{
-	return o_CResourceDataPack(othis);
-}
-
 typedef int(__cdecl* t_OpenPack)(CResourceDataPack* othis, char* param_1, UINT param_2);
 t_OpenPack o_OpenPack = nullptr;
 int hkOpenPack(CResourceDataPack* othis, char* path, UINT flags) {
-
-
-	auto pathstr = (std::string)path;
-
-	if (pathstr.find("common_textures_0_pc") != std::string::npos) {
-
-		std::thread([]() {
-			test((char*)"E:\\SteamLibrary\\steamapps\\common\\Dying Light\\DW\\Data\\Arr this be the bad blood textures.rpacz");
-		}).detach();
-	}
-
-
 
 	(void)dbgprintf("***********\n");
 	(void)dbgprintf("OpenPack \n");
@@ -357,14 +336,15 @@ t_LoadData o_LoadData = nullptr;
 int hkLoadData(CResourceDataPack* othis, bool param_1) {
 	int bruh = o_LoadData(othis,  param_1);
 
-	/*
 	(void)dbgprintf("***********\n");
 	(void)dbgprintf("LoadData\n\n");
+	(void)dbgprintf("LoadData return: %i\n", bruh);
 	(void)dbgprintf("CResourceDataPack* :%p\n", othis);
 	(void)dbgprintf("param_1 :%i\n", param_1);
-	(void)dbgprintf("***********\n\n");*/
+	(void)dbgprintf("***********\n\n");
 	return bruh;
 }
+
 
 bool FUN_180026c40(LONGLONG* param_1, byte param_2, byte param_3)
 {
@@ -376,9 +356,8 @@ bool FUN_180026c40(LONGLONG* param_1, byte param_2, byte param_3)
 	return (char)pvVar1 != 0;
 }
 
-CResourceDataPack* CResourceDataPackClone() {
 
-	UINT8 param = 0x80; //not even sure what this does , 0x20 or 0x80
+CResourceDataPack* CResourceDataPackClone() {
 
 	auto alloc = malloc(208); //CResourceDataPack is 208 
 	memset(alloc, 0, 208);
@@ -408,7 +387,7 @@ CResourceDataPack* CResourceDataPackClone() {
 	//resorce->RpackReference = (undefined4)resorce->RpackReference + 1;
 
 	//guessing some varriables
-	resorce->RpackReference = 160; //not sure how this is done
+	resorce->RpackReference = 2 ; //not sure how this is done
 	resorce->C11 = 15;
 	resorce->C15 = 15;
 	resorce->C17 = 1;
@@ -418,10 +397,24 @@ CResourceDataPack* CResourceDataPackClone() {
 	return resorce;
 }
 
+typedef CResourceDataPack* (__cdecl* t_CResourceDataPack)(CResourceDataPack* othis);
+t_CResourceDataPack o_CResourceDataPack = nullptr;
+
+CResourceDataPack* hkCResourceDataPack(CResourceDataPack* othis)
+{
+	return o_CResourceDataPack(othis);
+}
+
 void test(char* Path) {
 
-	CResourceDataPack* resorce = CResourceDataPackClone();
+	auto alloc = malloc(208); //CResourceDataPack is 208 
+	memset(alloc, 0, 208);
+
+	CResourceDataPack* resorce = hkCResourceDataPack((CResourceDataPack*)alloc);
+
+	//CResourceDataPack* resorce = CResourceDataPackClone();
 	
+	/*
 	bool param_6 = false; // I think this is only used on the engine.dll
 
 	UINT uVar6 = 0x102;
@@ -438,13 +431,21 @@ void test(char* Path) {
 	if ((uVar6 & 4) != 0) {
 		resorce->C8 = resorce->C8 | 0x4000000;
 	}
-
+	*/
 	//resorce->Patch = true;
 
+	/*
+	0x100
+	0x102
 
-	auto OpenPacKRet = hkOpenPack(resorce, Path, uVar6);
+	0x100 | 0x200
+	0x102 | 0x200
+	*/
+
+	auto OpenPacKRet = hkOpenPack(resorce, Path, 0x102 | 0x200);
 
 	if (OpenPacKRet < 0) {
+		(void)dbgprintf("OpenPacKRet : %i\n", OpenPacKRet);
 		//resorce->PackName = 0;
 		//UnloadRpack(resorce);
 	}
@@ -463,32 +464,30 @@ void test(char* Path) {
 	}
 }
 
-typedef int(__cdecl* t_CMonitor)(bool dontcare);
-t_CMonitor o_CMonitor = nullptr;
-void hkCMonitor(bool dontcare) {
-	o_CMonitor(dontcare);
+typedef LONGLONG(__cdecl* t_BREUHH)(int* param_1);
+t_BREUHH o_BREUHH = nullptr;
+bool bruhhhhhhhhhhhhhhh = true;
+
+LONGLONG BREUHH(int* param_1) {
+	if (bruhhhhhhhhhhhhhhh) {
+
+		test((char*)"E:\\SteamLibrary\\steamapps\\common\\Dying Light\\DW\\Data\\Arr this be the bad blood textures.rpack");
+	}
+
+	bruhhhhhhhhhhhhhhh = false;
+
+	return o_BREUHH(param_1);
 }
 
-FARPROC CMonitor_Addr;
 
 
-typedef void(__cdecl* t_AddRpackReference)(CResourceDataPack* othis);
-t_AddRpackReference o_AddRpackReference = nullptr;
 
-#include <stdio.h>
-#include <intrin.h>
-#pragma intrinsic(_ReturnAddress)
 
-void AddRpackReference(CResourceDataPack* othis) {
-	(void)dbgprintf("AddRpackReference\n");
-	(void)dbgprintf("Return address from % s: % p\n", __FUNCTION__, _ReturnAddress());
-	return o_AddRpackReference(othis);
-}
+
 
 BOOL CreateHooks(HMODULE hmodule) {
 
 	globals.WorkingDir = GetWorkingDir();
-	IndexPaks();
 	LoadDlls();
 
 	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
@@ -516,8 +515,7 @@ BOOL CreateHooks(HMODULE hmodule) {
 		(void)HookFunction(InitializeGameScript_Address, &hkInitializeGameScript, reinterpret_cast<void**>(&o_InitializeGameScript));
 		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
 
-
-		CResourceDataPack_Addr = GetProcAddressSimple(EngineDll, "??0CResourceDataPack@@QEAA@XZ");
+		FARPROC CResourceDataPack_Addr = GetProcAddressSimple(EngineDll, "??0CResourceDataPack@@QEAA@XZ");
 		(void)HookFunction(CResourceDataPack_Addr, &hkCResourceDataPack, reinterpret_cast<void**>(&o_CResourceDataPack));
 
 		OpenPack_Addr = GetProcAddressSimple(EngineDll, "?OpenPack@CResourceDataPack@@QEAA?AW4ENUM@EResPackErrorCode@@PEBDI@Z");
@@ -526,9 +524,8 @@ BOOL CreateHooks(HMODULE hmodule) {
 		LoadData_Addr = GetProcAddressSimple(EngineDll, "?LoadData@CResourceDataPack@@QEAA?AW4ENUM@EResPackErrorCode@@_N@Z");
 		(void)HookFunction(LoadData_Addr, &hkLoadData, reinterpret_cast<void**>(&o_LoadData));
 
-		CMonitor_Addr = GetProcAddressSimple(EngineDll, "?GetInstance@CMonitor@Anim@@SAPEAV12@_N@Z");
-		(void)HookFunction(CMonitor_Addr, &hkCMonitor, reinterpret_cast<void**>(&o_CMonitor));
-
+		FARPROC IDN_Addr = *reinterpret_cast<FARPROC>(reinterpret_cast<DWORD64>(EngineDll) + 0x2239a0);
+		HookFunction(IDN_Addr, &BREUHH, reinterpret_cast<void**>(&o_BREUHH));
 	}
 
 	LogSettingsInstance_Address = GetProcAddress(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
@@ -539,15 +536,10 @@ BOOL CreateHooks(HMODULE hmodule) {
 	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
 	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
 
-	FARPROC SEGGS = GetProcAddressSimple(EngineDll, "?AddRpackReference@CResourceDataPack@@QEAAXXZ");
-
-
-	HookFunction(SEGGS, &AddRpackReference, reinterpret_cast<void**>(&o_AddRpackReference));
-
 
 
 	(void)MH_EnableHook(MH_ALL_HOOKS);
-
+	IndexPaks();
 
 	bool init_hook = false;
 	do {
