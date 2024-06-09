@@ -46,8 +46,58 @@ void HookFunction(LPVOID target, LPVOID destination, LPVOID* original, bool enab
 		(void)MH_EnableHook(target);
 }
 
+bool is_initialized = false;
+
+#pragma region Shared
+typedef void(__cdecl* _clogv)(int LogType, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg);
+_clogv CLogV = nullptr;
+void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg) {
+	std::string Message;
+
+	if (logtype == 5)
+		Message.append(" DBUG :");
+	else if (logtype == 4)
+		Message.append(" WARN :");
+	else if (logtype == 3)
+		Message.append(" INFO :");
+	else if (logtype == 2)
+		Message.append(" ERRR :");
+
+	Message.append(" [" + (std::string)thread + "] ");
+
+	if (CLFilterAction == 2)
+		Message.append("| ");
+	else
+		Message.append("> ");
+
+	char Buffer[65528];
+	vsprintf(Buffer, message, (va_list)printarg);
+	Message.append(Buffer);
+
+	(void)dbgprintf("%s", Message.c_str());
+	Menu::AddLog("%s", Message.c_str());
+	return CLogV(logtype, thread, sourcefile, linenumber, CLFilterAction, CLLineMode, message, printarg);
+}
 
 
+typedef int* (*logsettingsinstance)();
+logsettingsinstance o_LogSettingsInstance;
+int* hkLogSettingsInstance() {
+	int* logint = o_LogSettingsInstance();
+	*logint = INT_MAX;
+	return logint;
+}
+
+int hkGetCategoryLevel(int This, char* Catagory) {
+	return INT_MAX;
+}
+
+
+FARPROC LogSettingsInstance_Address;
+FARPROC GetCategoryLevel_Address;
+FARPROC CLogV_Address;
+
+#pragma endregion Shared
 
 #pragma region DyingLight
 
@@ -71,7 +121,6 @@ FARPROC InitializeGameScript_Address;
 FARPROC Add_Source_Address;
 
 #pragma endregion DyingLight
-
 
 #pragma region DyingLight2
 
@@ -150,76 +199,25 @@ bool hkCResourceLoadingRuntime_Create(bool dontcare) {
 	return o_CResourceLoadingRuntime_Create(dontcare);
 }
 
-FARPROC Fs_Mount_Address;
-FARPROC CResourceLoadingRuntime_Create_Address;
-FARPROC ReadVideoSettings_Addr;
-#pragma endregion DyingLight2
-
-
-typedef void(__cdecl* _clogv)(int LogType, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg);
-_clogv CLogV = nullptr;
-void CLogV_Hook(int logtype, char* thread, char* sourcefile, int linenumber, int CLFilterAction, int CLLineMode, char const* __ptr64 message, char const* __ptr64 printarg) {
-	std::string Message;
-
-	if (logtype == 5)
-		Message.append(" DBUG :");
-	else if (logtype == 4)
-		Message.append(" WARN :");
-	else if (logtype == 3)
-		Message.append(" INFO :");
-	else if (logtype == 2)
-		Message.append(" ERRR :");
-
-	Message.append(" [" + (std::string)thread + "] ");
-
-	if (CLFilterAction == 2)
-		Message.append("| ");
-	else
-		Message.append("> ");
-
-	char Buffer[65528];
-	vsprintf(Buffer, message, (va_list)printarg);
-	Message.append(Buffer);
-
-	(void)dbgprintf("%s", Message.c_str());
-	Menu::AddLog("%s", Message.c_str());
-	return CLogV(logtype, thread, sourcefile, linenumber, CLFilterAction, CLLineMode, message, printarg);
-}
-
-
-typedef int* (*logsettingsinstance)();
-logsettingsinstance o_LogSettingsInstance;
-int* hkLogSettingsInstance() {
-	int* logint = o_LogSettingsInstance();
-	*logint = INT_MAX;
-	return logint;
-}
-
-int hkGetCategoryLevel(int This, char* Catagory) {
-	return INT_MAX;
-}
-
-
-FARPROC LogSettingsInstance_Address;
-FARPROC GetCategoryLevel_Address;
-FARPROC CLogV_Address;
-
-
-
 typedef bool (*t_IsDx12Enabled)();
 t_IsDx12Enabled o_IsDx12Enabled;
 bool hkIsDx12Enabled() {
 	return o_IsDx12Enabled();
 }
 
-
-bool is_initialized;
 typedef bool (*t_LoadResources)(_int64 a);
 t_LoadResources o_LoadResources;
 bool hkLoadResources(_int64 a) {
 	is_initialized = true;
 	return o_LoadResources(a);
 }
+
+FARPROC Fs_Mount_Address;
+FARPROC CResourceLoadingRuntime_Create_Address;
+FARPROC LoadResources_Address;
+FARPROC IsDx12Enabled_Address;
+
+#pragma endregion DyingLight2
 
 kiero::RenderType::Enum rendererAPI = kiero::RenderType::D3D11;
 
@@ -264,15 +262,20 @@ BOOL CreateHooks(HMODULE hmodule) {
 	HMODULE EngineDll = GetModuleHandleSimple("engine_x64_rwdi.dll");
 	HMODULE FilesystemDll = GetModuleHandleSimple("filesystem_x64_rwdi.dll");
 
+	//shared between both engines
 	LogSettingsInstance_Address = GetProcAddressSimple(FilesystemDll, "?Instance@Settings@Log@@SAAEAV12@XZ");
 	GetCategoryLevel_Address = GetProcAddressSimple(FilesystemDll, "?GetCategoryLevel@Settings@Log@@QEBA?AW4TYPE@ELevel@2@PEBD@Z");
 	CLogV_Address = GetProcAddressSimple(FilesystemDll, "?_CLogV@@YAXW4TYPE@ELevel@Log@@PEBD1HW4ENUM@CLFilterAction@@W44CLLineMode@@1PEAD@Z");
 
+	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
+	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
+	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
+
 	if (globals.DyingLight2) {
 		(void)dbgprintf("DLML2 Loaded\n");
 
-		FARPROC LoadResources_Address = GetProcAddressSimple(EngineDll, "?LoadResources@CResourceLoadingRuntime@@QEAA_NXZ");
-		FARPROC IsDx12Enabled_Address = GetProcAddressSimple(FilesystemDll, "?IsDx12Enabled@renderer_status@@YA_NXZ");
+		LoadResources_Address = GetProcAddressSimple(EngineDll, "?LoadResources@CResourceLoadingRuntime@@QEAA_NXZ");
+		IsDx12Enabled_Address = GetProcAddressSimple(FilesystemDll, "?IsDx12Enabled@renderer_status@@YA_NXZ");
 
 		CResourceLoadingRuntime_Create_Address = GetProcAddressSimple(EngineDll, "?Create@CResourceLoadingRuntime@@SAPEAV1@_N@Z");
 		Fs_Mount_Address = GetProcAddressSimple(FilesystemDll, "?mount@fs@@YA_NAEBUmount_path@1@GPEAPEAVCFsMount@@@Z");
@@ -280,8 +283,9 @@ BOOL CreateHooks(HMODULE hmodule) {
 		(void)HookFunction(LoadResources_Address, &hkLoadResources, reinterpret_cast<void**>(&o_LoadResources), true);
 		(void)HookFunction(IsDx12Enabled_Address, &hkIsDx12Enabled, reinterpret_cast<void**>(&o_IsDx12Enabled));
 
+		//rpack loading, CResourceLoadingRuntime::Create is close enough as a replacement for InitializeGameScript (for being used to inject pak's after core paks but before the game loads)
 		(void)HookFunction(CResourceLoadingRuntime_Create_Address, &hkCResourceLoadingRuntime_Create, reinterpret_cast<void**>(&o_CResourceLoadingRuntime_Create));
-		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount));
+		(void)HookFunction(Fs_Mount_Address, &hkFs_Mount, reinterpret_cast<void**>(&o_Fs_Mount)); //modified add_source
 	}
 	else {
 		(void)dbgprintf("DLML Loaded\n");
@@ -293,16 +297,10 @@ BOOL CreateHooks(HMODULE hmodule) {
 		(void)HookFunction(Add_Source_Address, &hkAdd_Source, reinterpret_cast<void**>(&o_Add_Source));
 	}
 
-	HookFunction(LogSettingsInstance_Address, &hkLogSettingsInstance, reinterpret_cast<void**>(&o_LogSettingsInstance));
-	HookFunction(GetCategoryLevel_Address, &hkGetCategoryLevel, NULL);
-	HookFunction(CLogV_Address, &CLogV_Hook, reinterpret_cast<void**>(&CLogV));
-
-	(void)MH_EnableHook(MH_ALL_HOOKS);
+	(void)MH_EnableHook(MH_ALL_HOOKS); 
 
 	IndexPaks();
-
 	HookRenderer();
-
 
 	return true;
 }
