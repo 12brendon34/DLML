@@ -1,3 +1,4 @@
 #pragma once
+#include "../Util.h"
 
-void winmm(bool Free = false);
+HMODULE winmm();

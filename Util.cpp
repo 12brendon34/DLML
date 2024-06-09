@@ -11,13 +11,30 @@ fs::path GetWorkingDir() {
 	return path.substr(0, path.find_last_of("/\\"));
 }
 
-//good enough
-bool IsDyingLight() {
+fs::path GetCurrentName(HMODULE hModule) {
 
-	fs::path WDPathName = GetWorkingDir().filename();
+	char path_c[MAX_PATH];
+	(void)GetModuleFileName(hModule, path_c, MAX_PATH);
 
-	if (WDPathName == "Dying Light")
-		return true;
-	
-	return false;
+	return fs::path(path_c).filename();
+}
+
+//forgot I had common.cpp
+//https://en.cppreference.com/w/cpp/string/byte/tolower bit lazy 
+std::string str_tolower(std::string s)
+{
+	std::transform(s.begin(), s.end(), s.begin(),
+		[](unsigned char c) { return std::tolower(c); }
+	);
+	return s;
+}
+
+void MsgBoxExit(UINT nType, LPCSTR lpCaption, LPCSTR sz, ...)
+{
+	char ach[512];
+	va_list args;
+	va_start(args, sz);
+	(void)wvsprintf(ach, sz, args);
+	(void)MessageBox(NULL, ach, lpCaption, nType);
+	ExitProcess(0);
 }

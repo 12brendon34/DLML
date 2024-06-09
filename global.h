@@ -1,11 +1,12 @@
 #pragma once
-#include "common.h"
+#include "Util.h"
 
 class global {
 public:
+    bool DyingLight2 = false;
     bool Running = true;
     bool MinHookInitialized = false;
-    fs::path WorkingDir;
+    std::filesystem::path WorkingDir;
 };
 
 inline global globals;

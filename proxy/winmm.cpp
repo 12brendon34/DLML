@@ -1,5 +1,4 @@
 #include "winmm.h"
-#include "../common.h"
 
 HMODULE winmm_dll;
 
@@ -1268,11 +1267,7 @@ MMRESULT WINAPI hkwaveOutWrite(HWAVEOUT hwo, LPWAVEHDR pwh, UINT cbwh)
 	return o_waveOutWrite(hwo, pwh, cbwh);
 }
 
-void winmm(bool Free) {
-	if (Free) {
-		(void)FreeLibrary(winmm_dll);
-		return;
-	}
+HMODULE winmm() {
 
 	char path[MAX_PATH]{};
 	CopyMemory(path + GetSystemDirectory(path, MAX_PATH - 11), "\\winmm.dll", 11);
@@ -1461,4 +1456,7 @@ void winmm(bool Free) {
 	o_waveOutSetVolume = reinterpret_cast<t_waveOutSetVolume>(GetProcAddress(winmm_dll, "waveOutSetVolume"));
 	o_waveOutUnprepareHeader = reinterpret_cast<t_waveOutUnprepareHeader>(GetProcAddress(winmm_dll, "waveOutUnprepareHeader"));
 	o_waveOutWrite = reinterpret_cast<t_waveOutWrite>(GetProcAddress(winmm_dll, "waveOutWrite"));
+
+	globals.DyingLight2 = true;
+	return winmm_dll;
 }

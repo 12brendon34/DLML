@@ -181,3 +181,17 @@ waveOutSetPlaybackRate = hkwaveOutSetPlaybackRate
 waveOutSetVolume = hkwaveOutSetVolume
 waveOutUnprepareHeader = hkwaveOutUnprepareHeader
 waveOutWrite = hkwaveOutWrite
+
+LIBRARY "dsound"
+EXPORTS
+
+DirectSoundCaptureCreate = hkDirectSoundCaptureCreate
+DirectSoundCaptureCreate8 = hkDirectSoundCaptureCreate8
+DirectSoundCaptureEnumerateA = hkDirectSoundCaptureEnumerateA
+DirectSoundCaptureEnumerateW = hkDirectSoundCaptureEnumerateW
+DirectSoundCreate = hkDirectSoundCreate
+DirectSoundCreate8 = hkDirectSoundCreate8
+DirectSoundEnumerateA = hkDirectSoundEnumerateA
+DirectSoundEnumerateW = hkDirectSoundEnumerateW
+DirectSoundFullDuplexCreate = hkDirectSoundFullDuplexCreate
+GetDeviceID = hkGetDeviceID

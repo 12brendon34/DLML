@@ -41,7 +41,7 @@ void IndexPaks()
 			ModInfo CurrentMod;
 			CurrentMod.ModName = L"PlaceHolder";
 			CurrentMod.IsEnabled = true;
-			CurrentMod.IsRpack = false;
+			CurrentMod.ModType = 0;
 			CurrentMod.ModPath = entry.path().string();
 			ModInfoList.push_back(CurrentMod);
 		}
@@ -53,7 +53,28 @@ void IndexRpaks()
 
 }
 
-void IndexDlls()
+void LoadDlls()
 {
+	fs::path asisPath = SetupDir("Asi");
 
+	for (const auto& entry : fs::directory_iterator(asisPath))
+	{
+		std::string EntryString = entry.path().string();
+		auto EntryExtension = str_tolower(entry.path().extension().string());
+
+		if (EntryExtension == ".asi" || EntryExtension == ".dll")
+		{
+			ModInfo CurrentMod;
+			CurrentMod.ModName = L"PlaceHolder";
+			CurrentMod.IsEnabled = true;
+			CurrentMod.ModType = 2;
+			CurrentMod.ModPath = EntryString;
+			(void)ModInfoList.push_back(CurrentMod);
+
+			if (LoadLibrary(EntryString.c_str()))
+				(void)dbgprintf(">>Plugin loaded: %s\n", EntryString.c_str());
+			else
+				(void)dbgprintf(">>Plugin error: %s\n", EntryString.c_str());
+		}
+	}
 }
