@@ -1,4 +1,4 @@
-LIBRARY "winmm"
+LIBRARY "DLML"
 EXPORTS
 
 mciExecute = hkmciExecute
@@ -181,9 +181,6 @@ waveOutSetPlaybackRate = hkwaveOutSetPlaybackRate
 waveOutSetVolume = hkwaveOutSetVolume
 waveOutUnprepareHeader = hkwaveOutUnprepareHeader
 waveOutWrite = hkwaveOutWrite
-
-LIBRARY "dsound"
-EXPORTS
 
 DirectSoundCaptureCreate = hkDirectSoundCaptureCreate
 DirectSoundCaptureCreate8 = hkDirectSoundCaptureCreate8

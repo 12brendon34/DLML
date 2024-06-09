@@ -87,6 +87,7 @@ namespace impl {
 
 					return oPresent(pSwapChain, SyncInterval, Flags);
 				} catch (const std::exception& e) {
+					(void)e;
 					(void)dbgprintf("Exception thrown rendering ImGui in DX11: {%s}\n", e.what());
 					if (retries >= 6) {
 						(void)dbgprintf("Retried rendering ImGui in DX11 6 times, game will exit now.\n");

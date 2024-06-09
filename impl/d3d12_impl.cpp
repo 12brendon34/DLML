@@ -147,6 +147,7 @@ namespace impl {
 
 					break;
 				} catch (const std::exception& e) {
+					(void)e; //https://stackoverflow.com/questions/24428146/catching-exception-with-unreferenced-local-variable-warning lmao
 					(void)dbgprintf("Exception thrown rendering ImGui in DX12: {%s}\n", e.what());
 					if (retries >= 6) {
 						(void)dbgprintf("Retried rendering ImGui in DX12 6 times, game will exit now.\n");
