@@ -99,53 +99,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="Fonts.cpp" />
-    <ClCompile Include="Hooks.cpp" />
-    <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
-    <ClCompile Include="ImGui\imgui_draw.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="impl\d3d11_impl.cpp" />
-    <ClCompile Include="impl\d3d12_impl.cpp" />
-    <ClCompile Include="impl\win32_impl.cpp" />
-    <ClCompile Include="kiero\kiero.cpp" />
-    <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="DLML.cpp" />
+    <ClCompile Include="Hook\Hook.cpp" />
+    <ClCompile Include="Hook\Hooks\Add_Source\Add_Source.cpp" />
     <ClCompile Include="MinHook\buffer.c" />
     <ClCompile Include="MinHook\hde32.c" />
     <ClCompile Include="MinHook\hde64.c" />
-    <ClCompile Include="MinHook\hook.c" />
+    <ClCompile Include="MinHook\MinHook.c" />
     <ClCompile Include="MinHook\trampoline.c" />
-    <ClCompile Include="proxy\dsound.cpp" />
-    <ClCompile Include="proxy\winmm.cpp" />
-    <ClCompile Include="Util.cpp" />
+    <ClCompile Include="Proxy\dsound.cpp" />
+    <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Fonts.h" />
-    <ClInclude Include="Hooks.h" />
-    <ClInclude Include="ImGui\imconfig.h" />
-    <ClInclude Include="ImGui\imgui.h" />
-    <ClInclude Include="ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="imgui\imgui_impl_dx12.h" />
-    <ClInclude Include="ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="ImGui\imgui_internal.h" />
-    <ClInclude Include="ImGui\imstb_rectpack.h" />
-    <ClInclude Include="ImGui\imstb_textedit.h" />
-    <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="impl\d3d11_impl.h" />
-    <ClInclude Include="impl\d3d12_impl.h" />
-    <ClInclude Include="impl\win32_impl.h" />
-    <ClInclude Include="kiero\kiero.h" />
-    <ClInclude Include="Loader.h" />
-    <ClInclude Include="Menu.h" />
+    <ClInclude Include="DLML.h" />
+    <ClInclude Include="Hook\Hook.h" />
+    <ClInclude Include="Hook\Hooks\Add_Source\Add_Source.h" />
     <ClInclude Include="MinHook\buffer.h" />
-    <ClInclude Include="global.h" />
     <ClInclude Include="MinHook\hde32.h" />
     <ClInclude Include="MinHook\hde64.h" />
     <ClInclude Include="MinHook\MinHook.h" />
@@ -153,9 +125,8 @@
     <ClInclude Include="MinHook\table32.h" />
     <ClInclude Include="MinHook\table64.h" />
     <ClInclude Include="MinHook\trampoline.h" />
-    <ClInclude Include="proxy\dsound.h" />
-    <ClInclude Include="proxy\winmm.h" />
-    <ClInclude Include="Util.h" />
+    <ClInclude Include="Proxy\dsound.h" />
+    <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

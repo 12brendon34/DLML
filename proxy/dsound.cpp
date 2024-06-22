@@ -73,25 +73,26 @@ HRESULT WINAPI hkGetDeviceID(_In_opt_ LPCGUID pGuidSrc, _Out_ LPGUID pGuidDest)
 	return o_GetDeviceID(pGuidSrc, pGuidDest);
 }
 
-HMODULE dsound() {
+auto Dsound::init(void) -> HMODULE {
 
 	char path[MAX_PATH]{};
 	CopyMemory(path + GetSystemDirectory(path, MAX_PATH - 11), "\\dsound.dll", 11);
 	dsound_dll = LoadLibrary(path);
 
-	o_DirectSoundCaptureCreate = reinterpret_cast<t_DirectSoundCaptureCreate>(GetProcAddress(dsound_dll, "DirectSoundCaptureCreate"));
-	o_DirectSoundCaptureCreate8 = reinterpret_cast<t_DirectSoundCaptureCreate8>(GetProcAddress(dsound_dll, "DirectSoundCaptureCreate8"));
-	o_DirectSoundCaptureEnumerateA = reinterpret_cast<t_DirectSoundCaptureEnumerateA>(GetProcAddress(dsound_dll, "DirectSoundCaptureEnumerateA"));
-	o_DirectSoundCaptureEnumerateW = reinterpret_cast<t_DirectSoundCaptureEnumerateW>(GetProcAddress(dsound_dll, "DirectSoundCaptureEnumerateW"));
-	o_DirectSoundCreate = reinterpret_cast<t_DirectSoundCreate>(GetProcAddress(dsound_dll, "DirectSoundCreate"));
-	o_DirectSoundCreate8 = reinterpret_cast<t_DirectSoundCreate8>(GetProcAddress(dsound_dll, "DirectSoundCreate8"));
-	o_DirectSoundEnumerateA = reinterpret_cast<t_DirectSoundEnumerateA>(GetProcAddress(dsound_dll, "DirectSoundEnumerateA"));
-	o_DirectSoundEnumerateW = reinterpret_cast<t_DirectSoundEnumerateW>(GetProcAddress(dsound_dll, "DirectSoundEnumerateW"));
-	o_DirectSoundFullDuplexCreate = reinterpret_cast<t_DirectSoundFullDuplexCreate>(GetProcAddress(dsound_dll, "DirectSoundFullDuplexCreate"));
-	o_GetDeviceID = reinterpret_cast<t_GetDeviceID>(GetProcAddress(dsound_dll, "GetDeviceID"));
-
 	if (dsound_dll == NULL)
-		MsgBoxExit(MB_ICONERROR, "Exiting", "Source dsound.dll missing");
+		Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Source dsound.dll missing");
+
+	o_DirectSoundCaptureCreate = std::bit_cast<t_DirectSoundCaptureCreate>(GetProcAddress(dsound_dll, "DirectSoundCaptureCreate"));
+	o_DirectSoundCaptureCreate8 = std::bit_cast<t_DirectSoundCaptureCreate8>(GetProcAddress(dsound_dll, "DirectSoundCaptureCreate8"));
+	o_DirectSoundCaptureEnumerateA = std::bit_cast<t_DirectSoundCaptureEnumerateA>(GetProcAddress(dsound_dll, "DirectSoundCaptureEnumerateA"));
+	o_DirectSoundCaptureEnumerateW = std::bit_cast<t_DirectSoundCaptureEnumerateW>(GetProcAddress(dsound_dll, "DirectSoundCaptureEnumerateW"));
+	o_DirectSoundCreate = std::bit_cast<t_DirectSoundCreate>(GetProcAddress(dsound_dll, "DirectSoundCreate"));
+	o_DirectSoundCreate8 = std::bit_cast<t_DirectSoundCreate8>(GetProcAddress(dsound_dll, "DirectSoundCreate8"));
+	o_DirectSoundEnumerateA = std::bit_cast<t_DirectSoundEnumerateA>(GetProcAddress(dsound_dll, "DirectSoundEnumerateA"));
+	o_DirectSoundEnumerateW = std::bit_cast<t_DirectSoundEnumerateW>(GetProcAddress(dsound_dll, "DirectSoundEnumerateW"));
+	o_DirectSoundFullDuplexCreate = std::bit_cast<t_DirectSoundFullDuplexCreate>(GetProcAddress(dsound_dll, "DirectSoundFullDuplexCreate"));
+	o_GetDeviceID = std::bit_cast<t_GetDeviceID>(GetProcAddress(dsound_dll, "GetDeviceID"));
+
 
 	return dsound_dll;
 }

@@ -1,5 +1,8 @@
 #pragma once
-#include "../Util.h"
+#include "../Utils/Utils.h"
 #include <dsound.h>
 
-HMODULE dsound();
+class Dsound {
+public:
+	static auto init(void) -> HMODULE;
+};

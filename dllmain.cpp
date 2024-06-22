@@ -1,20 +1,17 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
-#include "Hooks.h"
-#include "global.h"
-#include "Util.h"
+#include "DLML.h"
 
-#include "proxy/winmm.h"
-#include "proxy/dsound.h"
-#include "kiero/kiero.h"
+#include "Proxy/Dsound.h"
 
-HMODULE dll;
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
-	switch (ul_reason_for_call)
-	{
-	case DLL_PROCESS_ATTACH:
-	{
-		(void)DisableThreadLibraryCalls(hModule);
+auto init() -> void {
+	(void)std::make_unique<DLML>();
+};
+
+auto APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) -> BOOL {
+
+	if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
+
 
 		if (_DEBUG) {
 			(void)AllocConsole();
@@ -23,43 +20,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 			(void)freopen("CONOUT$", "w", stdout);
 		}
 
-		MH_STATUS status = MH_Initialize();
-		std::string statusCode = MH_StatusToString(status);
+		(void)Dsound::init();//handle
 
-		if (status != MH_OK && status != MH_ERROR_ALREADY_INITIALIZED) {
-			MsgBoxExit(MB_ICONERROR, "Exiting", "Unable to initialize MinHook: %p", statusCode);
-		}
-		globals.MinHookInitialized = true;
+		HANDLE handle = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)init, hModule, 0, nullptr);
+		(void)SetThreadPriority(handle, 2);
 
-
-		std::string CurrentName = str_tolower(GetCurrentName(hModule).string());
-
-		if (CurrentName == std::string("winmm.dll"))
-			dll = winmm();
-		if (CurrentName == std::string("dsound.dll"))
-			dll = dsound();
-
-
-		HANDLE handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)CreateHooks, hModule, 0, 0);
-		if (handle != 0)
-		{
-			(void)SetThreadPriority(handle, 2);
-			(void)CloseHandle(handle);
-		}
-
-		break;
 	}
-	case DLL_PROCESS_DETACH:
-	{
-		(void)kiero::shutdown();
-		(void)FreeLibrary(dll);
-		(void)MH_Uninitialize();
 
-		if (_DEBUG) {
-			(void)FreeConsole();
-		}
-	}
-	break;
-	}
 	return TRUE;
 }
