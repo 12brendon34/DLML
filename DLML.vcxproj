@@ -101,7 +101,8 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DLML.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
-    <ClCompile Include="Hook\Hooks\Add_Source\Add_Source.cpp" />
+    <ClCompile Include="Hook\Hooks\Hooks.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="MinHook\buffer.c" />
     <ClCompile Include="MinHook\hde32.c" />
     <ClCompile Include="MinHook\hde64.c" />
@@ -116,7 +117,8 @@
   <ItemGroup>
     <ClInclude Include="DLML.h" />
     <ClInclude Include="Hook\Hook.h" />
-    <ClInclude Include="Hook\Hooks\Add_Source\Add_Source.h" />
+    <ClInclude Include="Hook\Hooks\Hooks.h" />
+    <ClInclude Include="Loader.h" />
     <ClInclude Include="MinHook\buffer.h" />
     <ClInclude Include="MinHook\hde32.h" />
     <ClInclude Include="MinHook\hde64.h" />

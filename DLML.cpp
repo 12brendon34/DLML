@@ -1,13 +1,10 @@
 #include "DLML.h"
-#include "Hook/Hooks/Add_Source/Add_Source.h"
+#include "Hook/Hooks/Hooks.h"
+#include "Loader.h"
 
 DLML::DLML() {
-	while (!::IsDebuggerPresent())
-		::Sleep(100); // to avoid 100% CPU load
 
 	auto [minhookStatus, minhookStatusCode] = this->initMinHook();
-
-
 	switch (minhookStatus) {
 
 		case MethodStatus::Success: {
@@ -21,9 +18,8 @@ DLML::DLML() {
 	}
 
 
-
+	Loader::IndexPaks();
 	auto [hookStatus, hookStatusCode] = this->initHooks();
-
 	switch (hookStatus) {
 
 		case MethodStatus::Success:{
@@ -56,7 +52,8 @@ auto DLML::initHooks(void) -> Status {
 	DLML::FilesystemDll = Utils::GetModuleHandleSimple("filesystem_x64_rwdi.dll");
 	DLML::EngineDll = Utils::GetModuleHandleSimple("engine_x64_rwdi.dll");
 
-	(void)std::make_unique<Add_Source>(this);
+	new Add_Source(this);
+	new InitalizeGameScript(this);
 
 	for (auto hook : this->hooks) {
 

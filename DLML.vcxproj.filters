@@ -11,7 +11,9 @@
     <ClCompile Include="DLML.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
-    <ClCompile Include="Hook\Hooks\Add_Source\Add_Source.cpp" />
+    <ClCompile Include="Hook\Hooks\Hooks.cpp" />
+    <ClCompile Include="Hook\Hooks\Loader.cpp" />
+    <ClCompile Include="Loader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Minhook">
@@ -34,6 +36,7 @@
     <ClInclude Include="DLML.h" />
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Hook\Hook.h" />
-    <ClInclude Include="Hook\Hooks\Add_Source\Add_Source.h" />
+    <ClInclude Include="Hook\Hooks\Hooks.h" />
+    <ClInclude Include="Loader.h" />
   </ItemGroup>
 </Project>

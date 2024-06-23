@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <filesystem>
 
 #include "../MinHook/MinHook.h"
 
@@ -31,4 +33,6 @@ public:
 	static auto GetProcAddressSimple(HMODULE hModule, LPCSTR lpProcName) -> FARPROC;
 
 	static auto HookFunction(LPVOID target, LPVOID destination, LPVOID* original, const char* name = nullptr, bool enable = false) -> void;
+
+	static auto str_tolower(std::string s) -> std::string;
 };

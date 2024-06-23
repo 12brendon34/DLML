@@ -10,6 +10,14 @@ auto Utils::MsgBoxExit(UINT nType, LPCSTR lpCaption, LPCSTR sz, ...) -> void {
 	ExitProcess(0);
 }
 
+auto Utils::str_tolower(std::string s) -> std::string
+{
+	std::ranges::transform(s.begin(), s.end(), s.begin(),
+		[](unsigned char c) { return std::tolower(c); }
+	);
+	return s;
+}
+
 auto Utils::GetModuleHandleSimple(LPCSTR lpModuleName) -> HMODULE {
 
 	HMODULE Handle = GetModuleHandle(lpModuleName);
@@ -28,7 +36,7 @@ auto Utils::GetProcAddressSimple(HMODULE hModule, LPCSTR lpProcName) -> FARPROC 
 	if (Address)
 		(void)dbgprintf("Loaded Libary %s at: %p\n", lpProcName, Address);
 	else
-		Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Failed To Get Address");
+		Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Failed To Get Address of %s", lpProcName);
 
 	return Address;
 }
@@ -39,16 +47,16 @@ auto Utils::HookFunction(LPVOID target, LPVOID destination, LPVOID* original, co
 	std::string statusCode = MH_StatusToString(status);
 
 	if (status == MH_OK) {
-		if (name) {
+		if (name) 
 			(void)dbgprintf("Hooked \"%s\" at: %p -> %p\n", name, target, destination);
-		}
-		(void)dbgprintf("Hooked %p -> %p\n", target, destination);
+		else
+			(void)dbgprintf("Hooked %p -> %p\n", target, destination);
 	}
 	else {
-		if (name) {
+		if (name) 
 			Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook \"%s\" at: %p, Status Code: %s",name, target, statusCode.c_str());
-		}
-		Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p, Status Code: %s", target, statusCode.c_str());
+		else
+			Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Failed to hook %p, Status Code: %s", target, statusCode.c_str());
 	}
 	if (enable)
 		(void)MH_EnableHook(target);
