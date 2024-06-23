@@ -1,6 +1,4 @@
 #include "DLML.h"
-#include "Hook/Hooks/Hooks.h"
-#include "Loader.h"
 
 DLML::DLML() {
 
@@ -32,10 +30,55 @@ DLML::DLML() {
 		}
 	}
 
-	dbgprintf("DLML Initialized\n");
+	HookRenderer();
 }
 
-auto DLML::initMinHook(void) -> Status {
+//bool is_initialized = false;
+
+kiero::RenderType::Enum rendererAPI = kiero::RenderType::D3D11;
+
+auto DLML::HookRenderer(void) -> void {
+	/*
+	bool init_hook = false;
+	do {
+
+		if (globals.DyingLight2) {
+
+			if (!is_initialized)
+				continue;
+
+			if (hkIsDx12Enabled())
+				rendererAPI = kiero::RenderType::D3D12;
+			else
+				rendererAPI = kiero::RenderType::D3D11;
+
+		}
+
+		if (kiero::init(rendererAPI) != kiero::status::Success)
+			continue;
+
+
+		if (rendererAPI == kiero::RenderType::D3D11)
+			impl::d3d11::init();
+		else
+			impl::d3d12::init();
+
+
+		init_hook = true;
+
+	} while (!init_hook);
+	*/
+	bool init_hook = false;
+	do {
+		if (kiero::init(rendererAPI) != kiero::status::Success)
+			continue;
+
+		impl::d3d11::init();
+
+	} while (!init_hook);
+}
+
+auto DLML::initMinHook(void) const -> Status {
 
 	MH_STATUS status = MH_Initialize();
 	std::string statusCode = MH_StatusToString(status);

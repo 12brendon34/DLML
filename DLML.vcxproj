@@ -100,9 +100,21 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DLML.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Hook\Hook.cpp" />
     <ClCompile Include="Hook\Hooks\Hooks.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="impl\d3d11_impl.cpp" />
+    <ClCompile Include="impl\win32_impl.cpp" />
+    <ClCompile Include="kiero\kiero.cpp" />
     <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MinHook\buffer.c" />
     <ClCompile Include="MinHook\hde32.c" />
     <ClCompile Include="MinHook\hde64.c" />
@@ -116,9 +128,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DLML.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Hook\Hook.h" />
     <ClInclude Include="Hook\Hooks\Hooks.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="impl\d3d11_impl.h" />
+    <ClInclude Include="impl\win32_impl.h" />
+    <ClInclude Include="kiero\kiero.h" />
     <ClInclude Include="Loader.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="MinHook\buffer.h" />
     <ClInclude Include="MinHook\hde32.h" />
     <ClInclude Include="MinHook\hde64.h" />

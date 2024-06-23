@@ -79,7 +79,7 @@ auto Dsound::init(void) -> HMODULE {
 	CopyMemory(path + GetSystemDirectory(path, MAX_PATH - 11), "\\dsound.dll", 11);
 	dsound_dll = LoadLibrary(path);
 
-	if (dsound_dll == NULL)
+	if (dsound_dll == nullptr)
 		Utils::MsgBoxExit(MB_ICONERROR, "Exiting", "Source dsound.dll missing");
 
 	o_DirectSoundCaptureCreate = std::bit_cast<t_DirectSoundCaptureCreate>(GetProcAddress(dsound_dll, "DirectSoundCaptureCreate"));

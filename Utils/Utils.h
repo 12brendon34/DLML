@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <filesystem>
+#include <cstdint>
 
 #include "../MinHook/MinHook.h"
 

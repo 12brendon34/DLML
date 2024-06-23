@@ -5,7 +5,7 @@ std::vector<ModInfo> Loader::ModInfoList;
 auto Loader::SetupDir(const std::string& subfolder) -> std::filesystem::path {
 	char path_c[MAX_PATH];
 
-	(void)GetModuleFileNameA(NULL, path_c, MAX_PATH);
+	(void)GetModuleFileNameA(nullptr, path_c, MAX_PATH);
 
 	auto path = std::string(path_c);
 	std::filesystem::path RootDL = path.substr(0, path.find_last_of("/\\"));
