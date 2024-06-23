@@ -29,6 +29,8 @@ class Utils {
 public:
 	static auto MsgBoxExit(UINT nType, LPCSTR lpCaption, LPCSTR sz, ...) -> void;
 
+	static auto srprintf(LPCSTR sz, ...) ->std::string;
+
 	static auto GetModuleHandleSimple(LPCSTR lpModuleName) -> HMODULE;
 
 	static auto GetProcAddressSimple(HMODULE hModule, LPCSTR lpProcName) -> FARPROC;

@@ -1,6 +1,7 @@
 #include "Menu.h"
 
 bool Menu::menuToggle = false;
+bool Menu::sourceFiles = false;
 
 auto Menu::InitImGui() -> void {
 	auto& style = ImGui::GetStyle();
@@ -133,6 +134,8 @@ auto Menu::DrawLogWindow(const char* title, bool* p_open) -> void {
 	bool copy = ImGui::Button("Copy");
 	ImGui::SameLine();
 	ImGui::Checkbox("Verbose", &Verbose);
+	ImGui::SameLine();
+	ImGui::Checkbox("Show SourceFiles", &sourceFiles);
 	ImGui::SameLine();
 	Filter.Draw("Filter", -100.0f);
 

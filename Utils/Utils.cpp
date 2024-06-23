@@ -10,6 +10,14 @@ auto Utils::MsgBoxExit(UINT nType, LPCSTR lpCaption, LPCSTR sz, ...) -> void {
 	ExitProcess(0);
 }
 
+auto Utils::srprintf(LPCSTR sz, ...) -> std::string {
+	char msg[512];
+	va_list args;
+	va_start(args, sz);
+	(void)wvsprintf(msg, sz, args);
+	return msg;
+}
+
 auto Utils::str_tolower(std::string s) -> std::string
 {
 	std::ranges::transform(s.begin(), s.end(), s.begin(),

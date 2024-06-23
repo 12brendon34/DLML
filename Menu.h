@@ -6,6 +6,7 @@
 class Menu {
 public:
 	static bool menuToggle;
+	static bool sourceFiles;
 public:
 	static auto InitImGui() -> void;
 	static auto Render() -> void;

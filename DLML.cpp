@@ -1,7 +1,10 @@
 #include "DLML.h"
+#include "kiero/kiero.h"
+#include "Utils/Utils.h"
+#include "impl/d3d11_impl.h"
+#include "Hook/Hooks/Hooks.h"
 
 DLML::DLML() {
-
 	auto [minhookStatus, minhookStatusCode] = this->initMinHook();
 	switch (minhookStatus) {
 
@@ -97,6 +100,9 @@ auto DLML::initHooks(void) -> Status {
 
 	new Add_Source(this);
 	new InitalizeGameScript(this);
+	new CLogV(this);
+	new GetCategoryLevel(this);
+	new Log_Settings_Instance(this);
 
 	for (auto hook : this->hooks) {
 
